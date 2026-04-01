@@ -1,17 +1,16 @@
-import { Validators } from '@celo/abis/web3/Validators'
+import { validatorsABI } from '@celo/abis'
 import { eqAddress, findAddressIndex, NULL_ADDRESS } from '@celo/base/lib/address'
 import { concurrentMap } from '@celo/base/lib/async'
 import { zeroRange, zip } from '@celo/base/lib/collections'
-import { Address, CeloTransactionObject, EventLog, toTransactionObject } from '@celo/connect'
+import { Address, CeloTx, EventLog } from '@celo/connect'
 import { fromFixed, toFixed } from '@celo/utils/lib/fixidity'
 import BigNumber from 'bignumber.js'
 import {
   blocksToDurationString,
-  proxyCall,
-  proxySend,
   secondsToDurationString,
   stringToSolidityBytes,
-  tupleParser,
+  toViemAddress,
+  toViemBigInt,
   valueToBigNumber,
   valueToFixidityString,
   valueToInt,
@@ -77,36 +76,133 @@ export interface MembershipHistoryExtraData {
  * Contract for voting for validators and managing validator groups.
  */
 // TODO(asa): Support validator signers
-export class ValidatorsWrapper extends BaseWrapperForGoverning<Validators> {
+export class ValidatorsWrapper extends BaseWrapperForGoverning<typeof validatorsABI> {
+  // --- private proxy fields for typed contract calls ---
+  private _getValidatorLockedGoldRequirements = async (): Promise<LockedGoldRequirements> => {
+    const res = await this.contract.read.getValidatorLockedGoldRequirements()
+    return {
+      value: valueToBigNumber(res[0].toString()),
+      duration: valueToBigNumber(res[1].toString()),
+    }
+  }
+
+  private _getGroupLockedGoldRequirements = async (): Promise<LockedGoldRequirements> => {
+    const res = await this.contract.read.getGroupLockedGoldRequirements()
+    return {
+      value: valueToBigNumber(res[0].toString()),
+      duration: valueToBigNumber(res[1].toString()),
+    }
+  }
+
+  private _maxGroupSize = async () => {
+    const res = await this.contract.read.maxGroupSize()
+    return valueToBigNumber(res.toString())
+  }
+
+  private _membershipHistoryLength = async () => {
+    const res = await this.contract.read.membershipHistoryLength()
+    return valueToBigNumber(res.toString())
+  }
+
+  private _getValidator = async (address: string) => {
+    const res = await this.contract.read.getValidator([toViemAddress(address)])
+    return {
+      ecdsaPublicKey: res[0] as string,
+      affiliation: res[2] as string,
+      score: res[3].toString(),
+      signer: res[4] as string,
+    }
+  }
+
+  private _getValidatorsGroup = async (address: string) =>
+    this.contract.read.getValidatorsGroup([toViemAddress(address)])
+
+  private _getMembershipInLastEpoch = async (address: string) =>
+    this.contract.read.getMembershipInLastEpoch([toViemAddress(address)])
+
+  private _getValidatorGroup = async (address: string) => {
+    const res = await this.contract.read.getValidatorGroup([toViemAddress(address)])
+    return {
+      0: [...res[0]] as string[],
+      1: res[1].toString(),
+      2: res[2].toString(),
+      3: res[3].toString(),
+      4: [...res[4]].map((v) => v.toString()),
+      5: res[5].toString(),
+      6: res[6].toString(),
+    }
+  }
+
+  private _getRegisteredValidators = async () => {
+    const res = await this.contract.read.getRegisteredValidators()
+    return [...res] as string[]
+  }
+
+  private _numberValidatorsInCurrentSet = async () => {
+    const res = await this.contract.read.numberValidatorsInCurrentSet()
+    return valueToInt(res.toString())
+  }
+
+  private _validatorSignerAddressFromCurrentSet = async (index: number) =>
+    this.contract.read.validatorSignerAddressFromCurrentSet([toViemBigInt(index)])
+
+  private _deregisterValidator = (index: number, txParams?: Omit<CeloTx, 'data'>) =>
+    this.contract.write.deregisterValidator([toViemBigInt(index)], txParams as any)
+
+  private _registerValidatorGroup = (commission: string, txParams?: Omit<CeloTx, 'data'>) =>
+    this.contract.write.registerValidatorGroup([BigInt(commission)], txParams as any)
+
+  private _deregisterValidatorGroup = (index: number, txParams?: Omit<CeloTx, 'data'>) =>
+    this.contract.write.deregisterValidatorGroup([toViemBigInt(index)], txParams as any)
+
+  private _addFirstMember = (
+    validator: string,
+    lesser: string,
+    greater: string,
+    txParams?: Omit<CeloTx, 'data'>
+  ) =>
+    this.contract.write.addFirstMember(
+      [toViemAddress(validator), toViemAddress(lesser), toViemAddress(greater)],
+      txParams as any
+    )
+
+  private _addMember = (validator: string, txParams?: Omit<CeloTx, 'data'>) =>
+    this.contract.write.addMember([toViemAddress(validator)], txParams as any)
+
+  private _reorderMember = (
+    validator: string,
+    nextMember: string,
+    prevMember: string,
+    txParams?: Omit<CeloTx, 'data'>
+  ) =>
+    this.contract.write.reorderMember(
+      [toViemAddress(validator), toViemAddress(nextMember), toViemAddress(prevMember)],
+      txParams as any
+    )
+
   /**
    * Queues an update to a validator group's commission.
    * @param commission Fixidity representation of the commission this group receives on epoch
    *   payments made to its members. Must be in the range [0, 1.0].
    */
-  setNextCommissionUpdate: (commission: BigNumber.Value) => CeloTransactionObject<void> = proxySend(
-    this.connection,
-    this.contract.methods.setNextCommissionUpdate,
-    tupleParser(valueToFixidityString)
-  )
+  setNextCommissionUpdate = (commission: BigNumber.Value, txParams?: Omit<CeloTx, 'data'>) =>
+    this.contract.write.setNextCommissionUpdate(
+      [BigInt(valueToFixidityString(commission))],
+      txParams as any
+    )
 
   /**
    * Updates a validator group's commission based on the previously queued update
    */
-  updateCommission: () => CeloTransactionObject<void> = proxySend(
-    this.connection,
-    this.contract.methods.updateCommission
-  )
+  updateCommission = (txParams?: Omit<CeloTx, 'data'>) =>
+    this.contract.write.updateCommission(txParams as any)
 
   /**
    * Returns the Locked Gold requirements for validators.
    * @returns The Locked Gold requirements for validators.
    */
   async getValidatorLockedGoldRequirements(): Promise<LockedGoldRequirements> {
-    const res = await this.contract.methods.getValidatorLockedGoldRequirements().call()
-    return {
-      value: valueToBigNumber(res[0]),
-      duration: valueToBigNumber(res[1]),
-    }
+    return this._getValidatorLockedGoldRequirements()
   }
 
   /**
@@ -114,49 +210,41 @@ export class ValidatorsWrapper extends BaseWrapperForGoverning<Validators> {
    * @returns The Locked Gold requirements for validator groups.
    */
   async getGroupLockedGoldRequirements(): Promise<LockedGoldRequirements> {
-    const res = await this.contract.methods.getGroupLockedGoldRequirements().call()
-    return {
-      value: valueToBigNumber(res[0]),
-      duration: valueToBigNumber(res[1]),
-    }
+    return this._getGroupLockedGoldRequirements()
   }
 
   /**
    * Returns the Locked Gold requirements for specific account.
    * @returns The Locked Gold requirements for a specific account.
    */
-  getAccountLockedGoldRequirement = proxyCall(
-    this.contract.methods.getAccountLockedGoldRequirement,
-    undefined,
-    valueToBigNumber
-  )
+  getAccountLockedGoldRequirement = async (account: string) => {
+    const res = await this.contract.read.getAccountLockedGoldRequirement([toViemAddress(account)])
+    return valueToBigNumber(res.toString())
+  }
 
   /**
    * Returns the reset period, in seconds, for slashing multiplier.
    */
-  getSlashingMultiplierResetPeriod = proxyCall(
-    this.contract.methods.slashingMultiplierResetPeriod,
-    undefined,
-    valueToBigNumber
-  )
+  getSlashingMultiplierResetPeriod = async () => {
+    const res = await this.contract.read.slashingMultiplierResetPeriod()
+    return valueToBigNumber(res.toString())
+  }
 
   /**
    * Returns the update delay, in blocks, for the group commission.
    */
-  getCommissionUpdateDelay = proxyCall(
-    this.contract.methods.commissionUpdateDelay,
-    undefined,
-    valueToBigNumber
-  )
+  getCommissionUpdateDelay = async () => {
+    const res = await this.contract.read.commissionUpdateDelay()
+    return valueToBigNumber(res.toString())
+  }
 
   /**
    * Returns the validator downtime grace period
    */
-  getDowntimeGracePeriod = proxyCall(
-    this.contract.methods.deprecated_downtimeGracePeriod,
-    undefined,
-    valueToBigNumber
-  )
+  getDowntimeGracePeriod = async () => {
+    const res = await this.contract.read.deprecated_downtimeGracePeriod()
+    return valueToBigNumber(res.toString())
+  }
 
   /**
    * Returns current configuration parameters.
@@ -165,8 +253,8 @@ export class ValidatorsWrapper extends BaseWrapperForGoverning<Validators> {
     const res = await Promise.all([
       this.getValidatorLockedGoldRequirements(),
       this.getGroupLockedGoldRequirements(),
-      this.contract.methods.maxGroupSize().call(),
-      this.contract.methods.membershipHistoryLength().call(),
+      this._maxGroupSize(),
+      this._membershipHistoryLength(),
       this.getSlashingMultiplierResetPeriod(),
       this.getCommissionUpdateDelay(),
       this.getDowntimeGracePeriod(),
@@ -174,8 +262,8 @@ export class ValidatorsWrapper extends BaseWrapperForGoverning<Validators> {
     return {
       validatorLockedGoldRequirements: res[0],
       groupLockedGoldRequirements: res[1],
-      maxGroupSize: valueToBigNumber(res[2]),
-      membershipHistoryLength: valueToBigNumber(res[3]),
+      maxGroupSize: res[2],
+      membershipHistoryLength: res[3],
       slashingMultiplierResetPeriod: res[4],
       commissionUpdateDelay: res[5],
       downtimeGracePeriod: res[6],
@@ -232,14 +320,16 @@ export class ValidatorsWrapper extends BaseWrapperForGoverning<Validators> {
    * @param account The account.
    * @return Whether a particular address is a registered validator.
    */
-  isValidator = proxyCall(this.contract.methods.isValidator)
+  isValidator = async (account: string): Promise<boolean> =>
+    this.contract.read.isValidator([toViemAddress(account)])
 
   /**
    * Returns whether a particular account has a registered validator group.
    * @param account The account.
    * @return Whether a particular address is a registered validator group.
    */
-  isValidatorGroup = proxyCall(this.contract.methods.isValidatorGroup)
+  isValidatorGroup = async (account: string): Promise<boolean> =>
+    this.contract.read.isValidatorGroup([toViemAddress(account)])
 
   /**
    * Returns whether an account meets the requirements to register a validator.
@@ -269,14 +359,14 @@ export class ValidatorsWrapper extends BaseWrapperForGoverning<Validators> {
   /** Get Validator information */
   async getValidator(address: Address, blockNumber?: number): Promise<Validator> {
     // @ts-ignore: Expected 0-1 arguments, but got 2
-    const res = await this.contract.methods.getValidator(address).call({}, blockNumber)
+    const res = await this._getValidator(address)
     const accounts = await this.contracts.getAccounts()
     const name = (await accounts.getName(address, blockNumber)) || ''
 
     return {
       name,
       address,
-      ecdsaPublicKey: res.ecdsaPublicKey as unknown as string,
+      ecdsaPublicKey: res.ecdsaPublicKey,
       affiliation: res.affiliation,
       score: fromFixed(new BigNumber(res.score)),
       signer: res.signer,
@@ -284,11 +374,11 @@ export class ValidatorsWrapper extends BaseWrapperForGoverning<Validators> {
   }
 
   async getValidatorsGroup(address: Address): Promise<Address> {
-    return this.contract.methods.getValidatorsGroup(address).call()
+    return this._getValidatorsGroup(address)
   }
 
   async getMembershipInLastEpoch(address: Address): Promise<Address> {
-    return this.contract.methods.getMembershipInLastEpoch(address).call()
+    return this._getMembershipInLastEpoch(address)
   }
 
   async getValidatorFromSigner(address: Address, blockNumber?: number): Promise<Validator> {
@@ -314,7 +404,7 @@ export class ValidatorsWrapper extends BaseWrapperForGoverning<Validators> {
     blockNumber?: number
   ): Promise<ValidatorGroup> {
     // @ts-ignore: Expected 0-1 arguments, but got 2
-    const res = await this.contract.methods.getValidatorGroup(address).call({}, blockNumber)
+    const res = await this._getValidatorGroup(address)
     const accounts = await this.contracts.getAccounts()
     const name = (await accounts.getName(address, blockNumber)) || ''
     let affiliates: Validator[] = []
@@ -346,43 +436,47 @@ export class ValidatorsWrapper extends BaseWrapperForGoverning<Validators> {
    * @param validator The validator whose membership history to return.
    * @return The group membership history of a validator.
    */
-  getValidatorMembershipHistory: (validator: Address) => Promise<GroupMembership[]> = proxyCall(
-    this.contract.methods.getMembershipHistory,
-    undefined,
-    (res) =>
-      zip((epoch, group): GroupMembership => ({ epoch: valueToInt(epoch), group }), res[0], res[1])
-  )
+  getValidatorMembershipHistory = async (validator: Address): Promise<GroupMembership[]> => {
+    const res = await this.contract.read.getMembershipHistory([toViemAddress(validator)])
+    return zip(
+      (epoch, group): GroupMembership => ({ epoch: valueToInt(epoch.toString()), group }),
+      [...res[0]],
+      [...res[1]]
+    )
+  }
 
   /**
    * Returns extra data from the Validator's group membership history
    * @param validator The validator whose membership history to return.
    * @return The group membership history of a validator.
    */
-  getValidatorMembershipHistoryExtraData: (
+  getValidatorMembershipHistoryExtraData = async (
     validator: Address
-  ) => Promise<MembershipHistoryExtraData> = proxyCall(
-    this.contract.methods.getMembershipHistory,
-    undefined,
-    (res) => ({ lastRemovedFromGroupTimestamp: valueToInt(res[2]), tail: valueToInt(res[3]) })
-  )
+  ): Promise<MembershipHistoryExtraData> => {
+    const res = await this.contract.read.getMembershipHistory([toViemAddress(validator)])
+    return {
+      lastRemovedFromGroupTimestamp: valueToInt(res[2].toString()),
+      tail: valueToInt(res[3].toString()),
+    }
+  }
 
   /** Get the size (amount of members) of a ValidatorGroup */
-  getValidatorGroupSize: (group: Address) => Promise<number> = proxyCall(
-    this.contract.methods.getGroupNumMembers,
-    undefined,
-    valueToInt
-  )
+  getValidatorGroupSize = async (group: Address): Promise<number> => {
+    const res = await this.contract.read.getGroupNumMembers([toViemAddress(group)])
+    return valueToInt(res.toString())
+  }
 
   /** Get list of registered validator addresses */
-  async getRegisteredValidatorsAddresses(blockNumber?: number): Promise<Address[]> {
+  async getRegisteredValidatorsAddresses(_blockNumber?: number): Promise<Address[]> {
     // @ts-ignore: Expected 0-1 arguments, but got 2
-    return this.contract.methods.getRegisteredValidators().call({}, blockNumber)
+    return this._getRegisteredValidators()
   }
 
   /** Get list of registered validator group addresses */
-  getRegisteredValidatorGroupsAddresses: () => Promise<Address[]> = proxyCall(
-    this.contract.methods.getRegisteredValidatorGroups
-  )
+  getRegisteredValidatorGroupsAddresses = async () => {
+    const res = await this.contract.read.getRegisteredValidatorGroups()
+    return [...res] as string[]
+  }
 
   /** Get list of registered validators */
   async getRegisteredValidators(blockNumber?: number): Promise<Validator[]> {
@@ -405,34 +499,43 @@ export class ValidatorsWrapper extends BaseWrapperForGoverning<Validators> {
    *   the validator signer.
    * @param ecdsaPublicKey The ECDSA public key that the validator is using for consensus. 64 bytes.
    */
-  registerValidator: (ecdsaPublicKey: string) => CeloTransactionObject<boolean> = proxySend(
-    this.connection,
-    this.contract.methods.registerValidator,
-    tupleParser(stringToSolidityBytes)
-  )
+  registerValidator = (ecdsaPublicKey: string, txParams?: Omit<CeloTx, 'data'>) =>
+    this.contract.write.registerValidator(
+      [stringToSolidityBytes(ecdsaPublicKey) as `0x${string}`],
+      txParams as any
+    )
 
-  registerValidatorNoBls: (ecdsaPublicKey: string) => CeloTransactionObject<boolean> = proxySend(
-    this.connection,
-    this.contract.methods.registerValidatorNoBls,
-    tupleParser(stringToSolidityBytes)
-  )
+  registerValidatorNoBls = (ecdsaPublicKey: string, txParams?: Omit<CeloTx, 'data'>) =>
+    this.contract.write.registerValidatorNoBls(
+      [stringToSolidityBytes(ecdsaPublicKey) as `0x${string}`],
+      txParams as any
+    )
 
-  getEpochNumber = proxyCall(this.contract.methods.getEpochNumber, undefined, valueToBigNumber)
+  getEpochNumber = async () => {
+    const res = await this.contract.read.getEpochNumber()
+    return valueToBigNumber(res.toString())
+  }
 
-  getEpochSize = proxyCall(this.contract.methods.getEpochSize, undefined, valueToBigNumber)
+  getEpochSize = async () => {
+    const res = await this.contract.read.getEpochSize()
+    return valueToBigNumber(res.toString())
+  }
 
   /**
    * De-registers a validator, removing it from the group for which it is a member.
    * @param validatorAddress Address of the validator to deregister
    */
-  async deregisterValidator(validatorAddress: Address) {
+  async deregisterValidator(
+    validatorAddress: Address,
+    txParams?: Omit<CeloTx, 'data'>
+  ): Promise<`0x${string}`> {
     const allValidators = await this.getRegisteredValidatorsAddresses()
     const idx = findAddressIndex(validatorAddress, allValidators)
 
     if (idx < 0) {
       throw new Error(`${validatorAddress} is not a registered validator`)
     }
-    return toTransactionObject(this.connection, this.contract.methods.deregisterValidator(idx))
+    return this._deregisterValidator(idx, txParams)
   }
 
   /**
@@ -442,25 +545,28 @@ export class ValidatorsWrapper extends BaseWrapperForGoverning<Validators> {
    *
    * @param commission the commission this group receives on epoch payments made to its members.
    */
-  async registerValidatorGroup(commission: BigNumber): Promise<CeloTransactionObject<boolean>> {
-    return toTransactionObject(
-      this.connection,
-      this.contract.methods.registerValidatorGroup(toFixed(commission).toFixed())
-    )
+  async registerValidatorGroup(
+    commission: BigNumber,
+    txParams?: Omit<CeloTx, 'data'>
+  ): Promise<`0x${string}`> {
+    return this._registerValidatorGroup(toFixed(commission).toFixed(), txParams)
   }
 
   /**
    * De-registers a validator Group
    * @param validatorGroupAddress Address of the validator group to deregister
    */
-  async deregisterValidatorGroup(validatorGroupAddress: Address) {
+  async deregisterValidatorGroup(
+    validatorGroupAddress: Address,
+    txParams?: Omit<CeloTx, 'data'>
+  ): Promise<`0x${string}`> {
     const allGroups = await this.getRegisteredValidatorGroupsAddresses()
     const idx = findAddressIndex(validatorGroupAddress, allGroups)
 
     if (idx < 0) {
       throw new Error(`${validatorGroupAddress} is not a registered validator`)
     }
-    return toTransactionObject(this.connection, this.contract.methods.deregisterValidatorGroup(idx))
+    return this._deregisterValidatorGroup(idx, txParams)
   }
 
   /**
@@ -468,54 +574,53 @@ export class ValidatorsWrapper extends BaseWrapperForGoverning<Validators> {
    * De-affiliates with the previously affiliated group if present.
    * @param group The validator group with which to affiliate.
    */
-  affiliate: (group: Address) => CeloTransactionObject<boolean> = proxySend(
-    this.connection,
-    this.contract.methods.affiliate
-  )
+  affiliate = (group: Address, txParams?: Omit<CeloTx, 'data'>) =>
+    this.contract.write.affiliate([toViemAddress(group)], txParams as any)
 
   /**
    * De-affiliates a validator, removing it from the group for which it is a member.
    * Fails if the account is not a validator with non-zero affiliation.
    */
 
-  deaffiliate = proxySend(this.connection, this.contract.methods.deaffiliate)
+  deaffiliate = (txParams?: Omit<CeloTx, 'data'>) =>
+    this.contract.write.deaffiliate(txParams as any)
 
   /**
    * Removes a validator from the group for which it is a member.
    * @param validatorAccount The validator to deaffiliate from their affiliated validator group.
    */
-  forceDeaffiliateIfValidator = proxySend(
-    this.connection,
-    this.contract.methods.forceDeaffiliateIfValidator
-  )
+  forceDeaffiliateIfValidator = (validatorAccount: string, txParams?: Omit<CeloTx, 'data'>) =>
+    this.contract.write.forceDeaffiliateIfValidator(
+      [toViemAddress(validatorAccount)],
+      txParams as any
+    )
 
   /**
    * Resets a group's slashing multiplier if it has been >= the reset period since
    * the last time the group was slashed.
    */
-  resetSlashingMultiplier = proxySend(
-    this.connection,
-    this.contract.methods.resetSlashingMultiplier
-  )
+  resetSlashingMultiplier = (txParams?: Omit<CeloTx, 'data'>) =>
+    this.contract.write.resetSlashingMultiplier(txParams as any)
 
   /**
    * Adds a member to the end of a validator group's list of members.
    * Fails if `validator` has not set their affiliation to this account.
    * @param validator The validator to add to the group
    */
-  async addMember(group: Address, validator: Address): Promise<CeloTransactionObject<boolean>> {
+  async addMember(
+    group: Address,
+    validator: Address,
+    txParams?: Omit<CeloTx, 'data'>
+  ): Promise<`0x${string}`> {
     const numMembers = await this.getValidatorGroupSize(group)
     if (numMembers === 0) {
       const election = await this.contracts.getElection()
       const voteWeight = await election.getTotalVotesForGroup(group)
       const { lesser, greater } = await election.findLesserAndGreaterAfterVote(group, voteWeight)
 
-      return toTransactionObject(
-        this.connection,
-        this.contract.methods.addFirstMember(validator, lesser, greater)
-      )
+      return this._addFirstMember(validator, lesser, greater, txParams)
     } else {
-      return toTransactionObject(this.connection, this.contract.methods.addMember(validator))
+      return this._addMember(validator, txParams)
     }
   }
 
@@ -525,7 +630,8 @@ export class ValidatorsWrapper extends BaseWrapperForGoverning<Validators> {
    *
    * @param validator The Validator to remove from the group
    */
-  removeMember = proxySend(this.connection, this.contract.methods.removeMember)
+  removeMember = (validator: string, txParams?: Omit<CeloTx, 'data'>) =>
+    this.contract.write.removeMember([toViemAddress(validator)], txParams as any)
 
   /**
    * Reorders a member within a validator group.
@@ -534,7 +640,12 @@ export class ValidatorsWrapper extends BaseWrapperForGoverning<Validators> {
    * @param validator The validator to reorder.
    * @param newIndex New position for the validator
    */
-  async reorderMember(groupAddr: Address, validator: Address, newIndex: number) {
+  async reorderMember(
+    groupAddr: Address,
+    validator: Address,
+    newIndex: number,
+    txParams?: Omit<CeloTx, 'data'>
+  ): Promise<`0x${string}`> {
     const group = await this.getValidatorGroup(groupAddr)
 
     if (newIndex < 0 || newIndex >= group.members.length) {
@@ -557,10 +668,7 @@ export class ValidatorsWrapper extends BaseWrapperForGoverning<Validators> {
       newIndex === group.members.length - 1 ? NULL_ADDRESS : group.members[newIndex + 1]
     const prevMember = newIndex === 0 ? NULL_ADDRESS : group.members[newIndex - 1]
 
-    return toTransactionObject(
-      this.connection,
-      this.contract.methods.reorderMember(validator, nextMember, prevMember)
-    )
+    return this._reorderMember(validator, nextMember, prevMember, txParams)
   }
 
   async getEpochSizeNumber(): Promise<number> {
@@ -618,10 +726,8 @@ export class ValidatorsWrapper extends BaseWrapperForGoverning<Validators> {
    * Returns the current set of validator signer addresses
    */
   async currentSignerSet(): Promise<Address[]> {
-    const n = valueToInt(await this.contract.methods.numberValidatorsInCurrentSet().call())
-    return concurrentMap(5, zeroRange(n), (idx) =>
-      this.contract.methods.validatorSignerAddressFromCurrentSet(idx).call()
-    )
+    const n = await this._numberValidatorsInCurrentSet()
+    return concurrentMap(5, zeroRange(n), (idx) => this._validatorSignerAddressFromCurrentSet(idx))
   }
 
   /**
@@ -646,7 +752,7 @@ export class ValidatorsWrapper extends BaseWrapperForGoverning<Validators> {
     blockNumber?: number
   ): Promise<{ group: Address; historyIndex: number }> {
     const blockEpoch = await this.getEpochNumberOfBlock(
-      blockNumber || (await this.connection.getBlockNumber())
+      blockNumber || Number(await this.connection.viemClient.getBlockNumber())
     )
     const membershipHistory = await this.getValidatorMembershipHistory(account)
     const historyIndex = this.findValidatorMembershipHistoryIndex(blockEpoch, membershipHistory)

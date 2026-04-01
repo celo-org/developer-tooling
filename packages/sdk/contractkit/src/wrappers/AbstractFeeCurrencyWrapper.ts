@@ -1,8 +1,8 @@
 import { StrongAddress } from '@celo/base'
-import { Contract } from '@celo/connect'
-import { BaseWrapper } from './BaseWrapper'
+import type { AbiItem } from '@celo/connect'
+import { BaseWrapper, type ContractLike } from './BaseWrapper'
 
-const MINIMAL_TOKEN_INFO_ABI = [
+const MINIMAL_TOKEN_INFO_ABI: AbiItem[] = [
   {
     type: 'function' as const,
     stateMutability: 'view',
@@ -41,9 +41,7 @@ const MINIMAL_TOKEN_INFO_ABI = [
   },
 ] as const
 
-export abstract class AbstractFeeCurrencyWrapper<
-  TContract extends Contract,
-> extends BaseWrapper<TContract> {
+export abstract class AbstractFeeCurrencyWrapper extends BaseWrapper {
   abstract getAddresses(): Promise<StrongAddress[]>
 
   async getFeeCurrencyInformation(whitelist?: StrongAddress[]) {
@@ -51,38 +49,28 @@ export abstract class AbstractFeeCurrencyWrapper<
 
     return Promise.all(
       feeCurrencies.map(async (address) => {
-        // @ts-expect-error abi typing is not 100% correct but works
-        let contract = new this.connection.web3.eth.Contract(MINIMAL_TOKEN_INFO_ABI, address)
+        let contract: ContractLike = this.connection.getCeloContract(
+          MINIMAL_TOKEN_INFO_ABI,
+          address
+        )
 
-        const adaptedToken = (await contract.methods
+        const adaptedToken = (await (contract as any).read
           .adaptedToken()
-          .call()
-          .catch(() =>
-            contract.methods
-              .getAdaptedToken()
-              .call()
-              .catch(() => undefined)
-          )) as StrongAddress | undefined
+          .catch(() => (contract as any).read.getAdaptedToken().catch(() => undefined))) as
+          | StrongAddress
+          | undefined
         // if standard didnt work try alt
 
         if (adaptedToken) {
-          // @ts-expect-error abi typing is not 100% correct but works
-          contract = new this.connection.web3.eth.Contract(MINIMAL_TOKEN_INFO_ABI, adaptedToken)
+          contract = this.connection.getCeloContract(MINIMAL_TOKEN_INFO_ABI, adaptedToken)
         }
 
         return Promise.all([
-          contract.methods
-            .name()
-            .call()
-            .catch(() => undefined) as Promise<string | undefined>,
-          contract.methods
-            .symbol()
-            .call()
-            .catch(() => undefined) as Promise<string | undefined>,
-          contract.methods
+          (contract as any).read.name().catch(() => undefined) as Promise<string | undefined>,
+          (contract as any).read.symbol().catch(() => undefined) as Promise<string | undefined>,
+          (contract as any).read
             .decimals()
-            .call()
-            .then((x: string) => x && parseInt(x, 10))
+            .then((x: unknown) => (x != null ? Number(x) : undefined))
             .catch(() => undefined) as Promise<number | undefined>,
         ]).then(([name, symbol, decimals]) => ({
           name,

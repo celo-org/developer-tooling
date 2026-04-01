@@ -1,5 +1,4 @@
-import { newElection } from '@celo/abis/web3/Election'
-import { newRegistry } from '@celo/abis/web3/Registry'
+import { electionABI, registryABI } from '@celo/abis'
 import { StrongAddress } from '@celo/base'
 import {
   asCoreContractsOwner,
@@ -8,15 +7,15 @@ import {
 } from '@celo/dev-utils/anvil-test'
 import { timeTravel } from '@celo/dev-utils/ganache-test'
 import BigNumber from 'bignumber.js'
-import Web3 from 'web3'
+import { encodeFunctionData, parseEther } from 'viem'
 import { REGISTRY_CONTRACT_ADDRESS } from '../address-registry'
-import { newKitFromWeb3 } from '../kit'
+import { newKitFromProvider } from '../kit'
 import { startAndFinishEpochProcess } from '../test-utils/utils'
 
 process.env.NO_SYNCCHECK = 'true'
 
-testWithAnvilL2('EpochManagerWrapper', (web3: Web3) => {
-  const kit = newKitFromWeb3(web3)
+testWithAnvilL2('EpochManagerWrapper', (provider) => {
+  const kit = newKitFromProvider(provider)
 
   let epochDuration: number
 
@@ -36,7 +35,7 @@ testWithAnvilL2('EpochManagerWrapper', (web3: Web3) => {
   it('indicates that it is time for next epoch', async () => {
     const epochManagerWrapper = await kit.contracts.getEpochManager()
 
-    await timeTravel(epochDuration + 1, web3)
+    await timeTravel(epochDuration + 1, provider)
 
     expect(await epochManagerWrapper.isTimeForNextEpoch()).toBeTruthy()
 
@@ -62,15 +61,14 @@ testWithAnvilL2('EpochManagerWrapper', (web3: Web3) => {
 
   it('gets current epoch processing status', async () => {
     const epochManagerWrapper = await kit.contracts.getEpochManager()
-    const accounts = await web3.eth.getAccounts()
+    const accounts = await kit.connection.getAccounts()
 
     expect((await epochManagerWrapper.getEpochProcessingStatus()).status).toEqual(0)
 
     // Let the epoch pass and start another one
-    await timeTravel(epochDuration, web3)
-    await epochManagerWrapper.startNextEpochProcess().sendAndWaitForReceipt({
-      from: accounts[0],
-    })
+    await timeTravel(epochDuration, provider)
+    const hash1 = await epochManagerWrapper.startNextEpochProcess({ from: accounts[0] })
+    await kit.connection.viemClient.waitForTransactionReceipt({ hash: hash1 })
 
     expect((await epochManagerWrapper.getEpochProcessingStatus()).status).toEqual(1)
   })
@@ -84,23 +82,23 @@ testWithAnvilL2('EpochManagerWrapper', (web3: Web3) => {
   it('gets block numbers for an epoch', async () => {
     const epochManagerWrapper = await kit.contracts.getEpochManager()
     const currentEpochNumber = await epochManagerWrapper.getCurrentEpochNumber()
-    const accounts = await web3.eth.getAccounts()
+    const accounts = await kit.connection.getAccounts()
 
-    expect(await epochManagerWrapper.getFirstBlockAtEpoch(currentEpochNumber)).toEqual(300)
-    await expect(
-      epochManagerWrapper.getLastBlockAtEpoch(currentEpochNumber)
-    ).rejects.toMatchInlineSnapshot(`[Error: execution reverted: Epoch not finished yet]`)
+    const firstBlock = await epochManagerWrapper.getFirstBlockAtEpoch(currentEpochNumber)
+    expect(firstBlock).toEqual(300)
+    await expect(epochManagerWrapper.getLastBlockAtEpoch(currentEpochNumber)).rejects.toThrow(
+      'Epoch not finished yet'
+    )
 
     // Let the epoch pass and start another one
-    await timeTravel(epochDuration + 1, web3)
-    await epochManagerWrapper.startNextEpochProcess().sendAndWaitForReceipt({
-      from: accounts[0],
-    })
-    await (await epochManagerWrapper.finishNextEpochProcessTx()).sendAndWaitForReceipt({
-      from: accounts[0],
-    })
+    await timeTravel(epochDuration + 1, provider)
+    const hash2 = await epochManagerWrapper.startNextEpochProcess({ from: accounts[0] })
+    await kit.connection.viemClient.waitForTransactionReceipt({ hash: hash2 })
+    const hash3 = await epochManagerWrapper.finishNextEpochProcessTx({ from: accounts[0] })
+    await kit.connection.viemClient.waitForTransactionReceipt({ hash: hash3 })
 
-    expect(await epochManagerWrapper.getLastBlockAtEpoch(currentEpochNumber)).toEqual(17634)
+    const lastBlock = await epochManagerWrapper.getLastBlockAtEpoch(currentEpochNumber)
+    expect(lastBlock).toEqual(17634)
   })
 
   it(
@@ -108,49 +106,69 @@ testWithAnvilL2('EpochManagerWrapper', (web3: Web3) => {
     async () => {
       const epochManagerWrapper = await kit.contracts.getEpochManager()
       const currentEpochNumber = await epochManagerWrapper.getCurrentEpochNumber()
-      const accounts = await web3.eth.getAccounts()
+      const accounts = await kit.connection.getAccounts()
 
-      expect(await epochManagerWrapper.getFirstBlockAtEpoch(currentEpochNumber)).toEqual(300)
-      await expect(
-        epochManagerWrapper.getLastBlockAtEpoch(currentEpochNumber)
-      ).rejects.toMatchInlineSnapshot(`[Error: execution reverted: Epoch not finished yet]`)
+      const firstBlock = await epochManagerWrapper.getFirstBlockAtEpoch(currentEpochNumber)
+      expect(firstBlock).toEqual(300)
+      await expect(epochManagerWrapper.getLastBlockAtEpoch(currentEpochNumber)).rejects.toThrow(
+        'Epoch not finished yet'
+      )
 
       // Let the epoch pass and start another one
-      await timeTravel(epochDuration + 1, web3)
-      await epochManagerWrapper.startNextEpochProcess().sendAndWaitForReceipt({
-        from: accounts[0],
-      })
+      await timeTravel(epochDuration + 1, provider)
+      const hash4 = await epochManagerWrapper.startNextEpochProcess({ from: accounts[0] })
+      await kit.connection.viemClient.waitForTransactionReceipt({ hash: hash4 })
 
       const validatorsContract = await kit.contracts.getValidators()
       const electionContract = await kit.contracts.getElection()
       const validatorGroups = await validatorsContract.getRegisteredValidatorGroupsAddresses()
 
       await asCoreContractsOwner(
-        web3,
+        provider,
         async (ownerAdress: StrongAddress) => {
-          const registryContract = newRegistry(web3, REGISTRY_CONTRACT_ADDRESS)
+          const registryContract = kit.connection.getCeloContract(
+            registryABI as any,
+            REGISTRY_CONTRACT_ADDRESS
+          )
 
-          await registryContract.methods.setAddressFor('Validators', accounts[0]).send({
+          const hash5 = await kit.connection.sendTransaction({
+            to: registryContract.address,
+            data: encodeFunctionData({
+              abi: registryContract.abi as any,
+              functionName: 'setAddressFor',
+              args: ['Validators', accounts[0]],
+            }),
             from: ownerAdress,
           })
+          await kit.connection.viemClient.waitForTransactionReceipt({ hash: hash5 })
 
-          // @ts-expect-error
-          await electionContract.contract.methods
-            .markGroupIneligible(validatorGroups[0])
-            .send({ from: accounts[0] })
+          const hash6 = await kit.connection.sendTransaction({
+            to: (electionContract as any).contract.address,
+            data: encodeFunctionData({
+              abi: (electionContract as any).contract.abi as any,
+              functionName: 'markGroupIneligible',
+              args: [validatorGroups[0]],
+            }),
+            from: accounts[0],
+          })
+          await kit.connection.viemClient.waitForTransactionReceipt({ hash: hash6 })
 
-          await registryContract.methods
-            .setAddressFor('Validators', validatorsContract.address)
-            .send({
-              from: ownerAdress,
-            })
+          const hash7 = await kit.connection.sendTransaction({
+            to: registryContract.address,
+            data: encodeFunctionData({
+              abi: registryContract.abi as any,
+              functionName: 'setAddressFor',
+              args: ['Validators', validatorsContract.address],
+            }),
+            from: ownerAdress,
+          })
+          await kit.connection.viemClient.waitForTransactionReceipt({ hash: hash7 })
         },
-        new BigNumber(web3.utils.toWei('1', 'ether'))
+        parseEther('1')
       )
 
-      await (await epochManagerWrapper.finishNextEpochProcessTx()).sendAndWaitForReceipt({
-        from: accounts[0],
-      })
+      const hash8 = await epochManagerWrapper.finishNextEpochProcessTx({ from: accounts[0] })
+      await kit.connection.viemClient.waitForTransactionReceipt({ hash: hash8 })
     },
     1000 * 60 * 5
   )
@@ -158,53 +176,67 @@ testWithAnvilL2('EpochManagerWrapper', (web3: Web3) => {
   async function activateValidators() {
     const validatorsContract = await kit.contracts.getValidators()
     const electionWrapper = await kit.contracts.getElection()
-    const electionContract = newElection(web3, electionWrapper.address)
+    const electionViemContract = kit.connection.getCeloContract(
+      electionABI as any,
+      electionWrapper.address
+    )
     const validatorGroups = await validatorsContract.getRegisteredValidatorGroupsAddresses()
 
     for (const validatorGroup of validatorGroups) {
       const pendingVotesForGroup = new BigNumber(
-        await electionContract.methods.getPendingVotesForGroup(validatorGroup).call()
+        String(await (electionViemContract as any).read.getPendingVotesForGroup([validatorGroup]))
       )
       if (pendingVotesForGroup.gt(0)) {
         await withImpersonatedAccount(
-          web3,
+          provider,
           validatorGroup,
           async () => {
-            await electionContract.methods.activate(validatorGroup).send({ from: validatorGroup })
+            const hash9 = await kit.connection.sendTransaction({
+              to: electionViemContract.address,
+              data: encodeFunctionData({
+                abi: electionViemContract.abi as any,
+                functionName: 'activate',
+                args: [validatorGroup],
+              }),
+              from: validatorGroup,
+            })
+            await kit.connection.viemClient.waitForTransactionReceipt({ hash: hash9 })
           },
-          new BigNumber(web3.utils.toWei('1', 'ether'))
+          parseEther('1')
         )
       }
     }
   }
 
   it('starts and finishes a number of epochs and sends validator rewards', async () => {
-    const accounts = await kit.web3.eth.getAccounts()
+    const accounts = await kit.connection.getAccounts()
     const epochManagerWrapper = await kit.contracts.getEpochManager()
     const EPOCH_COUNT = 5
 
-    await timeTravel(epochDuration, web3)
+    await timeTravel(epochDuration, provider)
 
     await startAndFinishEpochProcess(kit)
 
     await activateValidators()
 
-    expect(await epochManagerWrapper.getCurrentEpochNumber()).toEqual(5)
+    const epochAfterFirstProcess = await epochManagerWrapper.getCurrentEpochNumber()
+    expect(epochAfterFirstProcess).toEqual(5)
 
     for (let i = 0; i < EPOCH_COUNT; i++) {
-      await timeTravel(epochDuration + 1, web3)
+      await timeTravel(epochDuration + 1, provider)
 
       await startAndFinishEpochProcess(kit)
     }
 
-    expect(await epochManagerWrapper.getCurrentEpochNumber()).toEqual(10)
+    expect(await epochManagerWrapper.getCurrentEpochNumber()).toEqual(
+      epochAfterFirstProcess + EPOCH_COUNT
+    )
     expect((await epochManagerWrapper.getEpochProcessingStatus()).status).toEqual(0)
 
     // Start a new epoch process, but not finish it, so we can check the amounts
-    await timeTravel(epochDuration + 1, web3)
-    await epochManagerWrapper.startNextEpochProcess().sendAndWaitForReceipt({
-      from: accounts[0],
-    })
+    await timeTravel(epochDuration + 1, provider)
+    const hash10 = await epochManagerWrapper.startNextEpochProcess({ from: accounts[0] })
+    await kit.connection.viemClient.waitForTransactionReceipt({ hash: hash10 })
 
     const status = await epochManagerWrapper.getEpochProcessingStatus()
 
@@ -221,9 +253,10 @@ testWithAnvilL2('EpochManagerWrapper', (web3: Web3) => {
     const validatorBalanceBefore = (await kit.getTotalBalance(validatorAddress)).USDm!
     const validatorGroupBalanceBefore = (await kit.getTotalBalance(validatorGroupAddress)).USDm!
 
-    await epochManagerWrapper.sendValidatorPayment(validatorAddress).sendAndWaitForReceipt({
+    const hash11 = await epochManagerWrapper.sendValidatorPayment(validatorAddress, {
       from: accounts[0],
     })
+    await kit.connection.viemClient.waitForTransactionReceipt({ hash: hash11 })
 
     expect(
       (await kit.getTotalBalance(validatorAddress)).USDm!.isGreaterThan(validatorBalanceBefore)
@@ -233,24 +266,23 @@ testWithAnvilL2('EpochManagerWrapper', (web3: Web3) => {
         validatorGroupBalanceBefore
       )
     ).toBeTruthy()
-  })
+  }, 60000)
 
   it('processes elected validator groups', async () => {
-    const accounts = await kit.web3.eth.getAccounts()
+    const accounts = await kit.connection.getAccounts()
     const epochManagerWrapper = await kit.contracts.getEpochManager()
 
-    await timeTravel(epochDuration, web3)
+    await timeTravel(epochDuration, provider)
 
     await startAndFinishEpochProcess(kit)
 
     await activateValidators()
 
     // Start a new epoch process, but don't process it, so we can compare the amounts
-    await timeTravel(epochDuration + 1, web3)
+    await timeTravel(epochDuration + 1, provider)
 
-    await epochManagerWrapper.startNextEpochProcess().sendAndWaitForReceipt({
-      from: accounts[0],
-    })
+    const hash12 = await epochManagerWrapper.startNextEpochProcess({ from: accounts[0] })
+    await kit.connection.viemClient.waitForTransactionReceipt({ hash: hash12 })
 
     const statusBeforeProcessing = await epochManagerWrapper.getEpochProcessingStatus()
 
@@ -259,13 +291,11 @@ testWithAnvilL2('EpochManagerWrapper', (web3: Web3) => {
     expect(statusBeforeProcessing.totalRewardsCommunity.toNumber()).toBeGreaterThan(0)
     expect(statusBeforeProcessing.totalRewardsCarbonFund.toNumber()).toBeGreaterThan(0)
 
-    await epochManagerWrapper.setToProcessGroups().sendAndWaitForReceipt({
-      from: accounts[0],
-    })
+    const hash13 = await epochManagerWrapper.setToProcessGroups({ from: accounts[0] })
+    await kit.connection.viemClient.waitForTransactionReceipt({ hash: hash13 })
 
-    await (await epochManagerWrapper.processGroupsTx()).sendAndWaitForReceipt({
-      from: accounts[0],
-    })
+    const hash14 = await epochManagerWrapper.processGroupsTx({ from: accounts[0] })
+    await kit.connection.viemClient.waitForTransactionReceipt({ hash: hash14 })
 
     const statusAfterProcessing = await epochManagerWrapper.getEpochProcessingStatus()
 
@@ -273,5 +303,5 @@ testWithAnvilL2('EpochManagerWrapper', (web3: Web3) => {
     expect(statusAfterProcessing.perValidatorReward.toNumber()).toEqual(0)
     expect(statusAfterProcessing.totalRewardsCommunity.toNumber()).toEqual(0)
     expect(statusAfterProcessing.totalRewardsCarbonFund.toNumber()).toEqual(0)
-  })
+  }, 60000)
 })

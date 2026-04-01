@@ -1,4 +1,5 @@
-import { Connection, Contract } from '@celo/connect'
+import { Connection, CeloContract } from '@celo/connect'
+import type { AbiItem } from '@celo/connect'
 import { AccountsWrapper } from './Accounts'
 import { BaseWrapper } from './BaseWrapper'
 import { ElectionWrapper } from './Election'
@@ -19,10 +20,12 @@ interface ContractWrappersForVotingAndRules {
 }
 
 /** @internal */
-export class BaseWrapperForGoverning<T extends Contract> extends BaseWrapper<T> {
+export class BaseWrapperForGoverning<
+  TAbi extends readonly unknown[] = AbiItem[],
+> extends BaseWrapper<TAbi> {
   constructor(
     protected readonly connection: Connection,
-    protected readonly contract: T,
+    protected readonly contract: CeloContract<TAbi>,
     protected readonly contracts: ContractWrappersForVotingAndRules
   ) {
     super(connection, contract)

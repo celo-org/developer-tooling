@@ -1,11 +1,11 @@
-import { Reserve } from '@celo/abis/web3/mento/Reserve'
-import { Address, EventLog } from '@celo/connect'
+import { reserveABI } from '@celo/abis'
+import { Address, CeloTx, EventLog } from '@celo/connect'
+import { hexToString } from 'viem'
 import BigNumber from 'bignumber.js'
 import {
   BaseWrapper,
   fixidityValueToBigNumber,
-  proxyCall,
-  proxySend,
+  toViemAddress,
   valueToBigNumber,
 } from './BaseWrapper'
 
@@ -20,68 +20,64 @@ export interface ReserveConfig {
 /**
  * Contract for handling reserve for stable currencies
  */
-export class ReserveWrapper extends BaseWrapper<Reserve> {
+export class ReserveWrapper extends BaseWrapper<typeof reserveABI> {
   /**
    * Query Tobin tax staleness threshold parameter.
    * @returns Current Tobin tax staleness threshold.
    */
-  tobinTaxStalenessThreshold = proxyCall(
-    this.contract.methods.tobinTaxStalenessThreshold,
-    undefined,
-    valueToBigNumber
-  )
-  dailySpendingRatio = proxyCall(
-    this.contract.methods.getDailySpendingRatio,
-    undefined,
-    fixidityValueToBigNumber
-  )
-  isSpender: (account: string) => Promise<boolean> = proxyCall(this.contract.methods.isSpender)
-  transferGold = proxySend(this.connection, this.contract.methods.transferGold)
-  getOrComputeTobinTax = proxySend(this.connection, this.contract.methods.getOrComputeTobinTax)
-  frozenReserveGoldStartBalance = proxyCall(
-    this.contract.methods.frozenReserveGoldStartBalance,
-    undefined,
-    valueToBigNumber
-  )
-  frozenReserveGoldStartDay = proxyCall(
-    this.contract.methods.frozenReserveGoldStartDay,
-    undefined,
-    valueToBigNumber
-  )
-  frozenReserveGoldDays = proxyCall(
-    this.contract.methods.frozenReserveGoldDays,
-    undefined,
-    valueToBigNumber
-  )
+  tobinTaxStalenessThreshold = async (): Promise<BigNumber> => {
+    const res = await this.contract.read.tobinTaxStalenessThreshold()
+    return valueToBigNumber(res.toString())
+  }
+  dailySpendingRatio = async (): Promise<BigNumber> => {
+    const res = await this.contract.read.getDailySpendingRatio()
+    return fixidityValueToBigNumber(res.toString())
+  }
+  isSpender = async (account: string): Promise<boolean> => {
+    return this.contract.read.isSpender([toViemAddress(account)])
+  }
+  transferGold = (to: string, value: string | number, txParams?: Omit<CeloTx, 'data'>) =>
+    this.contract.write.transferGold([toViemAddress(to), BigInt(value)] as const, txParams as any)
+  getOrComputeTobinTax = (txParams?: Omit<CeloTx, 'data'>) =>
+    this.contract.write.getOrComputeTobinTax(txParams as any)
+  frozenReserveGoldStartBalance = async (): Promise<BigNumber> => {
+    const res = await this.contract.read.frozenReserveGoldStartBalance()
+    return valueToBigNumber(res.toString())
+  }
+  frozenReserveGoldStartDay = async (): Promise<BigNumber> => {
+    const res = await this.contract.read.frozenReserveGoldStartDay()
+    return valueToBigNumber(res.toString())
+  }
+  frozenReserveGoldDays = async (): Promise<BigNumber> => {
+    const res = await this.contract.read.frozenReserveGoldDays()
+    return valueToBigNumber(res.toString())
+  }
 
   /**
    * @notice Returns a list of weights used for the allocation of reserve assets.
    * @return An array of a list of weights used for the allocation of reserve assets.
    */
-  getAssetAllocationWeights = proxyCall(
-    this.contract.methods.getAssetAllocationWeights,
-    undefined,
-    (weights) => weights.map(valueToBigNumber)
-  )
+  getAssetAllocationWeights = async (): Promise<BigNumber[]> => {
+    const res = await this.contract.read.getAssetAllocationWeights()
+    return [...res].map((w) => valueToBigNumber(w.toString()))
+  }
 
   /**
    * @notice Returns a list of token symbols that have been allocated.
    * @return An array of token symbols that have been allocated.
    */
-  getAssetAllocationSymbols = proxyCall(
-    this.contract.methods.getAssetAllocationSymbols,
-    undefined,
-    (symbols) => symbols.map((symbol) => this.connection.hexToAscii(symbol))
-  )
+  getAssetAllocationSymbols = async (): Promise<string[]> => {
+    const res = await this.contract.read.getAssetAllocationSymbols()
+    return [...res].map((symbol) => hexToString(symbol as `0x${string}`))
+  }
 
   /**
    * @alias {getReserveCeloBalance}
    */
-  getReserveGoldBalance = proxyCall(
-    this.contract.methods.getReserveGoldBalance,
-    undefined,
-    valueToBigNumber
-  )
+  getReserveGoldBalance = async (): Promise<BigNumber> => {
+    const res = await this.contract.read.getReserveGoldBalance()
+    return valueToBigNumber(res.toString())
+  }
 
   /**
    * @notice Returns the amount of CELO included in the reserve
@@ -94,11 +90,10 @@ export class ReserveWrapper extends BaseWrapper<Reserve> {
    * @see {getUnfrozenReserveCeloBalance}
    * @return {BigNumber} amount in wei
    */
-  getUnfrozenBalance = proxyCall(
-    this.contract.methods.getUnfrozenBalance,
-    undefined,
-    valueToBigNumber
-  )
+  getUnfrozenBalance = async (): Promise<BigNumber> => {
+    const res = await this.contract.read.getUnfrozenBalance()
+    return valueToBigNumber(res.toString())
+  }
 
   /**
    * @notice Returns the amount of unfrozen CELO included in the reserve
@@ -106,13 +101,15 @@ export class ReserveWrapper extends BaseWrapper<Reserve> {
    * @see {getUnfrozenBalance}
    * @return {BigNumber} amount in wei
    */
-  getUnfrozenReserveCeloBalance = proxyCall(
-    this.contract.methods.getUnfrozenReserveGoldBalance,
-    undefined,
-    valueToBigNumber
-  )
+  getUnfrozenReserveCeloBalance = async (): Promise<BigNumber> => {
+    const res = await this.contract.read.getUnfrozenReserveGoldBalance()
+    return valueToBigNumber(res.toString())
+  }
 
-  getOtherReserveAddresses = proxyCall(this.contract.methods.getOtherReserveAddresses)
+  getOtherReserveAddresses = async (): Promise<string[]> => {
+    const res = await this.contract.read.getOtherReserveAddresses()
+    return [...res] as string[]
+  }
 
   /**
    * Returns current configuration parameters.
@@ -127,7 +124,9 @@ export class ReserveWrapper extends BaseWrapper<Reserve> {
     }
   }
 
-  isOtherReserveAddress = proxyCall(this.contract.methods.isOtherReserveAddress)
+  isOtherReserveAddress = async (address: string): Promise<boolean> => {
+    return this.contract.read.isOtherReserveAddress([toViemAddress(address)])
+  }
 
   async getSpenders(): Promise<Address[]> {
     const spendersAdded = (

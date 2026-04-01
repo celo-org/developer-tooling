@@ -1,10 +1,11 @@
 import { asCoreContractsOwner, GROUP_ADDRESSES, testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
 import BigNumber from 'bignumber.js'
-import { newKitFromWeb3 } from '../kit'
+import { encodeFunctionData } from 'viem'
+import { newKitFromProvider } from '../kit'
 import { valueToFixidityString } from './BaseWrapper'
 
-testWithAnvilL2('ScoreManager Wrapper', (web3) => {
-  const kit = newKitFromWeb3(web3)
+testWithAnvilL2('ScoreManager Wrapper', (provider) => {
+  const kit = newKitFromProvider(provider)
 
   it('gets validator score', async () => {
     const epochManagerWrapper = await kit.contracts.getEpochManager()
@@ -17,19 +18,24 @@ testWithAnvilL2('ScoreManager Wrapper', (web3) => {
     ).toMatchInlineSnapshot(`"1"`)
 
     await asCoreContractsOwner(
-      web3,
+      provider,
       async (from) => {
-        const scoreManagerContract = await kit._web3Contracts.getScoreManager()
+        const scoreManagerContract = await kit._contracts.getScoreManager()
 
         // change the score
-        await scoreManagerContract.methods
-          .setValidatorScore(
-            electedValidatorAddresses[0],
-            valueToFixidityString(new BigNumber(0.5))
-          )
-          .send({ from })
+        const data = encodeFunctionData({
+          abi: scoreManagerContract.abi as any,
+          functionName: 'setValidatorScore',
+          args: [electedValidatorAddresses[0], valueToFixidityString(new BigNumber(0.5))],
+        })
+        const hash = await kit.connection.sendTransaction({
+          to: scoreManagerContract.address,
+          data,
+          from,
+        })
+        await kit.connection.viemClient.waitForTransactionReceipt({ hash: hash })
       },
-      new BigNumber(web3.utils.toWei('1', 'ether'))
+      new BigNumber('1e18')
     )
 
     // should return the new score
@@ -45,16 +51,24 @@ testWithAnvilL2('ScoreManager Wrapper', (web3) => {
     expect(await scoreManagerWrapper.getGroupScore(GROUP_ADDRESSES[0])).toMatchInlineSnapshot(`"1"`)
 
     await asCoreContractsOwner(
-      web3,
+      provider,
       async (from) => {
-        const scoreManagerContract = await kit._web3Contracts.getScoreManager()
+        const scoreManagerContract = await kit._contracts.getScoreManager()
 
         // change the score
-        await scoreManagerContract.methods
-          .setGroupScore(GROUP_ADDRESSES[0], valueToFixidityString(new BigNumber(0.99)))
-          .send({ from })
+        const data = encodeFunctionData({
+          abi: scoreManagerContract.abi as any,
+          functionName: 'setGroupScore',
+          args: [GROUP_ADDRESSES[0], valueToFixidityString(new BigNumber(0.99))],
+        })
+        const hash = await kit.connection.sendTransaction({
+          to: scoreManagerContract.address,
+          data,
+          from,
+        })
+        await kit.connection.viemClient.waitForTransactionReceipt({ hash: hash })
       },
-      new BigNumber(web3.utils.toWei('1', 'ether'))
+      new BigNumber('1e18')
     )
 
     // should return the new score

@@ -1,26 +1,20 @@
-import { Connection, ReadOnlyWallet } from '@celo/connect'
+import { Connection, Provider, ReadOnlyWallet } from '@celo/connect'
 import { LocalWallet } from '@celo/wallet-local'
 import { BigNumber } from 'bignumber.js'
-import Web3 from 'web3'
 import { AddressRegistry } from './address-registry'
 import { CeloTokens, EachCeloToken } from './celo-tokens'
 import { MiniContractCache } from './mini-contract-cache'
-import {
-  ensureCurrentProvider,
-  getWeb3ForKit,
-  HttpProviderOptions,
-  setupAPIKey,
-} from './setupForKits'
+import { getProviderForKit, HttpProviderOptions, setupAPIKey } from './setupForKits'
 
 /**
- * Creates a new instance of `MiniMiniContractKit` given a nodeUrl
+ * Creates a new instance of `MiniContractKit` given a nodeUrl
  * @param url CeloBlockchain node url
  * @param wallet to reuse or add a wallet different than the default (example ledger-wallet)
- * @param options to pass to the Web3 HttpProvider constructor
+ * @param options to pass to the HttpProvider constructor
  */
 export function newKit(url: string, wallet?: ReadOnlyWallet, options?: HttpProviderOptions) {
-  const web3: Web3 = getWeb3ForKit(url, options)
-  return newKitFromWeb3(web3, wallet)
+  const provider = getProviderForKit(url, options)
+  return newKitFromProvider(provider, wallet)
 }
 
 /**
@@ -35,12 +29,12 @@ export function newKitWithApiKey(url: string, apiKey: string, wallet?: ReadOnlyW
 }
 
 /**
- * Creates a new instance of the `MiniContractKit` with a web3 instance
- * @param web3 Web3 instance
+ * Creates a new instance of the `MiniContractKit` from a Provider
+ * @param provider – a JSON-RPC {@link Provider}
+ * @param wallet – optional wallet for signing
  */
-export function newKitFromWeb3(web3: Web3, wallet: ReadOnlyWallet = new LocalWallet()) {
-  ensureCurrentProvider(web3)
-  return new MiniContractKit(new Connection(web3, wallet))
+export function newKitFromProvider(provider: Provider, wallet: ReadOnlyWallet = new LocalWallet()) {
+  return new MiniContractKit(new Connection(provider, wallet))
 }
 
 /**
