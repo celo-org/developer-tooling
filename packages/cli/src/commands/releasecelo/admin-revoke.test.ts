@@ -1,17 +1,17 @@
-import { newReleaseGold } from '@celo/abis/web3/ReleaseGold'
+import { releaseGoldABI } from '@celo/abis'
 import { StableToken, StrongAddress } from '@celo/base'
 import { serializeSignature } from '@celo/base/lib/signatureUtils'
-import { ContractKit, newKitFromWeb3 } from '@celo/contractkit'
+import { ContractKit, newKitFromProvider } from '@celo/contractkit'
 import { AccountsWrapper } from '@celo/contractkit/lib/wrappers/Accounts'
 import { GovernanceWrapper } from '@celo/contractkit/lib/wrappers/Governance'
 import { ReleaseGoldWrapper } from '@celo/contractkit/lib/wrappers/ReleaseGold'
 import { setBalance, testWithAnvilL2, withImpersonatedAccount } from '@celo/dev-utils/anvil-test'
 import { getContractFromEvent, timeTravel } from '@celo/dev-utils/ganache-test'
 import BigNumber from 'bignumber.js'
+import { parseEther } from 'viem'
 import { privateKeyToAddress } from 'viem/accounts'
-import Web3 from 'web3'
 import { topUpWithToken } from '../../test-utils/chain-setup'
-import { testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
+import { testLocallyWithNode } from '../../test-utils/cliUtils'
 import { createMultisig } from '../../test-utils/multisigUtils'
 import { deployReleaseGoldContract } from '../../test-utils/release-gold'
 import Approve from '../governance/approve'
@@ -24,17 +24,17 @@ import LockedCelo from './locked-gold'
 
 process.env.NO_SYNCCHECK = 'true'
 
-testWithAnvilL2('releasegold:admin-revoke cmd', (web3: Web3) => {
+testWithAnvilL2('releasegold:admin-revoke cmd', (provider) => {
   let kit: ContractKit
   let contractAddress: StrongAddress
   let releaseGoldWrapper: ReleaseGoldWrapper
   let accounts: StrongAddress[]
 
   beforeEach(async () => {
-    accounts = (await web3.eth.getAccounts()) as StrongAddress[]
-    kit = newKitFromWeb3(web3)
+    kit = newKitFromProvider(provider)
+    accounts = (await kit.connection.getAccounts()) as StrongAddress[]
     contractAddress = await deployReleaseGoldContract(
-      web3,
+      provider,
       await createMultisig(kit, [accounts[0], accounts[1]] as StrongAddress[], 2, 2),
       accounts[1],
       accounts[0],
@@ -42,16 +42,16 @@ testWithAnvilL2('releasegold:admin-revoke cmd', (web3: Web3) => {
     )
     releaseGoldWrapper = new ReleaseGoldWrapper(
       kit.connection,
-      newReleaseGold(web3, contractAddress),
+      kit.connection.getCeloContract(releaseGoldABI as any, contractAddress) as any,
       kit.contracts
     )
   })
 
   test('will revoke', async () => {
-    await testLocallyWithWeb3Node(AdminRevoke, ['--contract', contractAddress, '--yesreally'], web3)
+    await testLocallyWithNode(AdminRevoke, ['--contract', contractAddress, '--yesreally'], provider)
     const revokedContract = await getContractFromEvent(
       'ReleaseScheduleRevoked(uint256,uint256)',
-      web3
+      provider
     )
     expect(revokedContract).toBe(contractAddress)
   })
@@ -59,19 +59,22 @@ testWithAnvilL2('releasegold:admin-revoke cmd', (web3: Web3) => {
   test('will rescue all USDm balance', async () => {
     await topUpWithToken(kit, StableToken.USDm, accounts[0], new BigNumber('100'))
     const stableToken = await kit.contracts.getStableToken()
-    await stableToken.transfer(contractAddress, 100).send({
+    const transferHash = await stableToken.transfer(contractAddress, 100, {
       from: accounts[0],
     })
-    await testLocallyWithWeb3Node(AdminRevoke, ['--contract', contractAddress, '--yesreally'], web3)
+    await kit.connection.viemClient.waitForTransactionReceipt({
+      hash: transferHash as `0x${string}`,
+    })
+    await testLocallyWithNode(AdminRevoke, ['--contract', contractAddress, '--yesreally'], provider)
     const balance = await stableToken.balanceOf(contractAddress)
     expect(balance.isZero()).toBeTruthy()
   })
 
   test('will refund and finalize', async () => {
-    await testLocallyWithWeb3Node(AdminRevoke, ['--contract', contractAddress, '--yesreally'], web3)
+    await testLocallyWithNode(AdminRevoke, ['--contract', contractAddress, '--yesreally'], provider)
     const destroyedContract = await getContractFromEvent(
       'ReleaseGoldInstanceDestroyed(address,address)',
-      web3
+      provider
     )
     expect(destroyedContract).toBe(contractAddress)
   })
@@ -81,20 +84,20 @@ testWithAnvilL2('releasegold:admin-revoke cmd', (web3: Web3) => {
 
     beforeEach(async () => {
       // Make sure the release gold contract has enough funds
-      await setBalance(web3, contractAddress, new BigNumber(web3.utils.toWei('10', 'ether')))
-      await testLocallyWithWeb3Node(CreateAccount, ['--contract', contractAddress], web3)
-      await testLocallyWithWeb3Node(
+      await setBalance(provider, contractAddress, new BigNumber(parseEther('10').toString()))
+      await testLocallyWithNode(CreateAccount, ['--contract', contractAddress], provider)
+      await testLocallyWithNode(
         LockedCelo,
         ['--contract', contractAddress, '--action', 'lock', '--value', value, '--yes'],
-        web3
+        provider
       )
     })
 
     test('will unlock all gold', async () => {
-      await testLocallyWithWeb3Node(
+      await testLocallyWithNode(
         AdminRevoke,
         ['--contract', contractAddress, '--yesreally'],
-        web3
+        provider
       )
       const lockedGold = await kit.contracts.getLockedGold()
       const lockedAmount = await lockedGold.getAccountTotalLockedGold(releaseGoldWrapper.address)
@@ -115,7 +118,7 @@ testWithAnvilL2('releasegold:admin-revoke cmd', (web3: Web3) => {
           voteSigner,
           PRIVATE_KEY1
         )
-        await testLocallyWithWeb3Node(
+        await testLocallyWithNode(
           Authorize,
           [
             '--contract',
@@ -127,15 +130,15 @@ testWithAnvilL2('releasegold:admin-revoke cmd', (web3: Web3) => {
             '--signature',
             serializeSignature(pop),
           ],
-          web3
+          provider
         )
       })
 
       it('will rotate vote signer', async () => {
-        await testLocallyWithWeb3Node(
+        await testLocallyWithNode(
           AdminRevoke,
           ['--contract', contractAddress, '--yesreally'],
-          web3
+          provider
         )
         const newVoteSigner = await accountsWrapper.getVoteSigner(contractAddress)
         expect(newVoteSigner).not.toEqual(voteSigner)
@@ -148,26 +151,30 @@ testWithAnvilL2('releasegold:admin-revoke cmd', (web3: Web3) => {
           // from vote.test.ts
           governance = await kit.contracts.getGovernance()
           const minDeposit = (await governance.minDeposit()).toFixed()
-          await governance
-            .propose([], 'URL')
-            .sendAndWaitForReceipt({ from: accounts[0], value: minDeposit })
+          const proposeHash1 = await governance.propose([], 'URL', {
+            from: accounts[0],
+            value: minDeposit,
+          })
+          await kit.connection.viemClient.waitForTransactionReceipt({
+            hash: proposeHash1 as `0x${string}`,
+          })
 
           const dequeueFrequency = (await governance.dequeueFrequency()).toNumber()
-          await timeTravel(dequeueFrequency + 1, web3)
+          await timeTravel(dequeueFrequency + 1, provider)
           const multiApprover = await governance.getApproverMultisig()
           await setBalance(
-            web3,
+            provider,
             multiApprover.address,
-            new BigNumber(web3.utils.toWei('10', 'ether'))
+            new BigNumber(parseEther('10').toString())
           )
-          await withImpersonatedAccount(web3, multiApprover.address, async () => {
-            await testLocallyWithWeb3Node(
+          await withImpersonatedAccount(provider, multiApprover.address, async () => {
+            await testLocallyWithNode(
               Approve,
               ['--from', multiApprover.address, '--proposalID', '1'],
-              web3
+              provider
             )
           })
-          await testLocallyWithWeb3Node(
+          await testLocallyWithNode(
             GovernanceVote,
             [
               '--from',
@@ -179,28 +186,36 @@ testWithAnvilL2('releasegold:admin-revoke cmd', (web3: Web3) => {
               '--privateKey',
               PRIVATE_KEY1,
             ],
-            web3
+            provider
           )
-          await governance
-            .propose([], 'URL')
-            .sendAndWaitForReceipt({ from: accounts[0], value: minDeposit })
-          await governance
-            .propose([], 'URL')
-            .sendAndWaitForReceipt({ from: accounts[0], value: minDeposit })
-          await testLocallyWithWeb3Node(
+          const proposeHash2 = await governance.propose([], 'URL', {
+            from: accounts[0],
+            value: minDeposit,
+          })
+          await kit.connection.viemClient.waitForTransactionReceipt({
+            hash: proposeHash2 as `0x${string}`,
+          })
+          const proposeHash3 = await governance.propose([], 'URL', {
+            from: accounts[0],
+            value: minDeposit,
+          })
+          await kit.connection.viemClient.waitForTransactionReceipt({
+            hash: proposeHash3 as `0x${string}`,
+          })
+          await testLocallyWithNode(
             GovernanceUpvote,
             ['--from', voteSigner, '--proposalID', '3', '--privateKey', PRIVATE_KEY1],
-            web3
+            provider
           )
         })
 
         it('will revoke governance votes and upvotes', async () => {
           const isVotingBefore = await governance.isVoting(contractAddress)
           expect(isVotingBefore).toBeTruthy()
-          await testLocallyWithWeb3Node(
+          await testLocallyWithNode(
             AdminRevoke,
             ['--contract', contractAddress, '--yesreally'],
-            web3
+            provider
           )
           const isVotingAfter = await governance.isVoting(contractAddress)
           expect(isVotingAfter).toBeFalsy()

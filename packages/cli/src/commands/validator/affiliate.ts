@@ -2,7 +2,7 @@ import { Flags } from '@oclif/core'
 import prompts from 'prompts'
 import { BaseCommand } from '../../base'
 import { newCheckBuilder } from '../../utils/checks'
-import { displaySendTx, humanizeRequirements } from '../../utils/cli'
+import { displayViemTx, humanizeRequirements } from '../../utils/cli'
 import { CustomArgs, CustomFlags } from '../../utils/command'
 
 export default class ValidatorAffiliate extends BaseCommand {
@@ -28,6 +28,7 @@ export default class ValidatorAffiliate extends BaseCommand {
 
   async run() {
     const kit = await this.getKit()
+    const publicClient = await this.getPublicClient()
     const res = await this.parse(ValidatorAffiliate)
 
     const validators = await kit.contracts.getValidators()
@@ -54,6 +55,6 @@ Affiliating with a Validator Group could result in Locked Gold requirements of u
         process.exit(0)
       }
     }
-    await displaySendTx('affiliate', validators.affiliate(groupAddress))
+    await displayViemTx('affiliate', validators.affiliate(groupAddress), publicClient)
   }
 }
