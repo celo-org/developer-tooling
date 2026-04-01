@@ -1,7 +1,7 @@
 import { Flags } from '@oclif/core'
 import { BaseCommand } from '../../base'
 import { newCheckBuilder } from '../../utils/checks'
-import { displaySendTx } from '../../utils/cli'
+import { displayViemTx } from '../../utils/cli'
 import { CustomFlags } from '../../utils/command'
 
 export default class Execute extends BaseCommand {
@@ -17,6 +17,7 @@ export default class Execute extends BaseCommand {
 
   async run() {
     const kit = await this.getKit()
+    const publicClient = await this.getPublicClient()
     const res = await this.parse(Execute)
     const id = res.flags.proposalID
     const account = res.flags.from
@@ -29,6 +30,6 @@ export default class Execute extends BaseCommand {
       .runChecks()
 
     const governance = await kit.contracts.getGovernance()
-    await displaySendTx('executeTx', await governance.execute(id), {}, 'ProposalExecuted')
+    await displayViemTx('executeTx', governance.execute(id), publicClient)
   }
 }

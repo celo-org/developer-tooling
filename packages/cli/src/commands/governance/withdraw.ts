@@ -3,14 +3,10 @@ import { ContractKit } from '@celo/contractkit'
 import { MultiSigWrapper } from '@celo/contractkit/lib/wrappers/MultiSig'
 import { BaseCommand } from '../../base'
 import { newCheckBuilder } from '../../utils/checks'
-import { displaySendTx } from '../../utils/cli'
+import { displayViemTx } from '../../utils/cli'
 import { CustomFlags } from '../../utils/command'
 import { MultiSigFlags, SafeFlags } from '../../utils/flags'
-import {
-  createSafeFromWeb3,
-  performSafeTransaction,
-  safeTransactionMetadataFromCeloTransactionObject,
-} from '../../utils/safe'
+import { createSafe, performSafeTransaction, safeTransactionMetadata } from '../../utils/safe'
 
 export default class Withdraw extends BaseCommand {
   static description = 'Withdraw refunded governance proposal deposits.'
@@ -27,6 +23,7 @@ export default class Withdraw extends BaseCommand {
 
   async run() {
     const kit = await this.getKit()
+    const publicClient = await this.getPublicClient()
     const res = await this.parse(Withdraw)
     const addressToRefund = this.getAddressToRefund(res.flags)
     const multiSigWrapper = await this.getMultiSigWrapper(kit, res.flags)
@@ -37,8 +34,8 @@ export default class Withdraw extends BaseCommand {
       checkBuilder.isMultiSigOwner(res.flags.from, res.flags.for as StrongAddress)
     } else if (res.flags.useSafe) {
       checkBuilder.addCheck(`${res.flags.from} is a safe owner`, async () => {
-        const safe = await createSafeFromWeb3(
-          await this.getWeb3(),
+        const safe = await createSafe(
+          (await this.getKit()).connection.currentProvider,
           res.flags.from,
           res.flags.safeAddress!
         )
@@ -49,26 +46,26 @@ export default class Withdraw extends BaseCommand {
     await checkBuilder.runChecks()
 
     const governance = await kit.contracts.getGovernance()
-    const withdrawTx = governance.withdraw()
+    const withdrawData = governance.encodeFunctionData('withdraw', [])
 
     if (multiSigWrapper) {
       const multiSigTx = await multiSigWrapper.submitOrConfirmTransaction(
         governance.address,
-        withdrawTx.txo
+        withdrawData
       )
 
       // "Deposit" event is emitted when the MultiSig contract receives the funds
-      await displaySendTx<string | void | boolean>('withdraw', multiSigTx, {}, 'Deposit')
+      await displayViemTx('withdraw', Promise.resolve(multiSigTx), publicClient)
     } else if (res.flags.useSafe) {
       await performSafeTransaction(
-        await this.getWeb3(),
+        (await this.getKit()).connection.currentProvider,
         res.flags.safeAddress!,
         res.flags.from,
-        await safeTransactionMetadataFromCeloTransactionObject(withdrawTx, governance.address)
+        safeTransactionMetadata(withdrawData, governance.address)
       )
     } else {
-      // No event is emited otherwise
-      await displaySendTx('withdraw', withdrawTx)
+      // No event is emitted otherwise
+      await displayViemTx('withdraw', governance.withdraw(), publicClient)
     }
   }
 

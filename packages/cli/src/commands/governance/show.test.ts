@@ -1,17 +1,16 @@
-import { newKitFromWeb3 } from '@celo/contractkit'
+import { newKitFromProvider } from '@celo/contractkit'
 import { unixSecondsTimestampToDateString } from '@celo/contractkit/lib/wrappers/BaseWrapper'
 import { Proposal } from '@celo/contractkit/lib/wrappers/Governance'
 import { testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
 import { timeTravel } from '@celo/dev-utils/ganache-test'
 import fs from 'fs'
 import path from 'node:path'
-import Web3 from 'web3'
-import { stripAnsiCodesAndTxHashes, testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
+import { stripAnsiCodesAndTxHashes, testLocallyWithNode } from '../../test-utils/cliUtils'
 import Show from './show'
 
 process.env.NO_SYNCCHECK = 'true'
 
-testWithAnvilL2('governance:show cmd', (web3: Web3) => {
+testWithAnvilL2('governance:show cmd', (provider) => {
   const PROPOSAL_TRANSACTIONS = [
     {
       to: '0x4200000000000000000000000000000000000018',
@@ -34,33 +33,41 @@ testWithAnvilL2('governance:show cmd', (web3: Web3) => {
   })
 
   it('shows a proposal in "Referendum" stage', async () => {
-    const kit = newKitFromWeb3(web3)
+    const kit = newKitFromProvider(provider)
     const governanceWrapper = await kit.contracts.getGovernance()
-    const [proposer, voter] = await web3.eth.getAccounts()
+    const [proposer, voter] = await kit.connection.getAccounts()
     const minDeposit = (await governanceWrapper.minDeposit()).toFixed()
     const logMock = jest.spyOn(console, 'log')
     const dequeueFrequency = (await governanceWrapper.dequeueFrequency()).toNumber()
     const proposalId = 1
 
-    await governanceWrapper
-      .propose(PROPOSAL_TRANSACTIONS, 'URL')
-      .sendAndWaitForReceipt({ from: proposer, value: minDeposit })
+    const proposeHash = await governanceWrapper.propose(PROPOSAL_TRANSACTIONS, 'URL', {
+      from: proposer,
+      value: minDeposit,
+    })
+    await kit.connection.viemClient.waitForTransactionReceipt({
+      hash: proposeHash as `0x${string}`,
+    })
 
     const accountWrapper = await kit.contracts.getAccounts()
     const lockedGoldWrapper = await kit.contracts.getLockedGold()
 
-    await accountWrapper.createAccount().sendAndWaitForReceipt({ from: voter })
-    await lockedGoldWrapper.lock().sendAndWaitForReceipt({ from: voter, value: minDeposit })
+    const createHash = await accountWrapper.createAccount({ from: voter })
+    await kit.connection.viemClient.waitForTransactionReceipt({ hash: createHash as `0x${string}` })
+    const lockHash = await lockedGoldWrapper.lock({ from: voter, value: minDeposit })
+    await kit.connection.viemClient.waitForTransactionReceipt({ hash: lockHash as `0x${string}` })
 
-    await timeTravel(dequeueFrequency + 1, web3)
+    await timeTravel(dequeueFrequency + 1, provider)
 
-    await governanceWrapper.dequeueProposalsIfReady().sendAndWaitForReceipt({
-      from: proposer,
+    const dequeueHash = await governanceWrapper.dequeueProposalsIfReady({ from: proposer })
+    await kit.connection.viemClient.waitForTransactionReceipt({
+      hash: dequeueHash as `0x${string}`,
     })
 
-    await (await governanceWrapper.vote(proposalId, 'Yes')).sendAndWaitForReceipt({ from: voter })
+    const voteHash = await governanceWrapper.vote(proposalId, 'Yes', { from: voter })
+    await kit.connection.viemClient.waitForTransactionReceipt({ hash: voteHash as `0x${string}` })
 
-    await testLocallyWithWeb3Node(Show, ['--proposalID', proposalId.toString()], web3)
+    await testLocallyWithNode(Show, ['--proposalID', proposalId.toString()], provider)
 
     const schedule = await governanceWrapper.proposalSchedule(proposalId)
     const timestamp = await (await governanceWrapper.getProposalMetadata(proposalId)).timestamp
