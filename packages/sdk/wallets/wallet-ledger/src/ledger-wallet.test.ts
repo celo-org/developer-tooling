@@ -4,7 +4,6 @@ import { CeloTx, EncodedTransaction } from '@celo/connect'
 import { verifySignature } from '@celo/utils/lib/signatureUtils'
 import { recoverTransaction, verifyEIP712TypedDataSigner } from '@celo/wallet-base'
 import TransportNodeHid from '@ledgerhq/hw-transport-node-hid'
-import Web3 from 'web3'
 import { AddressValidation, CELO_BASE_DERIVATION_PATH, LedgerWallet } from './ledger-wallet'
 import {
   ACCOUNT_ADDRESS1,
@@ -115,7 +114,7 @@ describe('LedgerWallet class', () => {
         from: knownAddress,
         to: knownAddress,
         chainId: CHAIN_ID,
-        value: Web3.utils.toWei('1', 'ether'),
+        value: '1000000000000000000',
         nonce: 0,
         gas: 99,
         maxFeePerGas: 99,
@@ -279,7 +278,6 @@ describe('LedgerWallet class', () => {
 
       // @ts-expect-error
       currentAppName = await wallet.retrieveAppName()
-      console.log(currentAppName)
     }, TEST_TIMEOUT_IN_MS)
 
     test('starts 5 accounts', () => {
@@ -301,7 +299,7 @@ describe('LedgerWallet class', () => {
           from: unknownAddress,
           to: unknownAddress,
           chainId: CHAIN_ID,
-          value: Web3.utils.toWei('1', 'ether'),
+          value: '1000000000000000000',
           nonce: 0,
           gas: 99,
           maxFeePerGas: 99,
@@ -361,7 +359,7 @@ describe('LedgerWallet class', () => {
                 from: knownAddress,
                 to: otherAddress,
                 chainId: CHAIN_ID,
-                value: Web3.utils.toWei('1', 'ether'),
+                value: '1000000000000000000',
                 nonce: 0,
                 gas: 99,
                 maxFeePerGas: 99,
@@ -449,7 +447,7 @@ describe('LedgerWallet class', () => {
                   from: knownAddress,
                   to: otherAddress,
                   chainId: CHAIN_ID,
-                  value: Web3.utils.toWei('1', 'ether'),
+                  value: '1000000000000000000',
                   nonce: 65,
                   gas: '10',
                   maxFeePerGas: 99,
@@ -475,7 +473,7 @@ describe('LedgerWallet class', () => {
                 from: knownAddress,
                 to: otherAddress,
                 chainId: CHAIN_ID,
-                value: Web3.utils.toWei('1', 'ether'),
+                value: '1000000000000000000',
                 nonce: 1,
                 gas: 99,
                 gasPrice: 99,
@@ -515,7 +513,7 @@ describe('LedgerWallet class', () => {
               from: knownAddress,
               to: otherAddress,
               chainId: CHAIN_ID,
-              value: Web3.utils.toWei('1', 'ether'),
+              value: '1000000000000000000',
               nonce: 0,
               gas: 99,
               maxFeePerGas: 99,
@@ -570,7 +568,7 @@ describe('LedgerWallet class', () => {
               from: knownAddress,
               to: otherAddress,
               chainId: CHAIN_ID,
-              value: Web3.utils.toWei('1', 'ether'),
+              value: '1000000000000000000',
               nonce: 0,
               gas: 99,
               maxFeePerGas: 99,
@@ -615,7 +613,7 @@ describe('LedgerWallet class', () => {
               from: knownAddress,
               to: otherAddress,
               chainId: CHAIN_ID,
-              value: Web3.utils.toWei('1', 'ether'),
+              value: '1000000000000000000',
               nonce: 0,
               gas: 99,
               maxFeePerGas: 99,

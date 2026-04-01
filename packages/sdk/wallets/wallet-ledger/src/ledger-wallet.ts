@@ -179,7 +179,7 @@ export class LedgerWallet extends RemoteWallet<LedgerSigner> implements ReadOnly
     for (const changeIndex of this.changeIndexes) {
       for (const addressIndex of this.derivationPathIndexes) {
         const derivationPath = `${purpose}/${coinType}/${account}/${changeIndex}/${addressIndex}`
-        console.info(`Fetching address for derivation path ${derivationPath}`)
+        debug(`Fetching address for derivation path ${derivationPath}`)
         const addressInfo = await this.ledger!.getAddress(derivationPath, validationRequired)
         addressToSigner.set(
           addressInfo.address!,

@@ -1,16 +1,9 @@
 /** biome-ignore-all lint/suspicious/noDoubleEquals: legacy-test-file */
-import {
-  Callback,
-  CeloTx,
-  Connection,
-  JsonRpcPayload,
-  JsonRpcResponse,
-  Provider,
-} from '@celo/connect'
+import { CeloTx, Connection, Provider } from '@celo/connect'
 import { privateKeyToAddress } from '@celo/utils/lib/address'
 import { recoverTransaction } from '@celo/wallet-base'
 import debugFactory from 'debug'
-import Web3 from 'web3'
+import { parseEther } from 'viem'
 import { LocalWallet } from './local-wallet'
 
 const debug = debugFactory('kit:txtest:sign')
@@ -30,42 +23,34 @@ debug(`Account Address 2: ${ACCOUNT_ADDRESS2}`)
 describe('Transaction Utils', () => {
   // only needed for the eth_coinbase rcp call
   let connection: Connection
-  let web3: Web3
+  let signTransaction: (tx: CeloTx) => Promise<{ raw: string; tx: any }>
   const mockProvider: Provider = {
-    send: (payload: JsonRpcPayload, callback: Callback<JsonRpcResponse>): void => {
-      if (payload.method === 'eth_coinbase') {
-        const response: JsonRpcResponse = {
-          jsonrpc: payload.jsonrpc,
-          id: Number(payload.id),
-          result: '0xc94770007dda54cF92009BFF0dE90c06F603a09f',
-        }
-        callback(null, response)
-      } else if (payload.method === 'eth_gasPrice') {
-        const response: JsonRpcResponse = {
-          jsonrpc: payload.jsonrpc,
-          id: Number(payload.id),
-          result: '0x09184e72a000',
-        }
-        callback(null, response)
+    request: (async ({ method }: any) => {
+      if (method === 'eth_coinbase') {
+        return '0xc94770007dda54cF92009BFF0dE90c06F603a09f'
+      } else if (method === 'eth_gasPrice') {
+        return '0x09184e72a000'
       } else {
-        callback(new Error(payload.method))
+        throw new Error(method)
       }
-    },
+    }) as any,
   }
 
   const setupConnection = async () => {
-    web3 = new Web3()
-    web3.setProvider(mockProvider as any)
-    connection = new Connection(web3)
+    connection = new Connection(mockProvider)
     connection.wallet = new LocalWallet()
+    const provider = connection.currentProvider
+    signTransaction = async (tx: CeloTx) => {
+      return provider.request({ method: 'eth_signTransaction', params: [tx] })
+    }
   }
   const verifyLocalSigning = async (celoTransaction: CeloTx): Promise<void> => {
     let recoveredSigner: string | undefined
     let recoveredTransaction: CeloTx | undefined
     let signedTransaction: { raw: string; tx: any } | undefined
     beforeAll(async () => {
-      signedTransaction = await web3.eth.signTransaction(celoTransaction)
-      const recovery = recoverTransaction(signedTransaction.raw)
+      signedTransaction = await signTransaction(celoTransaction)
+      const recovery = recoverTransaction(signedTransaction!.raw)
       recoveredTransaction = recovery[0]
       recoveredSigner = recovery[1]
     })
@@ -80,35 +65,37 @@ describe('Transaction Utils', () => {
       expect(recoveredSigner?.toLowerCase()).toEqual(celoTransaction.from!.toString().toLowerCase())
     })
 
+    // Helper: parse a value that may be a hex string or a number
+    const toNumber = (val: unknown): number => {
+      if (typeof val === 'string' && val.startsWith('0x')) return parseInt(val, 16)
+      return Number(val)
+    }
+
     test('Checking nonce', async () => {
       if (celoTransaction.nonce != null) {
-        expect(recoveredTransaction?.nonce).toEqual(parseInt(celoTransaction.nonce.toString(), 16))
+        expect(recoveredTransaction?.nonce).toEqual(toNumber(celoTransaction.nonce))
       }
     })
 
     test('Checking gas', async () => {
       if (celoTransaction.gas != null) {
-        expect(recoveredTransaction?.gas).toEqual(parseInt(celoTransaction.gas.toString(), 16))
+        expect(recoveredTransaction?.gas).toEqual(toNumber(celoTransaction.gas))
       }
     })
     test('Checking gas price', async () => {
       if (celoTransaction.gasPrice != null) {
-        expect(recoveredTransaction?.gasPrice).toEqual(
-          parseInt(celoTransaction.gasPrice.toString(), 16)
-        )
+        expect(recoveredTransaction?.gasPrice).toEqual(toNumber(celoTransaction.gasPrice))
       }
     })
     test('Checking maxFeePerGas', async () => {
       if (celoTransaction.maxFeePerGas != null) {
-        expect(recoveredTransaction?.maxFeePerGas).toEqual(
-          parseInt(celoTransaction.maxFeePerGas.toString(), 16)
-        )
+        expect(recoveredTransaction?.maxFeePerGas).toEqual(toNumber(celoTransaction.maxFeePerGas))
       }
     })
     test('Checking maxPriorityFeePerGas', async () => {
       if (celoTransaction.maxPriorityFeePerGas != null) {
         expect(recoveredTransaction?.maxPriorityFeePerGas).toEqual(
-          parseInt(celoTransaction.maxPriorityFeePerGas.toString(), 16)
+          toNumber(celoTransaction.maxPriorityFeePerGas)
         )
       }
     })
@@ -136,7 +123,7 @@ describe('Transaction Utils', () => {
   }
 
   const verifyLocalSigningInAllPermutations = async (from: string, to: string): Promise<void> => {
-    const amountInWei: string = Web3.utils.toWei('1', 'ether')
+    const amountInWei: string = parseEther('1').toString()
     const nonce = 0
     const badNonce = 100
     const gas = 10000

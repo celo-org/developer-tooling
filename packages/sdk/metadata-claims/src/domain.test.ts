@@ -1,5 +1,5 @@
 import { NULL_ADDRESS } from '@celo/base'
-import { newKitFromWeb3 } from '@celo/contractkit'
+import { newKitFromProvider } from '@celo/contractkit'
 import { testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
 import { ACCOUNT_ADDRESSES } from '@celo/dev-utils/test-accounts'
 import { NativeSigner, Signer, verifySignature } from '@celo/utils/lib/signatureUtils'
@@ -8,8 +8,8 @@ import { IdentityMetadataWrapper } from './metadata'
 import type { AccountMetadataSignerGetters } from './types'
 import { verifyDomainRecord } from './verify'
 
-testWithAnvilL2('Domain claims', (web3) => {
-  const kit = newKitFromWeb3(web3)
+testWithAnvilL2('Domain claims', (provider) => {
+  const kit = newKitFromProvider(provider)
 
   const address = ACCOUNT_ADDRESSES[0]
   const secondAddress = ACCOUNT_ADDRESSES[1]

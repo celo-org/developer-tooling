@@ -2,7 +2,7 @@ import { ensureLeading0x, normalizeAddressWith0x, trimLeading0x } from '@celo/ba
 import Eth from '@celo/hw-app-eth'
 import { generateTypedDataHash } from '@celo/utils/lib/sign-typed-data-utils.js'
 import { getHashFromEncoded, signTransaction } from '@celo/wallet-base'
-import * as ethUtil from '@ethereumjs/util'
+import { secp256k1 } from '@noble/curves/secp256k1'
 import { createVerify, VerifyPublicKeyInput } from 'node:crypto'
 import { readFileSync } from 'node:fs'
 import { dirname, join } from 'node:path'
@@ -175,11 +175,11 @@ export class TestLedger {
 
     const trimmedKey = trimLeading0x(ledgerAddresses[derivationPath].privateKey)
     const pkBuffer = Buffer.from(trimmedKey, 'hex')
-    const signature = ethUtil.ecsign(messageHash, pkBuffer)
+    const signature = secp256k1.sign(messageHash, pkBuffer)
     return {
-      v: Number(signature.v),
-      r: signature.r.toString('hex'),
-      s: signature.s.toString('hex'),
+      v: signature.recovery + 27,
+      r: signature.r.toString(16).padStart(64, '0'),
+      s: signature.s.toString(16).padStart(64, '0'),
     }
   }
 

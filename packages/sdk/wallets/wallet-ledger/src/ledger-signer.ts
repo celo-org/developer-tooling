@@ -3,7 +3,7 @@ import { RLPEncodedTx, Signer } from '@celo/connect'
 import Ledger from '@celo/hw-app-eth'
 import { EIP712TypedData, structHash } from '@celo/utils/lib/sign-typed-data-utils'
 import { LegacyEncodedTx } from '@celo/wallet-base'
-import * as ethUtil from '@ethereumjs/util'
+// ethUtil removed — Buffer.from used for hex→buffer conversion
 import { TransportStatusError } from '@ledgerhq/errors'
 import debugFactory from 'debug'
 import { SemVer } from 'semver'
@@ -75,8 +75,8 @@ export class LedgerSigner implements Signer {
 
       return {
         v,
-        r: ethUtil.toBuffer(ensureLeading0x(r)),
-        s: ethUtil.toBuffer(ensureLeading0x(s)),
+        r: Buffer.from(trimLeading0x(ensureLeading0x(r)), 'hex'),
+        s: Buffer.from(trimLeading0x(ensureLeading0x(s)), 'hex'),
       }
     } catch (error: unknown) {
       if (error instanceof TransportStatusError) {
@@ -103,8 +103,8 @@ export class LedgerSigner implements Signer {
       )
       return {
         v: signature.v,
-        r: ethUtil.toBuffer(ensureLeading0x(signature.r)),
-        s: ethUtil.toBuffer(ensureLeading0x(signature.s)),
+        r: Buffer.from(trimLeading0x(ensureLeading0x(signature.r)), 'hex'),
+        s: Buffer.from(trimLeading0x(ensureLeading0x(signature.s)), 'hex'),
       }
     } catch (error) {
       if (error instanceof TransportStatusError) {
@@ -134,8 +134,8 @@ export class LedgerSigner implements Signer {
       )
       return {
         v: sig.v,
-        r: ethUtil.toBuffer(ensureLeading0x(sig.r)),
-        s: ethUtil.toBuffer(ensureLeading0x(sig.s)),
+        r: Buffer.from(trimLeading0x(ensureLeading0x(sig.r)), 'hex'),
+        s: Buffer.from(trimLeading0x(ensureLeading0x(sig.s)), 'hex'),
       }
     } catch (error) {
       if (error instanceof TransportStatusError) {

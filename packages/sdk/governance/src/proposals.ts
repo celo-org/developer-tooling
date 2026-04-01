@@ -1,7 +1,13 @@
-import { ABI as GovernanceABI } from '@celo/abis/web3/Governance'
-import { ABI as RegistryABI } from '@celo/abis/web3/Registry'
+import { governanceABI, registryABI } from '@celo/abis'
 import { Address, trimLeading0x } from '@celo/base/lib/address'
-import { AbiCoder, CeloTxPending, getAbiByName, parseDecodedParams } from '@celo/connect'
+import {
+  type AbiItem,
+  AbiInput,
+  decodeParametersToObject,
+  getAbiByName,
+  parseDecodedParams,
+} from '@celo/connect'
+import { toChecksumAddress } from '@celo/utils/lib/address'
 import { CeloContract, ContractKit, REGISTRY_CONTRACT_ADDRESS } from '@celo/contractkit'
 import { stripProxy, suffixProxy } from '@celo/contractkit/lib/base'
 import {
@@ -22,15 +28,17 @@ import { keccak_256 } from '@noble/hashes/sha3'
 import { utf8ToBytes } from '@noble/hashes/utils'
 import { BigNumber } from 'bignumber.js'
 import debugFactory from 'debug'
+import { encodeAbiParameters, toFunctionSelector, type AbiParameter } from 'viem'
+import { bigintReplacer } from './json-utils'
 
 export const debug = debugFactory('governance:proposals')
 
-export const hotfixExecuteAbi = getAbiByName(GovernanceABI, 'executeHotfix')
+export const hotfixExecuteAbi = getAbiByName(governanceABI as unknown as AbiItem[], 'executeHotfix')
 
-export const hotfixToEncodedParams = (kit: ContractKit, proposal: Proposal, salt: Buffer) =>
-  kit.connection.getAbiCoder().encodeParameters(
-    hotfixExecuteAbi.inputs!.map((input) => input.type),
-    hotfixToParams(proposal, salt)
+export const hotfixToEncodedParams = (_kit: ContractKit, proposal: Proposal, salt: Buffer) =>
+  encodeAbiParameters(
+    hotfixExecuteAbi.inputs!.map((input) => ({ ...input }) as AbiParameter),
+    hotfixToParams(proposal, salt) as any
   )
 
 export const hotfixToHash = (kit: ContractKit, proposal: Proposal, salt: Buffer): Buffer =>
@@ -74,7 +82,9 @@ export const registryRepointArgs = (
   tx: Pick<ExternalProposalTransactionJSON, 'args' | 'contract' | 'function'>
 ) => {
   if (!isRegistryRepoint(tx)) {
-    throw new Error(`Proposal transaction not a registry repoint:\n${JSON.stringify(tx, null, 2)}`)
+    throw new Error(
+      `Proposal transaction not a registry repoint:\n${JSON.stringify(tx, bigintReplacer, 2)}`
+    )
   }
   return {
     name: tx.args[0] as CeloContract,
@@ -82,20 +92,25 @@ export const registryRepointArgs = (
   }
 }
 
-const setAddressAbi = getAbiByName(RegistryABI, 'setAddressFor')
+const setAddressAbi = getAbiByName(registryABI as unknown as AbiItem[], 'setAddressFor')
 
-const isRegistryRepointRaw = (abiCoder: AbiCoder, tx: ProposalTransaction) =>
-  tx.to === REGISTRY_CONTRACT_ADDRESS &&
-  tx.input.startsWith(abiCoder.encodeFunctionSignature(setAddressAbi))
+const setAddressFnSelector = toFunctionSelector(
+  `${setAddressAbi.name}(${(setAddressAbi.inputs || []).map((i: AbiInput) => i.type).join(',')})`
+)
 
-const registryRepointRawArgs = (abiCoder: AbiCoder, tx: ProposalTransaction) => {
-  if (!isRegistryRepointRaw(abiCoder, tx)) {
-    throw new Error(`Proposal transaction not a registry repoint:\n${JSON.stringify(tx, null, 2)}`)
+const isRegistryRepointRaw = (tx: ProposalTransaction) =>
+  tx.to === REGISTRY_CONTRACT_ADDRESS && tx.input.startsWith(setAddressFnSelector)
+
+const registryRepointRawArgs = (tx: ProposalTransaction) => {
+  if (!isRegistryRepointRaw(tx)) {
+    throw new Error(
+      `Proposal transaction not a registry repoint:\n${JSON.stringify(tx, bigintReplacer, 2)}`
+    )
   }
-  const params = abiCoder.decodeParameters(setAddressAbi.inputs!, trimLeading0x(tx.input).slice(8))
+  const params = decodeParametersToObject(setAddressAbi.inputs!, trimLeading0x(tx.input).slice(8))
   return {
     name: params.identifier as CeloContract,
-    address: params.addr,
+    address: params.addr as string,
   }
 }
 
@@ -136,27 +151,26 @@ export const proposalToJSON = async (
       })
     )
   }
-  const abiCoder = kit.connection.getAbiCoder()
 
   const proposalJson: ProposalTransactionJSON[] = []
 
   for (const tx of proposal) {
-    const parsedTx = await blockExplorer.tryParseTx(tx as CeloTxPending)
-    if (parsedTx == null) {
-      throw new Error(`Unable to parse ${JSON.stringify(tx)} with block explorer`)
+    const callDetails = await blockExplorer.tryParseTxInput(tx.to!, tx.input)
+    if (callDetails == null) {
+      throw new Error(`Unable to parse ${JSON.stringify(tx, bigintReplacer)} with block explorer`)
     }
-    if (isRegistryRepointRaw(abiCoder, tx) && parsedTx.callDetails.isCoreContract) {
-      const args = registryRepointRawArgs(abiCoder, tx)
+    if (isRegistryRepointRaw(tx) && callDetails.isCoreContract) {
+      const args = registryRepointRawArgs(tx)
       await updateRegistryMapping(args.name, args.address)
     }
 
     const jsonTx: ProposalTransactionJSON = {
-      contract: parsedTx.callDetails.contract as CeloContract,
-      address: parsedTx.callDetails.contractAddress,
-      function: parsedTx.callDetails.function,
-      args: parsedTx.callDetails.argList,
-      params: parsedTx.callDetails.paramMap,
-      value: parsedTx.tx.value,
+      contract: callDetails.contract as CeloContract,
+      address: callDetails.contractAddress,
+      function: callDetails.function,
+      args: callDetails.argList,
+      params: callDetails.paramMap,
+      value: tx.value,
     }
 
     if (isProxySetFunction(jsonTx)) {
@@ -165,15 +179,12 @@ export const proposalToJSON = async (
     } else if (isProxySetAndInitFunction(jsonTx)) {
       await blockExplorer.setProxyOverride(tx.to!, jsonTx.args[0])
       let initAbi
-      if (parsedTx.callDetails.isCoreContract) {
+      if (callDetails.isCoreContract) {
         jsonTx.contract = suffixProxy(jsonTx.contract)
         initAbi = getInitializeAbiOfImplementation(jsonTx.contract as any)
       } else {
         const implAddress = jsonTx.args[0]
-        const metadata = await fetchMetadata(
-          kit.connection,
-          kit.web3.utils.toChecksumAddress(implAddress)
-        )
+        const metadata = await fetchMetadata(kit.connection, toChecksumAddress(implAddress))
         if (metadata && metadata.abi) {
           initAbi = metadata?.abiForMethod('initialize')[0]
         }
@@ -186,7 +197,7 @@ export const proposalToJSON = async (
         const initArgs = trimLeading0x(jsonTx.args[1]).slice(8)
 
         const { params: initParams } = parseDecodedParams(
-          kit.connection.getAbiCoder().decodeParameters(initAbi.inputs!, initArgs)
+          decodeParametersToObject(initAbi.inputs!, initArgs)
         )
         jsonTx.params![`initialize@${initSig}`] = initParams
       }
