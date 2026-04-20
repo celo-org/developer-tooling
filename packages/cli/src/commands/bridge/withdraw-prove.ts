@@ -112,7 +112,9 @@ export default class BridgeWithdrawProve extends BaseCommand {
     console.log('\nWithdrawal proof submitted! Next steps:')
     console.log('  1. Wait 7 days for the challenge period to pass')
     console.log('  2. Run: celocli bridge:withdraw-status --txHash ' + txHash + ' ...')
-    console.log('  3. When ready, run: celocli bridge:withdraw-finalize --txHash ' + txHash + ' ...')
+    console.log(
+      '  3. When ready, run: celocli bridge:withdraw-finalize --txHash ' + txHash + ' ...'
+    )
   }
 
   private async getL1WalletClient(res: any, l1RpcUrl: string, network: BridgeNetwork) {

@@ -114,11 +114,11 @@ export default class BridgeDeposit extends BaseCommand {
     })
 
     if (depositReceipt.status === 'success') {
-      console.log(
-        '\nDeposit initiated! Your CELO should appear on L2 in approximately 15 minutes.'
-      )
+      console.log('\nDeposit initiated! Your CELO should appear on L2 in approximately 15 minutes.')
     } else {
-      throw new Error('Deposit transaction failed. Please check the transaction on a block explorer.')
+      throw new Error(
+        'Deposit transaction failed. Please check the transaction on a block explorer.'
+      )
     }
   }
 

@@ -3,11 +3,7 @@ import { BaseCommand } from '../../base'
 import { displayViemTx } from '../../utils/cli'
 import { CustomFlags } from '../../utils/command'
 import { newCheckBuilder } from '../../utils/checks'
-import {
-  BRIDGE_CONFIG,
-  L2_L1_MESSAGE_PASSER_ABI,
-  validateNetwork,
-} from '../../utils/bridge'
+import { BRIDGE_CONFIG, L2_L1_MESSAGE_PASSER_ABI, validateNetwork } from '../../utils/bridge'
 
 export default class BridgeWithdrawInit extends BaseCommand {
   static description =

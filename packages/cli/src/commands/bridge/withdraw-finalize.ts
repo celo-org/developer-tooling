@@ -83,8 +83,7 @@ export default class BridgeWithdrawFinalize extends BaseCommand {
       const statusMessages: Record<string, string> = {
         'waiting-to-prove':
           'The withdrawal has not been proven yet. Run bridge:withdraw-prove first.',
-        'ready-to-prove':
-          'The withdrawal needs to be proven first. Run bridge:withdraw-prove.',
+        'ready-to-prove': 'The withdrawal needs to be proven first. Run bridge:withdraw-prove.',
         'waiting-to-finalize':
           'The 7-day challenge period has not passed yet. Please wait and try again later.',
         finalized: 'This withdrawal has already been finalized.',
