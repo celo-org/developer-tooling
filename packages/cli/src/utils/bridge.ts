@@ -196,13 +196,11 @@ export const WITHDRAWAL_STATUS_LABELS: Record<
   },
   'ready-to-prove': {
     label: 'Ready to Prove',
-    description:
-      'The proof is available. You can now submit it on L1 with bridge:withdraw-prove.',
+    description: 'The proof is available. You can now submit it on L1 with bridge:withdraw-prove.',
   },
   'waiting-to-finalize': {
     label: 'Waiting to Finalize',
-    description:
-      'The proof has been submitted. The 7-day challenge period is in progress.',
+    description: 'The proof has been submitted. The 7-day challenge period is in progress.',
   },
   'ready-to-finalize': {
     label: 'Ready to Finalize',
