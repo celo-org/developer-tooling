@@ -82,11 +82,17 @@ export default class BridgeWithdrawInit extends BaseCommand {
       console.log('\nWithdrawal initiated! Save the transaction hash above.')
       console.log('Next steps:')
       console.log('  1. Wait ~1 hour for the proof to become available')
-      console.log('  2. Run: celocli bridge:withdraw-prove --txHash ' + receipt.transactionHash + ' ...')
+      console.log(
+        '  2. Run: celocli bridge:withdraw-prove --txHash ' + receipt.transactionHash + ' ...'
+      )
       console.log('  3. Wait 7 days for the challenge period to pass')
-      console.log('  4. Run: celocli bridge:withdraw-finalize --txHash ' + receipt.transactionHash + ' ...')
+      console.log(
+        '  4. Run: celocli bridge:withdraw-finalize --txHash ' + receipt.transactionHash + ' ...'
+      )
     } else {
-      throw new Error('Withdrawal initiation failed. Please check the transaction on a block explorer.')
+      throw new Error(
+        'Withdrawal initiation failed. Please check the transaction on a block explorer.'
+      )
     }
   }
 }

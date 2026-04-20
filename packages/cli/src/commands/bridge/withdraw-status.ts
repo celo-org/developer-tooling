@@ -87,7 +87,9 @@ export default class BridgeWithdrawStatus extends BaseCommand {
     })
     ux.action.stop()
 
-    const statusInfo = WITHDRAWAL_STATUS_LABELS[status as keyof typeof WITHDRAWAL_STATUS_LABELS] || {
+    const statusInfo = WITHDRAWAL_STATUS_LABELS[
+      status as keyof typeof WITHDRAWAL_STATUS_LABELS
+    ] || {
       label: status,
       description: 'Unknown status',
     }
