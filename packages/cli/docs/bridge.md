@@ -144,7 +144,7 @@ celocli bridge:withdraw-status \
 | Network | L1 | L2 |
 |---------|----|----|
 | `mainnet` | Ethereum Mainnet | Celo Mainnet |
-| `sepolia` | Ethereum Sepolia | Celo Alfajores |
+| `sepolia` | Ethereum Sepolia | Celo Sepolia |
 
 ## Using with Ledger
 
