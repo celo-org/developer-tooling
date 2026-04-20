@@ -1,6 +1,6 @@
 import { ensureLeading0x } from '@celo/base'
 import { Flags, ux } from '@oclif/core'
-import { createPublicClient, createWalletClient, http } from 'viem'
+import { createPublicClient, createWalletClient, http, isAddressEqual } from 'viem'
 import { privateKeyToAccount } from 'viem/accounts'
 import { getWithdrawals, publicActionsL2, walletActionsL1 } from 'viem/op-stack'
 import { BaseCommand } from '../../base'
@@ -83,7 +83,8 @@ export default class BridgeWithdrawFinalize extends BaseCommand {
       const statusMessages: Record<string, string> = {
         'waiting-to-prove':
           'The withdrawal has not been proven yet. Run bridge:withdraw-prove first.',
-        'ready-to-prove': 'The withdrawal needs to be proven first. Run bridge:withdraw-prove.',
+        'ready-to-prove':
+          'The withdrawal needs to be proven first. Run bridge:withdraw-prove.',
         'waiting-to-finalize':
           'The 7-day challenge period has not passed yet. Please wait and try again later.',
         finalized: 'This withdrawal has already been finalized.',
@@ -131,6 +132,11 @@ export default class BridgeWithdrawFinalize extends BaseCommand {
       return wallet.extend(walletActionsL1())
     } else if (res.flags.privateKey) {
       const account = privateKeyToAccount(ensureLeading0x(res.flags.privateKey))
+      if (res.flags.from && !isAddressEqual(res.flags.from, account.address)) {
+        throw new Error(
+          `The --from address ${res.flags.from} does not match the address derived from the provided private key ${account.address}.`
+        )
+      }
       return createWalletClient({
         account,
         chain: config.l1Chain,

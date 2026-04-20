@@ -1,5 +1,5 @@
 import { Flags, ux } from '@oclif/core'
-import { createPublicClient, createWalletClient, http } from 'viem'
+import { createPublicClient, createWalletClient, http, isAddressEqual } from 'viem'
 import { privateKeyToAccount } from 'viem/accounts'
 import { BaseCommand } from '../../base'
 import { printValueMap } from '../../utils/cli'
@@ -44,7 +44,7 @@ export default class BridgeDeposit extends BaseCommand {
       required: true,
       description: 'RPC URL for the Ethereum L1 network',
     }),
-    gaslimit: Flags.integer({
+    gasLimit: Flags.integer({
       description: 'Gas limit for the L2 transaction',
       default: 100000,
     }),
@@ -58,7 +58,7 @@ export default class BridgeDeposit extends BaseCommand {
 
   async run() {
     const res = await this.parse(BridgeDeposit)
-    const { from, value, network: networkFlag, l1RpcUrl, gaslimit } = res.flags
+    const { from, value, network: networkFlag, l1RpcUrl, gasLimit } = res.flags
     const to = res.flags.to || from
     const network = validateNetwork(networkFlag)
     const config = BRIDGE_CONFIG[network]
@@ -82,6 +82,7 @@ export default class BridgeDeposit extends BaseCommand {
 
     // Step 2: Approve OptimismPortal to spend CELO
     ux.action.start('Step 2/3: Approving CELO spending on L1')
+    // Type assertion needed: wallet client is created dynamically so TS can't infer chain/account
     const approveHash = await wallet.writeContract({
       address: celoL1Address,
       abi: ERC20_APPROVE_ABI,
@@ -100,7 +101,8 @@ export default class BridgeDeposit extends BaseCommand {
       address: config.optimismPortal,
       abi: OPTIMISM_PORTAL_DEPOSIT_ABI,
       functionName: 'depositERC20Transaction',
-      args: [to, value, value, BigInt(gaslimit), false, '0x00'],
+      // Type assertion needed: wallet client is created dynamically so TS can't infer chain/account
+      args: [to, value, value, BigInt(gasLimit), false, '0x'],
       chain: config.l1Chain,
       account: wallet.account!,
     } as any)
@@ -111,7 +113,13 @@ export default class BridgeDeposit extends BaseCommand {
       status: depositReceipt.status === 'success' ? 'Success' : 'Failed',
     })
 
-    console.log('\nDeposit initiated! Your CELO should appear on L2 in approximately 15 minutes.')
+    if (depositReceipt.status === 'success') {
+      console.log(
+        '\nDeposit initiated! Your CELO should appear on L2 in approximately 15 minutes.'
+      )
+    } else {
+      throw new Error('Deposit transaction failed. Please check the transaction on a block explorer.')
+    }
   }
 
   // Create an L1 wallet client using the same signing mechanism as BaseCommand
@@ -132,6 +140,11 @@ export default class BridgeDeposit extends BaseCommand {
     } else if (res.flags.privateKey) {
       const { ensureLeading0x } = await import('@celo/base')
       const account = privateKeyToAccount(ensureLeading0x(res.flags.privateKey))
+      if (res.flags.from && !isAddressEqual(res.flags.from, account.address)) {
+        throw new Error(
+          `The --from address ${res.flags.from} does not match the address derived from the provided private key ${account.address}.`
+        )
+      }
       return createWalletClient({
         account,
         chain: config.l1Chain,

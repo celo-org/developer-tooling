@@ -3,7 +3,11 @@ import { BaseCommand } from '../../base'
 import { displayViemTx } from '../../utils/cli'
 import { CustomFlags } from '../../utils/command'
 import { newCheckBuilder } from '../../utils/checks'
-import { BRIDGE_CONFIG, L2_L1_MESSAGE_PASSER_ABI, validateNetwork } from '../../utils/bridge'
+import {
+  BRIDGE_CONFIG,
+  L2_L1_MESSAGE_PASSER_ABI,
+  validateNetwork,
+} from '../../utils/bridge'
 
 export default class BridgeWithdrawInit extends BaseCommand {
   static description =
@@ -62,7 +66,8 @@ export default class BridgeWithdrawInit extends BaseCommand {
       address: config.l2L1MessagePasser,
       abi: L2_L1_MESSAGE_PASSER_ABI,
       functionName: 'initiateWithdrawal',
-      args: [to, BigInt(0), '0x00'],
+      // Type assertion needed: wallet client is created dynamically so TS can't infer chain/account
+      args: [to, BigInt(0), '0x'],
       value: value,
       chain: client.chain,
       account: wallet.account!,

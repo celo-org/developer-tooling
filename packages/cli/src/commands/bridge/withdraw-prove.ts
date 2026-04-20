@@ -1,6 +1,6 @@
 import { ensureLeading0x } from '@celo/base'
 import { Flags, ux } from '@oclif/core'
-import { createPublicClient, createWalletClient, http } from 'viem'
+import { createPublicClient, createWalletClient, http, isAddressEqual } from 'viem'
 import { privateKeyToAccount } from 'viem/accounts'
 import { publicActionsL2, walletActionsL1 } from 'viem/op-stack'
 import { BaseCommand } from '../../base'
@@ -112,9 +112,7 @@ export default class BridgeWithdrawProve extends BaseCommand {
     console.log('\nWithdrawal proof submitted! Next steps:')
     console.log('  1. Wait 7 days for the challenge period to pass')
     console.log('  2. Run: celocli bridge:withdraw-status --txHash ' + txHash + ' ...')
-    console.log(
-      '  3. When ready, run: celocli bridge:withdraw-finalize --txHash ' + txHash + ' ...'
-    )
+    console.log('  3. When ready, run: celocli bridge:withdraw-finalize --txHash ' + txHash + ' ...')
   }
 
   private async getL1WalletClient(res: any, l1RpcUrl: string, network: BridgeNetwork) {
@@ -134,6 +132,11 @@ export default class BridgeWithdrawProve extends BaseCommand {
       return wallet.extend(walletActionsL1())
     } else if (res.flags.privateKey) {
       const account = privateKeyToAccount(ensureLeading0x(res.flags.privateKey))
+      if (res.flags.from && !isAddressEqual(res.flags.from, account.address)) {
+        throw new Error(
+          `The --from address ${res.flags.from} does not match the address derived from the provided private key ${account.address}.`
+        )
+      }
       return createWalletClient({
         account,
         chain: config.l1Chain,
