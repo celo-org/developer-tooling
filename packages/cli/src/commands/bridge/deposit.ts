@@ -111,9 +111,7 @@ export default class BridgeDeposit extends BaseCommand {
       status: depositReceipt.status === 'success' ? 'Success' : 'Failed',
     })
 
-    console.log(
-      '\nDeposit initiated! Your CELO should appear on L2 in approximately 15 minutes.'
-    )
+    console.log('\nDeposit initiated! Your CELO should appear on L2 in approximately 15 minutes.')
   }
 
   // Create an L1 wallet client using the same signing mechanism as BaseCommand
