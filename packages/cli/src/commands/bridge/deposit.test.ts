@@ -15,9 +15,15 @@ jest.setTimeout(15000)
 
 describe('bridge:deposit', () => {
   beforeEach(() => {
-    jest.spyOn(console, 'log').mockImplementation(() => {})
-    jest.spyOn(console, 'error').mockImplementation(() => {})
-    jest.spyOn(console, 'info').mockImplementation(() => {})
+    jest.spyOn(console, 'log').mockImplementation(() => {
+      // noop
+    })
+    jest.spyOn(console, 'error').mockImplementation(() => {
+      // noop
+    })
+    jest.spyOn(console, 'info').mockImplementation(() => {
+      // noop
+    })
   })
 
   afterEach(() => {
@@ -27,14 +33,10 @@ describe('bridge:deposit', () => {
   it('requires --from flag', async () => {
     await expect(
       testLocally(BridgeDeposit, [
-        '--value',
-        '1000000000000000000',
-        '--network',
-        'sepolia',
-        '--l1RpcUrl',
-        'https://eth-sepolia.example.com',
-        '-k',
-        '0x' + '1'.repeat(64),
+        '--value', '1000000000000000000',
+        '--network', 'sepolia',
+        '--l1RpcUrl', 'https://eth-sepolia.example.com',
+        '-k', '0x' + '1'.repeat(64),
       ])
     ).rejects.toThrow()
   })
@@ -42,14 +44,10 @@ describe('bridge:deposit', () => {
   it('requires --value flag', async () => {
     await expect(
       testLocally(BridgeDeposit, [
-        '--from',
-        '0x5409ED021D9299bf6814279A6A1411A7e866A631',
-        '--network',
-        'sepolia',
-        '--l1RpcUrl',
-        'https://eth-sepolia.example.com',
-        '-k',
-        '0x' + '1'.repeat(64),
+        '--from', '0x5409ED021D9299bf6814279A6A1411A7e866A631',
+        '--network', 'sepolia',
+        '--l1RpcUrl', 'https://eth-sepolia.example.com',
+        '-k', '0x' + '1'.repeat(64),
       ])
     ).rejects.toThrow()
   })
@@ -57,14 +55,10 @@ describe('bridge:deposit', () => {
   it('requires --network flag', async () => {
     await expect(
       testLocally(BridgeDeposit, [
-        '--from',
-        '0x5409ED021D9299bf6814279A6A1411A7e866A631',
-        '--value',
-        '1000000000000000000',
-        '--l1RpcUrl',
-        'https://eth-sepolia.example.com',
-        '-k',
-        '0x' + '1'.repeat(64),
+        '--from', '0x5409ED021D9299bf6814279A6A1411A7e866A631',
+        '--value', '1000000000000000000',
+        '--l1RpcUrl', 'https://eth-sepolia.example.com',
+        '-k', '0x' + '1'.repeat(64),
       ])
     ).rejects.toThrow()
   })
@@ -72,14 +66,10 @@ describe('bridge:deposit', () => {
   it('requires --l1RpcUrl flag', async () => {
     await expect(
       testLocally(BridgeDeposit, [
-        '--from',
-        '0x5409ED021D9299bf6814279A6A1411A7e866A631',
-        '--value',
-        '1000000000000000000',
-        '--network',
-        'sepolia',
-        '-k',
-        '0x' + '1'.repeat(64),
+        '--from', '0x5409ED021D9299bf6814279A6A1411A7e866A631',
+        '--value', '1000000000000000000',
+        '--network', 'sepolia',
+        '-k', '0x' + '1'.repeat(64),
       ])
     ).rejects.toThrow()
   })
@@ -87,16 +77,11 @@ describe('bridge:deposit', () => {
   it('rejects invalid network value', async () => {
     await expect(
       testLocally(BridgeDeposit, [
-        '--from',
-        '0x5409ED021D9299bf6814279A6A1411A7e866A631',
-        '--value',
-        '1000000000000000000',
-        '--network',
-        'goerli',
-        '--l1RpcUrl',
-        'https://eth-sepolia.example.com',
-        '-k',
-        '0x' + '1'.repeat(64),
+        '--from', '0x5409ED021D9299bf6814279A6A1411A7e866A631',
+        '--value', '1000000000000000000',
+        '--network', 'goerli',
+        '--l1RpcUrl', 'https://eth-sepolia.example.com',
+        '-k', '0x' + '1'.repeat(64),
       ])
     ).rejects.toThrow()
   })
@@ -104,16 +89,11 @@ describe('bridge:deposit', () => {
   it('rejects invalid address format', async () => {
     await expect(
       testLocally(BridgeDeposit, [
-        '--from',
-        'not-an-address',
-        '--value',
-        '1000000000000000000',
-        '--network',
-        'sepolia',
-        '--l1RpcUrl',
-        'https://eth-sepolia.example.com',
-        '-k',
-        '0x' + '1'.repeat(64),
+        '--from', 'not-an-address',
+        '--value', '1000000000000000000',
+        '--network', 'sepolia',
+        '--l1RpcUrl', 'https://eth-sepolia.example.com',
+        '-k', '0x' + '1'.repeat(64),
       ])
     ).rejects.toThrow('is not a valid address')
   })
@@ -121,14 +101,10 @@ describe('bridge:deposit', () => {
   it('requires signing method (privateKey or useLedger)', async () => {
     await expect(
       testLocally(BridgeDeposit, [
-        '--from',
-        '0x5409ED021D9299bf6814279A6A1411A7e866A631',
-        '--value',
-        '1000000000000000000',
-        '--network',
-        'sepolia',
-        '--l1RpcUrl',
-        'https://eth-sepolia.example.com',
+        '--from', '0x5409ED021D9299bf6814279A6A1411A7e866A631',
+        '--value', '1000000000000000000',
+        '--network', 'sepolia',
+        '--l1RpcUrl', 'https://eth-sepolia.example.com',
       ])
     ).rejects.toThrow()
   })
