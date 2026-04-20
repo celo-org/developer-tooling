@@ -11,6 +11,8 @@ import {
   validateNetwork,
   getL2OpChain,
   createL1PublicClient,
+  verifyL1ChainId,
+  verifyL2ChainId,
   type BridgeNetwork,
 } from '../../utils/bridge'
 
@@ -62,8 +64,13 @@ export default class BridgeWithdrawFinalize extends BaseCommand {
       transport: http(l2NodeUrl),
     }).extend(publicActionsL2())
 
+    await verifyL2ChainId(l2Client, network)
+
     // Create L1 clients
     const l1Client = createL1PublicClient(l1RpcUrl, network)
+
+    await verifyL1ChainId(l1Client, network)
+
     const l1Wallet = await this.getL1WalletClient(res, l1RpcUrl, network)
 
     // Step 1: Get the withdrawal receipt
@@ -83,7 +90,8 @@ export default class BridgeWithdrawFinalize extends BaseCommand {
       const statusMessages: Record<string, string> = {
         'waiting-to-prove':
           'The withdrawal has not been proven yet. Run bridge:withdraw-prove first.',
-        'ready-to-prove': 'The withdrawal needs to be proven first. Run bridge:withdraw-prove.',
+        'ready-to-prove':
+          'The withdrawal needs to be proven first. Run bridge:withdraw-prove.',
         'waiting-to-finalize':
           'The 7-day challenge period has not passed yet. Please wait and try again later.',
         finalized: 'This withdrawal has already been finalized.',
@@ -111,7 +119,11 @@ export default class BridgeWithdrawFinalize extends BaseCommand {
       status: finalizeReceipt.status === 'success' ? 'Success' : 'Failed',
     })
 
-    console.log('\nWithdrawal finalized! Your CELO has been sent to your L1 address.')
+    if (finalizeReceipt.status === 'success') {
+      console.log('\nWithdrawal finalized! Your CELO has been sent to your L1 address.')
+    } else {
+      throw new Error('Finalize transaction failed. Please check the transaction on a block explorer.')
+    }
   }
 
   private async getL1WalletClient(res: any, l1RpcUrl: string, network: BridgeNetwork) {

@@ -10,6 +10,7 @@ import {
   ERC20_APPROVE_ABI,
   OPTIMISM_PORTAL_DEPOSIT_ABI,
   validateNetwork,
+  verifyL1ChainId,
   type BridgeNetwork,
 } from '../../utils/bridge'
 
@@ -70,6 +71,8 @@ export default class BridgeDeposit extends BaseCommand {
       transport: http(l1RpcUrl),
     })
 
+    await verifyL1ChainId(l1Client, network)
+
     // Step 1: Retrieve gas paying token (CELO address on L1)
     ux.action.start('Step 1/3: Retrieving CELO token address on L1')
     const [celoL1Address] = await l1Client.readContract({
@@ -95,6 +98,10 @@ export default class BridgeDeposit extends BaseCommand {
     ux.action.stop()
     printValueMap({ 'Approval txHash': approveReceipt.transactionHash })
 
+    if (approveReceipt.status !== 'success') {
+      throw new Error('Approval transaction failed. Please check the transaction on a block explorer.')
+    }
+
     // Step 3: Deposit CELO to L2
     ux.action.start('Step 3/3: Depositing CELO to L2')
     const depositHash = await wallet.writeContract({
@@ -114,11 +121,11 @@ export default class BridgeDeposit extends BaseCommand {
     })
 
     if (depositReceipt.status === 'success') {
-      console.log('\nDeposit initiated! Your CELO should appear on L2 in approximately 15 minutes.')
-    } else {
-      throw new Error(
-        'Deposit transaction failed. Please check the transaction on a block explorer.'
+      console.log(
+        '\nDeposit initiated! Your CELO should appear on L2 in approximately 15 minutes.'
       )
+    } else {
+      throw new Error('Deposit transaction failed. Please check the transaction on a block explorer.')
     }
   }
 

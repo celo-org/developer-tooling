@@ -110,6 +110,26 @@ export function getL2OpChain(network: BridgeNetwork) {
   return network === 'mainnet' ? celoL2 : celoSepoliaL2
 }
 
+export async function verifyL2ChainId(client: { getChainId: () => Promise<number> }, network: BridgeNetwork) {
+  const expectedChainId = getL2OpChain(network).id
+  const actualChainId = await client.getChainId()
+  if (actualChainId !== expectedChainId) {
+    throw new Error(
+      `L2 node chain ID mismatch: --network ${network} expects chain ${expectedChainId} but --node is connected to chain ${actualChainId}. Ensure --node points to the correct L2 network.`
+    )
+  }
+}
+
+export async function verifyL1ChainId(client: { getChainId: () => Promise<number> }, network: BridgeNetwork) {
+  const expectedChainId = BRIDGE_CONFIG[network].l1Chain.id
+  const actualChainId = await client.getChainId()
+  if (actualChainId !== expectedChainId) {
+    throw new Error(
+      `L1 RPC chain ID mismatch: --network ${network} expects chain ${expectedChainId} but --l1RpcUrl is connected to chain ${actualChainId}. Ensure --l1RpcUrl points to the correct L1 network.`
+    )
+  }
+}
+
 export function createL1PublicClient(l1RpcUrl: string, network: BridgeNetwork): any {
   const config = BRIDGE_CONFIG[network]
   return createPublicClient({
@@ -196,11 +216,13 @@ export const WITHDRAWAL_STATUS_LABELS: Record<
   },
   'ready-to-prove': {
     label: 'Ready to Prove',
-    description: 'The proof is available. You can now submit it on L1 with bridge:withdraw-prove.',
+    description:
+      'The proof is available. You can now submit it on L1 with bridge:withdraw-prove.',
   },
   'waiting-to-finalize': {
     label: 'Waiting to Finalize',
-    description: 'The proof has been submitted. The 7-day challenge period is in progress.',
+    description:
+      'The proof has been submitted. The 7-day challenge period is in progress.',
   },
   'ready-to-finalize': {
     label: 'Ready to Finalize',

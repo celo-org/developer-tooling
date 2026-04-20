@@ -9,6 +9,8 @@ import {
   validateNetwork,
   getL2OpChain,
   createL1PublicClient,
+  verifyL1ChainId,
+  verifyL2ChainId,
 } from '../../utils/bridge'
 
 export default class BridgeWithdrawStatus extends BaseCommand {
@@ -59,8 +61,12 @@ export default class BridgeWithdrawStatus extends BaseCommand {
       transport: http(l2NodeUrl),
     }).extend(publicActionsL2())
 
+    await verifyL2ChainId(l2Client, network)
+
     // Create L1 client with OP Stack extensions
     const l1Client = createL1PublicClient(l1RpcUrl, network)
+
+    await verifyL1ChainId(l1Client, network)
 
     // Get the receipt
     ux.action.start('Fetching withdrawal transaction')
@@ -81,9 +87,7 @@ export default class BridgeWithdrawStatus extends BaseCommand {
     })
     ux.action.stop()
 
-    const statusInfo = WITHDRAWAL_STATUS_LABELS[
-      status as keyof typeof WITHDRAWAL_STATUS_LABELS
-    ] || {
+    const statusInfo = WITHDRAWAL_STATUS_LABELS[status as keyof typeof WITHDRAWAL_STATUS_LABELS] || {
       label: status,
       description: 'Unknown status',
     }

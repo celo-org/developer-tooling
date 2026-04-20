@@ -11,6 +11,8 @@ import {
   validateNetwork,
   getL2OpChain,
   createL1PublicClient,
+  verifyL1ChainId,
+  verifyL2ChainId,
   type BridgeNetwork,
 } from '../../utils/bridge'
 
@@ -62,8 +64,12 @@ export default class BridgeWithdrawProve extends BaseCommand {
       transport: http(l2NodeUrl),
     }).extend(publicActionsL2())
 
+    await verifyL2ChainId(l2Client, network)
+
     // Create L1 public client with OP Stack extensions
     const l1Client = createL1PublicClient(l1RpcUrl, network)
+
+    await verifyL1ChainId(l1Client, network)
 
     // Create L1 wallet client for submitting the prove tx
     const l1Wallet = await this.getL1WalletClient(res, l1RpcUrl, network)
@@ -109,12 +115,14 @@ export default class BridgeWithdrawProve extends BaseCommand {
       status: proveReceipt.status === 'success' ? 'Success' : 'Failed',
     })
 
-    console.log('\nWithdrawal proof submitted! Next steps:')
-    console.log('  1. Wait 7 days for the challenge period to pass')
-    console.log('  2. Run: celocli bridge:withdraw-status --txHash ' + txHash + ' ...')
-    console.log(
-      '  3. When ready, run: celocli bridge:withdraw-finalize --txHash ' + txHash + ' ...'
-    )
+    if (proveReceipt.status === 'success') {
+      console.log('\nWithdrawal proof submitted! Next steps:')
+      console.log('  1. Wait 7 days for the challenge period to pass')
+      console.log('  2. Run: celocli bridge:withdraw-status --txHash ' + txHash + ' ...')
+      console.log('  3. When ready, run: celocli bridge:withdraw-finalize --txHash ' + txHash + ' ...')
+    } else {
+      throw new Error('Prove transaction failed. Please check the transaction on a block explorer.')
+    }
   }
 
   private async getL1WalletClient(res: any, l1RpcUrl: string, network: BridgeNetwork) {
