@@ -83,8 +83,25 @@ export default class BridgeWithdrawProve extends BaseCommand {
       status: receipt.status,
     })
 
-    // Step 2: Check/wait for proof readiness
-    ux.action.start('Step 2/4: Waiting for proof to become available (this may take up to 1 hour)')
+    // Step 2: Check if already proven
+    ux.action.start('Step 2/5: Checking withdrawal status')
+    const status = await l1Client.getWithdrawalStatus({
+      receipt,
+      targetChain: l2Chain as any,
+    })
+    ux.action.stop()
+
+    if (status !== 'ready-to-prove' && status !== 'waiting-to-prove') {
+      const messages: Record<string, string> = {
+        'waiting-to-finalize': 'This withdrawal has already been proven. Wait for the 7-day challenge period to pass, then run bridge:withdraw-finalize.',
+        'ready-to-finalize': 'This withdrawal has already been proven and is ready to finalize. Run bridge:withdraw-finalize.',
+        finalized: 'This withdrawal has already been finalized.',
+      }
+      throw new Error(messages[status] || `Unexpected withdrawal status: ${status}`)
+    }
+
+    // Step 3: Wait for proof readiness
+    ux.action.start('Step 3/5: Waiting for proof to become available (this may take up to 1 hour)')
     const { output, withdrawal } = await l1Client.waitToProve({
       receipt,
       targetChain: l2Chain as any,
@@ -92,8 +109,8 @@ export default class BridgeWithdrawProve extends BaseCommand {
     ux.action.stop()
     console.log('Proof is ready!')
 
-    // Step 3: Build the proof
-    ux.action.start('Step 3/4: Building withdrawal proof')
+    // Step 4: Build the proof
+    ux.action.start('Step 4/5: Building withdrawal proof')
     const proveArgs = await l2Client.buildProveWithdrawal({
       output,
       withdrawal,
@@ -101,8 +118,8 @@ export default class BridgeWithdrawProve extends BaseCommand {
     ux.action.stop()
     console.log('Proof built successfully.')
 
-    // Step 4: Submit the prove transaction on L1
-    ux.action.start('Step 4/4: Submitting proof to L1')
+    // Step 5: Submit the prove transaction on L1
+    ux.action.start('Step 5/5: Submitting proof to L1')
     const proveHash = await l1Wallet.proveWithdrawal(proveArgs)
     const proveReceipt = await createPublicClient({
       chain: BRIDGE_CONFIG[network].l1Chain,
@@ -119,9 +136,7 @@ export default class BridgeWithdrawProve extends BaseCommand {
       console.log('\nWithdrawal proof submitted! Next steps:')
       console.log('  1. Wait 7 days for the challenge period to pass')
       console.log('  2. Run: celocli bridge:withdraw-status --txHash ' + txHash + ' ...')
-      console.log(
-        '  3. When ready, run: celocli bridge:withdraw-finalize --txHash ' + txHash + ' ...'
-      )
+      console.log('  3. When ready, run: celocli bridge:withdraw-finalize --txHash ' + txHash + ' ...')
     } else {
       throw new Error('Prove transaction failed. Please check the transaction on a block explorer.')
     }

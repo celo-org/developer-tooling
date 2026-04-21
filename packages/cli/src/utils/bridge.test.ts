@@ -1,4 +1,12 @@
-import { validateNetwork, BRIDGE_CONFIG, WITHDRAWAL_STATUS_LABELS, getL2OpChain } from './bridge'
+import {
+  validateNetwork,
+  BRIDGE_CONFIG,
+  WITHDRAWAL_STATUS_LABELS,
+  getL2OpChain,
+  createL1PublicClient,
+  verifyL2ChainId,
+  verifyL1ChainId,
+} from './bridge'
 
 describe('bridge utils', () => {
   describe('validateNetwork', () => {
@@ -63,6 +71,74 @@ describe('bridge utils', () => {
         expect(status.label).toBeTruthy()
         expect(status.description).toBeTruthy()
       })
+    })
+  })
+
+  describe('verifyL2ChainId', () => {
+    it('passes when chain ID matches mainnet', async () => {
+      const mockClient = { getChainId: async () => 42220 }
+      await expect(verifyL2ChainId(mockClient, 'mainnet')).resolves.toBeUndefined()
+    })
+
+    it('passes when chain ID matches sepolia', async () => {
+      const mockClient = { getChainId: async () => 11142220 }
+      await expect(verifyL2ChainId(mockClient, 'sepolia')).resolves.toBeUndefined()
+    })
+
+    it('throws when chain ID mismatches', async () => {
+      const mockClient = { getChainId: async () => 42220 }
+      await expect(verifyL2ChainId(mockClient, 'sepolia')).rejects.toThrow(
+        'L2 node chain ID mismatch'
+      )
+    })
+
+    it('includes expected and actual chain IDs in error', async () => {
+      const mockClient = { getChainId: async () => 99999 }
+      await expect(verifyL2ChainId(mockClient, 'mainnet')).rejects.toThrow(
+        'expects chain 42220 but --node is connected to chain 99999'
+      )
+    })
+  })
+
+  describe('verifyL1ChainId', () => {
+    it('passes when chain ID matches mainnet (Ethereum)', async () => {
+      const mockClient = { getChainId: async () => 1 }
+      await expect(verifyL1ChainId(mockClient, 'mainnet')).resolves.toBeUndefined()
+    })
+
+    it('passes when chain ID matches sepolia', async () => {
+      const mockClient = { getChainId: async () => 11155111 }
+      await expect(verifyL1ChainId(mockClient, 'sepolia')).resolves.toBeUndefined()
+    })
+
+    it('throws when chain ID mismatches', async () => {
+      const mockClient = { getChainId: async () => 11155111 }
+      await expect(verifyL1ChainId(mockClient, 'mainnet')).rejects.toThrow(
+        'L1 RPC chain ID mismatch'
+      )
+    })
+
+    it('includes expected and actual chain IDs in error', async () => {
+      const mockClient = { getChainId: async () => 5 }
+      await expect(verifyL1ChainId(mockClient, 'sepolia')).rejects.toThrow(
+        'expects chain 11155111 but --l1RpcUrl is connected to chain 5'
+      )
+    })
+  })
+
+  describe('createL1PublicClient', () => {
+    it('creates a client with OP Stack L1 actions for mainnet', () => {
+      const client = createL1PublicClient('https://eth.example.com', 'mainnet')
+      expect(client).toBeDefined()
+      expect(typeof client.getWithdrawalStatus).toBe('function')
+      expect(typeof client.waitToProve).toBe('function')
+    })
+
+    it('creates a client with OP Stack L1 actions for sepolia', () => {
+      const client = createL1PublicClient('https://eth-sepolia.example.com', 'sepolia')
+      expect(client).toBeDefined()
+      expect(typeof client.getWithdrawalStatus).toBe('function')
+      expect(typeof client.waitToProve).toBe('function')
     })
   })
 })
