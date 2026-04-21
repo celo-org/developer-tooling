@@ -55,7 +55,7 @@ describe('bridge utils', () => {
       expect(WITHDRAWAL_STATUS_LABELS['ready-to-prove']).toBeDefined()
       expect(WITHDRAWAL_STATUS_LABELS['waiting-to-finalize']).toBeDefined()
       expect(WITHDRAWAL_STATUS_LABELS['ready-to-finalize']).toBeDefined()
-      expect(WITHDRAWAL_STATUS_LABELS['finalized']).toBeDefined()
+      expect(WITHDRAWAL_STATUS_LABELS.finalized).toBeDefined()
     })
 
     it('each status has label and description', () => {

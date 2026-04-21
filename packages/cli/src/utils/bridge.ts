@@ -52,13 +52,13 @@ const celoL2 = /*#__PURE__*/ defineChain({
       blockCreated: 13112599,
     },
     portal: {
-      [1]: { address: '0xc5c5D157928BDBD2ACf6d0777626b6C75a9EAEDC' },
+      1: { address: '0xc5c5D157928BDBD2ACf6d0777626b6C75a9EAEDC' },
     },
     disputeGameFactory: {
-      [1]: { address: '0xFbAC162162f4009Bb007C6DeBC36B1dAC10aF683' },
+      1: { address: '0xFbAC162162f4009Bb007C6DeBC36B1dAC10aF683' },
     },
     l1StandardBridge: {
-      [1]: { address: '0x9C4955b92F34148dbcfDCD82e9c9eCe5CF2badfe' },
+      1: { address: '0x9C4955b92F34148dbcfDCD82e9c9eCe5CF2badfe' },
     },
   },
   sourceId: 1,
@@ -86,13 +86,13 @@ const celoSepoliaL2 = /*#__PURE__*/ defineChain({
       blockCreated: 1,
     },
     portal: {
-      [11155111]: { address: '0x44ae3d41a335a7d05eb533029917aad35662dcc2', blockCreated: 8825790 },
+      11155111: { address: '0x44ae3d41a335a7d05eb533029917aad35662dcc2', blockCreated: 8825790 },
     },
     disputeGameFactory: {
-      [11155111]: { address: '0x57c45d82d1a995f1e135b8d7edc0a6bb5211cfaa', blockCreated: 8825790 },
+      11155111: { address: '0x57c45d82d1a995f1e135b8d7edc0a6bb5211cfaa', blockCreated: 8825790 },
     },
     l1StandardBridge: {
-      [11155111]: { address: '0xec18a3c30131a0db4246e785355fbc16e2eaf408', blockCreated: 8825790 },
+      11155111: { address: '0xec18a3c30131a0db4246e785355fbc16e2eaf408', blockCreated: 8825790 },
     },
   },
   sourceId: 11155111,
@@ -110,10 +110,7 @@ export function getL2OpChain(network: BridgeNetwork) {
   return network === 'mainnet' ? celoL2 : celoSepoliaL2
 }
 
-export async function verifyL2ChainId(
-  client: { getChainId: () => Promise<number> },
-  network: BridgeNetwork
-) {
+export async function verifyL2ChainId(client: { getChainId: () => Promise<number> }, network: BridgeNetwork) {
   const expectedChainId = getL2OpChain(network).id
   const actualChainId = await client.getChainId()
   if (actualChainId !== expectedChainId) {
@@ -123,10 +120,7 @@ export async function verifyL2ChainId(
   }
 }
 
-export async function verifyL1ChainId(
-  client: { getChainId: () => Promise<number> },
-  network: BridgeNetwork
-) {
+export async function verifyL1ChainId(client: { getChainId: () => Promise<number> }, network: BridgeNetwork) {
   const expectedChainId = BRIDGE_CONFIG[network].l1Chain.id
   const actualChainId = await client.getChainId()
   if (actualChainId !== expectedChainId) {
@@ -222,11 +216,13 @@ export const WITHDRAWAL_STATUS_LABELS: Record<
   },
   'ready-to-prove': {
     label: 'Ready to Prove',
-    description: 'The proof is available. You can now submit it on L1 with bridge:withdraw-prove.',
+    description:
+      'The proof is available. You can now submit it on L1 with bridge:withdraw-prove.',
   },
   'waiting-to-finalize': {
     label: 'Waiting to Finalize',
-    description: 'The proof has been submitted. The 7-day challenge period is in progress.',
+    description:
+      'The proof has been submitted. The 7-day challenge period is in progress.',
   },
   'ready-to-finalize': {
     label: 'Ready to Finalize',
