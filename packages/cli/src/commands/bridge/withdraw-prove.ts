@@ -93,8 +93,10 @@ export default class BridgeWithdrawProve extends BaseCommand {
 
     if (status !== 'ready-to-prove' && status !== 'waiting-to-prove') {
       const messages: Record<string, string> = {
-        'waiting-to-finalize': 'This withdrawal has already been proven. Wait for the 7-day challenge period to pass, then run bridge:withdraw-finalize.',
-        'ready-to-finalize': 'This withdrawal has already been proven and is ready to finalize. Run bridge:withdraw-finalize.',
+        'waiting-to-finalize':
+          'This withdrawal has already been proven. Wait for the 7-day challenge period to pass, then run bridge:withdraw-finalize.',
+        'ready-to-finalize':
+          'This withdrawal has already been proven and is ready to finalize. Run bridge:withdraw-finalize.',
         finalized: 'This withdrawal has already been finalized.',
       }
       throw new Error(messages[status] || `Unexpected withdrawal status: ${status}`)
@@ -136,7 +138,9 @@ export default class BridgeWithdrawProve extends BaseCommand {
       console.log('\nWithdrawal proof submitted! Next steps:')
       console.log('  1. Wait 7 days for the challenge period to pass')
       console.log('  2. Run: celocli bridge:withdraw-status --txHash ' + txHash + ' ...')
-      console.log('  3. When ready, run: celocli bridge:withdraw-finalize --txHash ' + txHash + ' ...')
+      console.log(
+        '  3. When ready, run: celocli bridge:withdraw-finalize --txHash ' + txHash + ' ...'
+      )
     } else {
       throw new Error('Prove transaction failed. Please check the transaction on a block explorer.')
     }
