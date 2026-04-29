@@ -43,7 +43,7 @@ export default class Propose extends BaseCommand {
     simulate: Flags.string({
       required: false,
       description:
-        'RPC URL of a forked node (e.g. anvil) to simulate the proposal against. Each proposal transaction is actually sent (not eth_call) from the Governance contract address, which the node must have unlocked (e.g. anvil --auto-impersonate). Replaces the default eth_call simulation.',
+        'RPC URL of a forked node (e.g. anvil) to simulate the proposal against. Each proposal transaction is actually sent (not eth_call) from the Governance contract address, which the node must have unlocked (e.g. anvil --auto-impersonate). Replaces the default eth_call simulation. Useful for proposals where the success of one tx depends on a previous one succeeding.',
       exclusive: ['force'],
     }),
     noInfo: Flags.boolean({ description: 'Skip printing the proposal info', default: false }),
