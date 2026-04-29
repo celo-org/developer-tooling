@@ -35,6 +35,10 @@ export async function simulateProposalOnRpc(
   let ok = true
   for (const [i, tx] of proposal.entries()) {
     if (!tx.to) {
+      console.log(
+        chalk.red(`   ${chalk.bold('✘')}  Transaction ${i} has no 'to' address; skipping`)
+      )
+      ok = false
       continue
     }
     try {
@@ -94,6 +98,10 @@ async function tryProposal(
   let ok = true
   for (const [i, tx] of proposal.entries()) {
     if (!tx.to) {
+      console.log(
+        chalk.red(`   ${chalk.bold('✘')}  Transaction ${i} has no 'to' address; skipping`)
+      )
+      ok = false
       continue
     }
 
