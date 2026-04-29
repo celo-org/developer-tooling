@@ -2,7 +2,6 @@ import { ProposalBuilder, proposalToJSON, ProposalTransactionJSON } from '@celo/
 import { Flags } from '@oclif/core'
 import { BigNumber } from 'bignumber.js'
 import { readFileSync } from 'fs'
-import { type Hex } from 'viem'
 import { BaseCommand } from '../../base'
 import { newCheckBuilder } from '../../utils/checks'
 import { displaySendTx, printValueMapRecursive } from '../../utils/cli'
@@ -127,7 +126,7 @@ export default class Propose extends BaseCommand {
 
     if (!res.flags.force) {
       const ok = res.flags.simulate
-        ? await simulateProposalOnRpc(proposal, res.flags.simulate, governance.address as Hex)
+        ? await simulateProposalOnRpc(proposal, res.flags.simulate, governance.address)
         : await checkProposal(proposal, kit)
       if (!ok) {
         return

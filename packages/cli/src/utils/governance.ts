@@ -1,3 +1,4 @@
+import { type StrongAddress } from '@celo/base'
 import { toTxResult } from '@celo/connect'
 import { ContractKit } from '@celo/contractkit'
 import { ProposalTransaction } from '@celo/contractkit/lib/wrappers/Governance'
@@ -15,7 +16,7 @@ export async function checkProposal(proposal: ProposalTransaction[], kit: Contra
 export async function simulateProposalOnRpc(
   proposal: ProposalTransaction[],
   rpcUrl: string,
-  governanceAddress: Hex
+  governanceAddress: StrongAddress
 ) {
   const transport = http(rpcUrl)
   const publicClient = await createCeloPublicClient({ transport, nodeUrl: rpcUrl })
@@ -26,9 +27,7 @@ export async function simulateProposalOnRpc(
     account: governanceAddress,
   })
 
-  console.log(
-    `Simulating proposal execution against ${rpcUrl} as Governance ${governanceAddress}`
-  )
+  console.log(`Simulating proposal execution against ${rpcUrl} as Governance ${governanceAddress}`)
 
   let ok = true
   for (const [i, tx] of proposal.entries()) {
@@ -37,7 +36,7 @@ export async function simulateProposalOnRpc(
     }
     try {
       const hash = await walletClient.sendTransaction({
-        to: tx.to as Hex,
+        to: tx.to as StrongAddress,
         value: BigInt(tx.value ?? 0),
         data: (tx.input ?? '0x') as Hex,
       })
@@ -46,7 +45,7 @@ export async function simulateProposalOnRpc(
         let reason = ''
         try {
           await publicClient.call({
-            to: tx.to as Hex,
+            to: tx.to as StrongAddress,
             data: (tx.input ?? '0x') as Hex,
             value: BigInt(tx.value ?? 0),
             account: governanceAddress,
