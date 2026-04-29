@@ -127,7 +127,7 @@ export default class Propose extends BaseCommand {
     if (!res.flags.force) {
       const ok = res.flags.simulate
         ? await simulateProposalOnRpc(proposal, res.flags.simulate, governance.address)
-        : await checkProposal(proposal, kit)
+        : await checkProposal(proposal, kit, governance.address)
       if (!ok) {
         return
       }

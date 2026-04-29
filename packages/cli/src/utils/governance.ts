@@ -8,9 +8,12 @@ import { readJsonSync } from 'fs-extra'
 import { createWalletClient, http, type Hex } from 'viem'
 import createCeloPublicClient from '../packages-to-be/public-client'
 
-export async function checkProposal(proposal: ProposalTransaction[], kit: ContractKit) {
-  const governance = await kit.contracts.getGovernance()
-  return tryProposal(proposal, kit, governance.address, true)
+export async function checkProposal(
+  proposal: ProposalTransaction[],
+  kit: ContractKit,
+  governanceAddress: StrongAddress
+) {
+  return tryProposal(proposal, kit, governanceAddress, true)
 }
 
 export async function simulateProposalOnRpc(
