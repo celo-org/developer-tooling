@@ -9,6 +9,7 @@ export default async function createCeloPublicClient({
   transport: Transport
   nodeUrl: string
 }): Promise<PublicCeloClient> {
+  // Create an intermediate client to get the chain id
   const intermediateClient = createPublicClient({ transport })
   const chainId = await intermediateClient.getChainId()
   const extractedChain = extractChain({
@@ -24,6 +25,7 @@ export default async function createCeloPublicClient({
     })
   }
 
+  // we might be connecting to a dev chain or anvil fork or another testnet
   return createPublicClient({
     transport,
     chain: {
