@@ -8,14 +8,28 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - name: Akeyless Get CODECOV_TOKEN Secrets
-      id: get_codecov_token
+    - name: Import Secrets from OpenBao
       if: github.ref_name == github.event.repository.default_branch
-      uses: docker://us-west1-docker.pkg.dev/devopsre/akeyless-public/akeyless-action:latest
+      id: get_codecov_token
+      uses: hashicorp/vault-action@v3
       with:
-        api-url: https://api.gateway.akeyless.celo-networks-dev.org
-        access-id: p-kf9vjzruht6l
-        static-secrets: '{"/static-secrets/dev-tooling-circle/codecov/developer-tooling":"CODECOV_TOKEN"}'
+        # Your OpenBao URL
+        url: https://openbao.akeyless.celo-networks-dev.org
+        # Authentication configuration
+        method: jwt
+        path: github
+        role: celo-org_developer-tooling
+        # Secrets to retrieve: <PATH> <KEY> | <ENV_VAR_NAME>
+        secrets: |
+          secrets/data/static-secrets/dev-tooling-circle/codecov/developer-tooling value | CODECOV_TOKEN
+    # - name: Akeyless Get CODECOV_TOKEN Secrets
+    #   id: get_codecov_token
+    #   if: github.ref_name == github.event.repository.default_branch
+    #   uses: docker://us-west1-docker.pkg.dev/devopsre/akeyless-public/akeyless-action:latest
+    #   with:
+    #     api-url: https://api.gateway.akeyless.celo-networks-dev.org
+    #     access-id: p-kf9vjzruht6l
+    #     static-secrets: '{"/static-secrets/dev-tooling-circle/codecov/developer-tooling":"CODECOV_TOKEN"}'
     - name: Upload coverage to Codecov
       if: github.ref_name == github.event.repository.default_branch
       uses: codecov/codecov-action@v5

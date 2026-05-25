@@ -21,7 +21,7 @@ jobs:
       attestations: write
       id-token: write
       repository-projects: write
-    uses: celo-org/reusable-workflows/.github/workflows/npm-publish.yaml@develop-npm-publishing-oidc
+    uses: celo-org/reusable-workflows/.github/workflows/npm-publish-oidc-changesets.yaml@v3.1.0-rc.6
     with:
       node-version: 20
       version-command: yarn version-then-update-files
