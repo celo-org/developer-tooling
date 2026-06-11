@@ -5,6 +5,7 @@ import {
   defineChain,
   getContract,
 } from 'viem'
+import { chainConfig as celoChainConfig } from 'viem/celo'
 
 /**
  * Viem-native contract type for Celo contracts.
@@ -25,7 +26,8 @@ function wrapWriteWithAccountMapping(
   write: any,
   estimateGasNs: any,
   getDefaultAccount?: () => string | undefined,
-  getChainId?: () => Promise<number>
+  getChainId?: () => Promise<number>,
+  getFeeCurrency?: () => string | undefined
 ): any {
   let chainCache: ReturnType<typeof defineChain> | undefined
 
@@ -60,11 +62,32 @@ function wrapWriteWithAccountMapping(
           }
         }
 
-        // Inject chain from RPC so viem's chain validation passes
+        // Inject the connection-level default fee currency (CIP-64) when the
+        // caller did not specify one. Without this, kit.setFeeCurrency() would
+        // be silently ignored for contract.write calls.
+        if (getFeeCurrency) {
+          const feeCurrency = getFeeCurrency()
+          if (feeCurrency) {
+            const fIdx = args.length - 1
+            const fArg = fIdx >= 0 ? args[fIdx] : undefined
+            if (fArg && typeof fArg === 'object' && !Array.isArray(fArg)) {
+              if (!fArg.feeCurrency) {
+                args[fIdx] = { ...fArg, feeCurrency }
+              }
+            } else {
+              args.push({ feeCurrency })
+            }
+          }
+        }
+
+        // Inject chain from RPC so viem's chain validation passes.
+        // Celo serializers/formatters are required so feeCurrency survives
+        // serialization (local accounts) and request formatting (node accounts).
         if (getChainId) {
           if (!chainCache) {
             const id = await getChainId()
             chainCache = defineChain({
+              ...celoChainConfig,
               id,
               name: 'celo',
               nativeCurrency: { name: 'CELO', symbol: 'CELO', decimals: 18 },
@@ -132,6 +155,9 @@ function wrapWriteWithAccountMapping(
  *   `.write` call so it picks up runtime changes.
  * @param getChainId - optional async callback returning the chain ID of the
  *   connected RPC. Used to satisfy viem's chain validation on write calls.
+ * @param getFeeCurrency - optional callback returning the connection-level
+ *   default fee currency (e.g. Connection.defaultFeeCurrency). Evaluated
+ *   lazily on each `.write` call.
  */
 export function createCeloContract<TAbi extends readonly unknown[]>(
   abi: TAbi,
@@ -139,7 +165,8 @@ export function createCeloContract<TAbi extends readonly unknown[]>(
   publicClient: PublicClient,
   walletClient?: WalletClient,
   getDefaultAccount?: () => string | undefined,
-  getChainId?: () => Promise<number>
+  getChainId?: () => Promise<number>,
+  getFeeCurrency?: () => string | undefined
 ): CeloContract<TAbi> {
   const contract: any = walletClient
     ? getContract({
@@ -157,7 +184,8 @@ export function createCeloContract<TAbi extends readonly unknown[]>(
         contract.write,
         contract.estimateGas,
         getDefaultAccount,
-        getChainId
+        getChainId,
+        getFeeCurrency
       ),
     } as CeloContract<TAbi>
   }

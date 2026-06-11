@@ -306,14 +306,17 @@ export class Connection {
     }
 
     if (isEmpty(tx.maxFeePerGas)) {
+      // baseFeePerGas is null on chains/blocks without EIP-1559; fall back to eth_gasPrice
       const baseFee = isEmpty(tx.feeCurrency)
-        ? await this._viemClient
+        ? (await this._viemClient
             .getBlock({ blockTag: 'latest' })
-            .then((block) => block.baseFeePerGas)
+            .then((block) => block.baseFeePerGas)) ?? (await this.gasPrice())
         : await this.gasPrice(tx.feeCurrency)
-      const withBuffer = addBufferToBaseFee(BigInt(baseFee!))
-      const maxFeePerGas =
-        withBuffer + BigInt(ensureLeading0x(tx.maxPriorityFeePerGas.toString(16)))
+      const withBuffer = addBufferToBaseFee(BigInt(baseFee))
+      // BigInt() handles bigint, number, decimal strings, and 0x-prefixed hex strings.
+      // (String.prototype.toString ignores a radix argument, so .toString(16) must not
+      // be used on values that may already be strings.)
+      const maxFeePerGas = withBuffer + BigInt(tx.maxPriorityFeePerGas)
       tx.maxFeePerGas = ensureLeading0x(maxFeePerGas.toString(16))
     }
 
@@ -442,7 +445,8 @@ export class Connection {
       this._viemClient,
       this.walletClient,
       () => this.config.from,
-      () => this._viemClient.getChainId()
+      () => this._viemClient.getChainId(),
+      () => this.config.feeCurrency
     )
   }
 

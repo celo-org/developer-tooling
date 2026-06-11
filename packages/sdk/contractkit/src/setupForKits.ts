@@ -23,6 +23,11 @@ export function setupAPIKey(apiKey: string) {
 
 let nextId = 1
 
+// JSON-RPC quantities may arrive as bigint (e.g. from viem); plain JSON.stringify
+// throws "Do not know how to serialize a BigInt", so encode them as hex strings.
+const bigintToHexReplacer = (_key: string, value: unknown) =>
+  typeof value === 'bigint' ? `0x${value.toString(16)}` : value
+
 /**
  * HTTP/HTTPS provider with custom headers support (e.g. API keys).
  * Implements EIP-1193 request() interface.
@@ -39,12 +44,15 @@ class SimpleHttpProvider implements Provider {
   }
 
   request: EIP1193RequestFn = async ({ method, params }) => {
-    const body = JSON.stringify({
-      jsonrpc: '2.0',
-      id: nextId++,
-      method,
-      params: Array.isArray(params) ? params : params != null ? [params] : [],
-    })
+    const body = JSON.stringify(
+      {
+        jsonrpc: '2.0',
+        id: nextId++,
+        method,
+        params: Array.isArray(params) ? params : params != null ? [params] : [],
+      },
+      bigintToHexReplacer
+    )
     const parsedUrl = new URL(this.url)
     const isHttps = parsedUrl.protocol === 'https:'
     const httpModule = isHttps ? https : http
@@ -106,12 +114,15 @@ class SimpleIpcProvider implements Provider {
   ) {}
 
   request: EIP1193RequestFn = async ({ method, params }) => {
-    const body = JSON.stringify({
-      jsonrpc: '2.0',
-      id: nextId++,
-      method,
-      params: Array.isArray(params) ? params : params != null ? [params] : [],
-    })
+    const body = JSON.stringify(
+      {
+        jsonrpc: '2.0',
+        id: nextId++,
+        method,
+        params: Array.isArray(params) ? params : params != null ? [params] : [],
+      },
+      bigintToHexReplacer
+    )
 
     return new Promise((resolve, reject) => {
       const socket = this.netModule.connect({ path: this.path })

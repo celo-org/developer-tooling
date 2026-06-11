@@ -1,6 +1,6 @@
 import { StrongAddress, ensureLeading0x, hexToBuffer } from '@celo/base/lib/address'
 import { secp256k1 } from '@noble/curves/secp256k1'
-import { getAddress, isAddress } from 'viem'
+import { getAddress } from 'viem'
 import { publicKeyToAddress as viemPublicKeyToAddress } from 'viem/accounts'
 // Exports moved to @celo/base, forwarding them
 // here for backwards compatibility
@@ -21,8 +21,15 @@ export {
   trimLeading0x,
 } from '@celo/base/lib/address'
 export { getAddress as toChecksumAddress } from 'viem'
-export const isValidChecksumAddress = (address: string): boolean =>
-  isAddress(address, { strict: true })
+// viem's isAddress({ strict: true }) accepts all-lowercase addresses; a checksum
+// validator must require the exact EIP-55 mixed-case form (parity with @ethereumjs/util).
+export const isValidChecksumAddress = (address: string): boolean => {
+  try {
+    return getAddress(address) === address
+  } catch {
+    return false
+  }
+}
 
 export const privateKeyToAddress = (privateKey: string) => {
   const pubKey = secp256k1.getPublicKey(hexToBuffer(privateKey), false)
