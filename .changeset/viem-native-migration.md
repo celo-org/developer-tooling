@@ -12,4 +12,5 @@
 - Updated `proxyCall`/`proxySend` to accept `ViemContract` + function name strings
 - Migrated CLI commands, dev-utils, and explorer to use new API
 - Deprecated `Connection.createContract()` (kept for backward compatibility with `.deploy()`)
-- Public API unchanged: `CeloTransactionObject`, wrapper method signatures remain the same
+- Removed the deprecated `kit.web3` shim (use `kit.connection.viemClient` instead)
+- Wrapper method signatures remain the same (`CeloTransactionObject` unchanged at this stage)
