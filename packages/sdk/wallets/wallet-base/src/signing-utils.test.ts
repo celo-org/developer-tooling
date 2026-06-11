@@ -26,6 +26,22 @@ describe('rlpEncodedTx', () => {
     })
   })
 
+  describe('value encoding precision', () => {
+    it('keeps wei precision above 2^53 (regression: Number() truncated the last wei)', () => {
+      const result = rlpEncodedTx({
+        from: '0x1daf825EB5C0D9d9FeC33C444e413452A08e04A6',
+        to: '0x43d72ff17701b2da814620735c39c620ce0ea4a1',
+        chainId: 42220,
+        value: '1000000000000000001', // 1 CELO + 1 wei
+        nonce: 1,
+        gas: '100000',
+        gasPrice: '5000000000',
+        data: '0x',
+      })
+      expect(result.transaction.value).toBe('0x0de0b6b3a7640001')
+    })
+  })
+
   describe('Ethereum legacy', () => {
     const legacyTransaction = {
       from: '0x1daf825EB5C0D9d9FeC33C444e413452A08e04A6',

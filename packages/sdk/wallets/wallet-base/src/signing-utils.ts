@@ -125,7 +125,10 @@ function stringNumberToHex(num?: number | string | bigint): StrongAddress {
   if (typeof num === 'bigint') {
     return makeEven(`0x` + num.toString(16)) as StrongAddress
   }
-  return makeEven(ensureLeading0x(Number(num).toString(16))) as StrongAddress
+  // BigInt keeps arbitrary precision like web3's numberToHex did — Number()
+  // silently truncates integers above 2^53 (e.g. wei amounts), which would
+  // sign a transaction carrying a wrong value
+  return makeEven(`0x` + BigInt(num).toString(16)) as StrongAddress
 }
 export function rlpEncodedTx(tx: CeloTx): RLPEncodedTx {
   assertSerializableTX(tx)
@@ -487,7 +490,11 @@ function getPublicKeyofSignerFromTx(transactionArray: Uint8Array[], type: OldTra
   const { v, r, s } = extractSignatureFromDecoded(transactionArray)
   try {
     const recovery = v === '0x' || v === undefined ? 0 : 1
-    const sig = new secp256k1.Signature(BigInt(r), BigInt(s)).addRecoveryBit(recovery)
+    // an unsigned/malformed tx yields '0x' for r/s — BigInt('0x') throws SyntaxError
+    const sig = new secp256k1.Signature(
+      BigInt(r === '0x' ? '0x0' : r),
+      BigInt(s === '0x' ? '0x0' : s)
+    ).addRecoveryBit(recovery)
     return Buffer.from(sig.recoverPublicKey(msgHash).toRawBytes(false))
   } catch (e: any) {
     throw new Error(e)
