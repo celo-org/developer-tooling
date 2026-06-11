@@ -402,6 +402,11 @@ export class ElectionWrapper extends BaseWrapperForGoverning<typeof electionABI>
 
   /**
    * Activates any activatable pending votes.
+   *
+   * Sends one transaction per group eagerly and sequentially (unlike the old
+   * API, which returned lazy transaction objects). If a later group's
+   * activation reverts, earlier groups remain activated on-chain and the
+   * error propagates without the partial hashes.
    * @param account The account with pending votes to activate.
    */
   async activate(
