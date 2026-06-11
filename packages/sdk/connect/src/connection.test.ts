@@ -31,24 +31,6 @@ describe('Connection', () => {
         })
       })
     })
-    describe('when fee market gas is set (duplicate)', () => {
-      let connection: Connection
-      beforeEach(() => {
-        connection = new Connection(createMockProvider())
-      })
-      it('returns with gasPrice undefined and feeMarketGas set', async () => {
-        const result = await connection.setFeeMarketGas({
-          maxFeePerGas: '1',
-          maxPriorityFeePerGas: '2',
-        })
-        expect(result).toEqual({
-          gasPrice: undefined,
-          maxFeePerGas: '1',
-          maxPriorityFeePerGas: '2',
-        })
-      })
-    })
-
     describe('when fee market gas is not set', () => {
       const ETH_GAS_PRICE = 25001000000
       const BASE_FEE_PER = 25000000000

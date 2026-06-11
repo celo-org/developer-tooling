@@ -147,7 +147,8 @@ export function Encrypt(pubKeyTo: PubKey, plaintext: Uint8Array) {
   const ephemPubKey = Buffer.from(secp256k1.getPublicKey(ephemPrivKey, false))
   const ephemPubKeyEncoded = Buffer.from(ephemPubKey)
   if (typeof pubKeyTo === 'string') {
-    pubKeyTo = secp256k1.ProjectivePoint.fromHex(pubKeyTo).toRawBytes()
+    // explicit uncompressed form (65 bytes) — toRawBytes() defaults to compressed
+    pubKeyTo = secp256k1.ProjectivePoint.fromHex(pubKeyTo).toRawBytes(false)
   }
 
   // Ensure the public key is in uncompressed form (65 bytes, starting with 0x04).

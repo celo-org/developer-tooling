@@ -22,6 +22,10 @@ function messageLength(message: string) {
   }
   return message.length
 }
+// secp256k1 recovery bit is 0/1; Ethereum signatures commonly carry v as 27/28.
+// Accept both (parity with @ethereumjs/util ecrecover, which normalized v).
+const toRecoveryBit = (v: number) => (v >= 27 ? v - 27 : v)
+
 // Ethereum has a special signature format that requires a prefix
 // https://github.com/ethereum/wiki/wiki/JSON-RPC#eth_sign
 export function hashMessageWithPrefix(message: string): string {
@@ -62,7 +66,7 @@ export async function addressToPublicKey(
   const signature = new secp256k1.Signature(
     BigInt(toHex(r, { size: 32 })),
     BigInt(toHex(s, { size: 32 }))
-  ).addRecoveryBit(v - 27)
+  ).addRecoveryBit(toRecoveryBit(v))
   const pubKeyFull = signature.recoverPublicKey(msgHash).toRawBytes(false)
 
   const computedAddr = viemPublicKeyToAddress(bytesToHex(pubKeyFull) as `0x${string}`)
@@ -85,7 +89,7 @@ export function LocalSigner(privateKey: string): Signer {
 
 export function signedMessageToPublicKey(message: string, v: number, r: string, s: string) {
   const msgHash = hexToBytes(message as `0x${string}`)
-  const signature = new secp256k1.Signature(BigInt(r), BigInt(s)).addRecoveryBit(v - 27)
+  const signature = new secp256k1.Signature(BigInt(r), BigInt(s)).addRecoveryBit(toRecoveryBit(v))
   const pubKey = signature.recoverPublicKey(msgHash).toRawBytes(false)
   // Return raw 64-byte key (without 04 prefix) for on-chain compatibility
   return bytesToHex(pubKey.subarray(1))
@@ -156,7 +160,7 @@ function recoverEIP712TypedDataSigner(
   const dataBuff = generateTypedDataHash(typedData)
   const { r, s, v } = parseFunction(trimLeading0x(signature))
   const msgHash = dataBuff instanceof Uint8Array ? dataBuff : hexToBytes(dataBuff as `0x${string}`)
-  const sig = new secp256k1.Signature(BigInt(r), BigInt(s)).addRecoveryBit(v - 27)
+  const sig = new secp256k1.Signature(BigInt(r), BigInt(s)).addRecoveryBit(toRecoveryBit(v))
   const publicKey = sig.recoverPublicKey(msgHash).toRawBytes(false)
   return viemPublicKeyToAddress(bytesToHex(publicKey) as `0x${string}`)
 }
@@ -214,7 +218,7 @@ export function guessSigner(message: string, signature: string): string {
   const messageHash = hashMessageWithPrefix(message)
   const { r, s, v } = parseSignatureAsRsv(signature.slice(2))
   const msgHash = hexToBytes(messageHash as `0x${string}`)
-  const sig = new secp256k1.Signature(BigInt(r), BigInt(s)).addRecoveryBit(v - 27)
+  const sig = new secp256k1.Signature(BigInt(r), BigInt(s)).addRecoveryBit(toRecoveryBit(v))
   const publicKey = sig.recoverPublicKey(msgHash).toRawBytes(false)
   return viemPublicKeyToAddress(bytesToHex(publicKey) as `0x${string}`)
 }
@@ -242,7 +246,7 @@ function parseSignatureAsRsv(signature: string) {
 function isValidSignature(signer: string, message: string, v: number, r: string, s: string) {
   try {
     const msgHash = hexToBytes(message as `0x${string}`)
-    const sig = new secp256k1.Signature(BigInt(r), BigInt(s)).addRecoveryBit(v - 27)
+    const sig = new secp256k1.Signature(BigInt(r), BigInt(s)).addRecoveryBit(toRecoveryBit(v))
     const publicKey = sig.recoverPublicKey(msgHash).toRawBytes(false)
     const retrievedAddress = viemPublicKeyToAddress(bytesToHex(publicKey) as `0x${string}`)
     return eqAddress(retrievedAddress, signer)
