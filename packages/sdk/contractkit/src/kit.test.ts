@@ -45,13 +45,23 @@ import { startAndFinishEpochProcess } from './test-utils/utils'
     })
 
     test('should use inflation factor on gas', async () => {
-      estimateGasSpy.mockResolvedValue(2000)
-      await kit.connection.sendTransaction(txData)
-      expect(sendViaProviderSpy).toBeCalledWith(
-        expect.objectContaining({
-          gas: 2000,
-        })
-      )
+      // verify the multiplication itself: mock the raw estimate, not the
+      // inflation-applying method
+      estimateGasSpy.mockRestore()
+      const rawEstimateSpy = jest.spyOn(kit.connection, 'estimateGas').mockResolvedValue(1000)
+      const previousFactor = kit.connection.defaultGasInflationFactor
+      try {
+        kit.connection.defaultGasInflationFactor = 2
+        await kit.connection.sendTransaction(txData)
+        expect(sendViaProviderSpy).toBeCalledWith(
+          expect.objectContaining({
+            gas: 2000,
+          })
+        )
+      } finally {
+        kit.connection.defaultGasInflationFactor = previousFactor
+        rawEstimateSpy.mockRestore()
+      }
     })
 
     test('should forward tx params to sendTransactionViaProvider()', async () => {

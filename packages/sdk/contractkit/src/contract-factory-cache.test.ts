@@ -38,7 +38,6 @@ testWithAnvilL2('provider-contract-cache', (provider) => {
       const contract = await contractCache.getLockedCelo()
       expect(contract).not.toBeNull()
       expect(contract).toBeDefined()
-      expect
     })
   })
   describe('getCeloToken()', () => {

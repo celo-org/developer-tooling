@@ -368,11 +368,14 @@ export class AccountsWrapper extends BaseWrapper<typeof accountsABI> {
    * @param account Account
    * @param blockNumber Height of result, defaults to tip.
    */
-  private _getName = async (account: string) => this.contract.read.getName([toViemAddress(account)])
+  private _getName = async (account: string, blockNumber?: number) =>
+    this.contract.read.getName(
+      [toViemAddress(account)],
+      blockNumber !== undefined ? { blockNumber: BigInt(blockNumber) } : {}
+    )
 
-  async getName(account: Address, _blockNumber?: number): Promise<string> {
-    // @ts-ignore: Expected 0-1 arguments, but got 2
-    return this._getName(account)
+  async getName(account: Address, blockNumber?: number): Promise<string> {
+    return this._getName(account, blockNumber)
   }
 
   /**
