@@ -139,7 +139,7 @@ testWithAnvilL2('transfer:dollars cmd', (provider) => {
               "   ✔  The provided feeCurrency is whitelisted ",
             ],
             [
-              "   ✘  Account can afford to transfer USDm with gas paid in 0x20FE3FD86C231fb8E28255452CEA7851f9C5f9c1 Cannot afford to transfer USDm ; try reducing value slightly or using a different feeCurrency",
+              "   ✘  Account can afford to transfer USDm with gas paid in 0x20FE3FD86C231fb8E28255452CEA7851f9C5f9c1 Cannot afford to transfer USDm with 0x20FE3FD86C231fb8E28255452CEA7851f9C5f9c1 feeCurrency ; try reducing value slightly or using a different feeCurrency",
             ],
           ]
         `)
