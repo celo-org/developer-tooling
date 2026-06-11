@@ -990,20 +990,14 @@ export class GovernanceWrapper extends BaseWrapperForGoverning<typeof governance
    * @notice Only the `approver` address will succeed in sending this transaction
    */
   approveHotfix = (hash: Buffer, txParams?: Omit<CeloTx, 'data'>) =>
-    this.contract.write.approveHotfix(
-      [bufferToHex(hash) as `0x${string}`],
-      txParams as any
-    )
+    this.contract.write.approveHotfix([bufferToHex(hash) as `0x${string}`], txParams as any)
 
   /**
    * Marks the given hotfix prepared for current epoch if quorum of validators have whitelisted it.
    * @param hash keccak256 hash of hotfix's associated abi encoded transactions
    */
   prepareHotfix = (hash: Buffer, txParams?: Omit<CeloTx, 'data'>) =>
-    this.contract.write.prepareHotfix(
-      [bufferToHex(hash) as `0x${string}`],
-      txParams as any
-    )
+    this.contract.write.prepareHotfix([bufferToHex(hash) as `0x${string}`], txParams as any)
 
   /**
    * Executes a given sequence of transactions if the corresponding hash is prepared and approved.

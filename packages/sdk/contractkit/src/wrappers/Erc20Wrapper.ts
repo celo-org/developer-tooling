@@ -70,7 +70,8 @@ export class Erc20Wrapper<TAbi extends Abi = typeof ierc20ABI> extends BaseWrapp
     to: string,
     value: string | number,
     txParams?: Omit<CeloTx, 'data'>
-  ) => (this.contract as any).write.transferFrom(
+  ) =>
+    (this.contract as any).write.transferFrom(
       [toViemAddress(from), toViemAddress(to), toViemBigInt(value)] as const,
       txParams as any
     )
