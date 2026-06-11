@@ -5,7 +5,11 @@ import type { AbiItem } from '@celo/connect'
 import { coerceArgsForAbi } from '@celo/connect/lib/viem-abi-coder'
 import { decodeParametersToObject } from '@celo/connect/lib/utils/abi-utils'
 import type { PublicClient } from 'viem'
-import { toFunctionHash, encodeFunctionData as viemEncodeFunctionData } from 'viem'
+import {
+  toFunctionHash,
+  toFunctionSelector,
+  encodeFunctionData as viemEncodeFunctionData,
+} from 'viem'
 import { fromFixed, toFixed } from '@celo/utils/lib/fixidity'
 import BigNumber from 'bignumber.js'
 import { ContractVersion } from '../versions'
@@ -162,8 +166,9 @@ export abstract class BaseWrapper<TAbi extends readonly unknown[] = AbiItem[]> {
   methodIds = (this.contract.abi as unknown as AbiItem[])
     .filter((item: AbiItem) => item.type === 'function' && item.name)
     .reduce<Record<Methods, string>>((acc, item: AbiItem) => {
-      const sig = `${item.name}(${(item.inputs || []).map((i) => i.type).join(',')})`
-      acc[item.name!] = toFunctionHash(sig).slice(0, 10)
+      // toFunctionSelector expands tuple components into the canonical
+      // signature; joining raw input types would hash 'fn(tuple)' instead
+      acc[item.name!] = toFunctionSelector(item as Parameters<typeof toFunctionSelector>[0])
       return acc
     }, {} as any)
 }
