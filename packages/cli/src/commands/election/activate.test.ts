@@ -123,8 +123,8 @@ testWithAnvilL2(
       expect(
         (
           await election.getVotesForGroupByAccount(userAddress, groupAddress)
-        ).active.isGreaterThanOrEqualTo(new BigNumber(activateAmount))
-      ).toBe(true)
+        ).active
+      ).toEqBigNumber(new BigNumber(activateAmount))
     }, 120000)
 
     it(
@@ -234,8 +234,8 @@ testWithAnvilL2(
         expect(
           (
             await election.getVotesForGroupByAccount(userAddress, groupAddress)
-          ).active.isGreaterThanOrEqualTo(new BigNumber(activateAmount))
-        ).toBe(true)
+          ).active
+        ).toEqBigNumber(new BigNumber(activateAmount))
         expect(
           (await election.getVotesForGroupByAccount(otherUserAddress, groupAddress)).active
         ).toEqual(new BigNumber(0))
@@ -342,8 +342,8 @@ testWithAnvilL2(
       expect(
         (
           await election.getVotesForGroupByAccount(userAddress, groupAddress)
-        ).active.isGreaterThanOrEqualTo(new BigNumber(activateAmount))
-      ).toBe(true)
+        ).active
+      ).toEqBigNumber(new BigNumber(activateAmount))
       expect(
         (
           await election.getVotesForGroupByAccount(userAddress, secondGroupAddress)
