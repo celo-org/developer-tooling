@@ -33,9 +33,11 @@ async function tryProposal(
 
     try {
       if (call) {
+        // JSON-RPC quantities must be hex-encoded; proposal values are decimal strings
+        const hexValue = `0x${BigInt(tx.value ?? 0).toString(16)}`
         await kit.connection.viemClient.request({
           method: 'eth_call',
-          params: [{ to: tx.to, from, value: tx.value, data: tx.input }, 'latest'] as any,
+          params: [{ to: tx.to, from, value: hexValue, data: tx.input }, 'latest'] as any,
         })
       } else {
         const hash = await kit.connection.sendTransaction({

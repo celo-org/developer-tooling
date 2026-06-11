@@ -1,5 +1,5 @@
 import { ABIDefinition, Address, AbiInput, EventLog } from '@celo/connect'
-import { decodeEventLog, toEventHash, type TransactionReceipt } from 'viem'
+import { decodeEventLog, toEventSelector, type TransactionReceipt } from 'viem'
 import { ContractKit } from '@celo/contractkit'
 import { ContractDetails, mapFromPairs, obtainKitContractDetails } from './base'
 
@@ -94,8 +94,9 @@ export class LogExplorer {
     const eventAbi = [
       { type: 'event' as const, name: matchedAbi.name || 'Event', inputs: eventInputs },
     ]
-    const sig = `${matchedAbi.name || 'Event'}(${eventInputs.map((i: AbiInput) => i.type).join(',')})`
-    const eventSigHash = toEventHash(sig)
+    // toEventSelector expands tuple components into the canonical signature;
+    // joining raw input types would hash 'Event(tuple,...)' and never match
+    const eventSigHash = toEventSelector(eventAbi[0] as Parameters<typeof toEventSelector>[0])
     const fullTopics = [eventSigHash, ...log.topics.slice(1)] as [`0x${string}`, ...`0x${string}`[]]
     try {
       const result = decodeEventLog({
@@ -107,6 +108,12 @@ export class LogExplorer {
       // bigint to string for backward compat
       for (const key of Object.keys(decoded)) {
         if (typeof decoded[key] === 'bigint') decoded[key] = (decoded[key] as bigint).toString()
+      }
+
+      // pending logs carry null block/index fields — Number(null) would
+      // silently report block 0
+      if (log.blockNumber == null || log.logIndex == null || log.transactionIndex == null) {
+        return null
       }
 
       const logEvent: EventLog & { signature: string } = {

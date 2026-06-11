@@ -11,7 +11,7 @@
  * }
  */
 import { ABIDefinition, AbiItem, AbiInput, Address, Connection } from '@celo/connect'
-import { toFunctionSelector } from 'viem'
+import { getAddress, toFunctionSelector } from 'viem'
 import fetch from 'cross-fetch'
 import { ContractMapping, mapFromPairs } from './base'
 
@@ -273,8 +273,8 @@ export async function tryGetProxyImplementation(
     if (!hexValue) {
       return undefined
     }
-    const address = ('0x' + hexValue.slice(-40)) as Address
-    return address
+    // checksum to match map keys populated from registry.addressMapping()
+    return getAddress('0x' + hexValue.slice(-40)) as Address
   } catch {
     return undefined
   }

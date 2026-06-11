@@ -8,12 +8,14 @@ import {
   createPublicClient,
   createWalletClient,
   custom,
-  toFunctionHash,
-  toEventHash,
+  toFunctionSelector,
+  toEventSelector,
+  type AbiEvent,
+  type AbiFunction,
   type PublicClient,
   type WalletClient,
 } from 'viem'
-import { AbiInput, AbiItem } from './abi-types'
+import { AbiItem } from './abi-types'
 import { isEmpty } from './viem-abi-coder'
 import { type CeloContract, createCeloContract } from './contract-types'
 import { CeloProvider, assertIsCeloProvider } from './celo-provider'
@@ -427,15 +429,15 @@ export class Connection {
     abi: TAbi | AbiItem[],
     address: string
   ): CeloContract<TAbi> {
-    // Enrich ABI items with function/event signatures for backward compatibility
+    // Enrich ABI items with function/event signatures for backward compatibility.
+    // toFunctionSelector/toEventSelector expand tuple components into the
+    // canonical signature; joining raw input types would hash 'fn(tuple)'.
     const enrichedAbi = (abi as AbiItem[]).map((item: AbiItem) => {
       if (item.type === 'function' && !('signature' in item)) {
-        const sig = `${item.name}(${(item.inputs || []).map((i: AbiInput) => i.type).join(',')})`
-        return { ...item, signature: toFunctionHash(sig).slice(0, 10) }
+        return { ...item, signature: toFunctionSelector(item as AbiFunction) }
       }
       if (item.type === 'event' && !('signature' in item)) {
-        const sig = `${item.name}(${(item.inputs || []).map((i: AbiInput) => i.type).join(',')})`
-        return { ...item, signature: toEventHash(sig) }
+        return { ...item, signature: toEventSelector(item as AbiEvent) }
       }
       return item
     })
