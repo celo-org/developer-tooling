@@ -121,9 +121,7 @@ testWithAnvilL2(
 
       expect(writeMock.mock.calls).toMatchInlineSnapshot(`[]`)
       expect(
-        (
-          await election.getVotesForGroupByAccount(userAddress, groupAddress)
-        ).active
+        (await election.getVotesForGroupByAccount(userAddress, groupAddress)).active
       ).toEqBigNumber(new BigNumber(activateAmount))
     }, 120000)
 
@@ -232,9 +230,7 @@ testWithAnvilL2(
 
         expect(writeMock.mock.calls).toMatchInlineSnapshot(`[]`)
         expect(
-          (
-            await election.getVotesForGroupByAccount(userAddress, groupAddress)
-          ).active
+          (await election.getVotesForGroupByAccount(userAddress, groupAddress)).active
         ).toEqBigNumber(new BigNumber(activateAmount))
         expect(
           (await election.getVotesForGroupByAccount(otherUserAddress, groupAddress)).active
@@ -340,9 +336,7 @@ testWithAnvilL2(
 
       expect(writeMock.mock.calls).toMatchInlineSnapshot(`[]`)
       expect(
-        (
-          await election.getVotesForGroupByAccount(userAddress, groupAddress)
-        ).active
+        (await election.getVotesForGroupByAccount(userAddress, groupAddress)).active
       ).toEqBigNumber(new BigNumber(activateAmount))
       expect(
         (
