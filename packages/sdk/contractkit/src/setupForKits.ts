@@ -1,4 +1,5 @@
 import { Provider } from '@celo/connect'
+import { webSocket } from 'viem'
 import type { EIP1193RequestFn } from 'viem'
 import * as http from 'http'
 import * as https from 'https'
@@ -83,6 +84,10 @@ class SimpleHttpProvider implements Provider {
             data += chunk
           })
           res.on('end', () => {
+            if (res.statusCode != null && res.statusCode >= 400) {
+              reject(new Error(`RPC request failed with status ${res.statusCode}: ${data}`))
+              return
+            }
             try {
               const json = JSON.parse(data)
               if (json.error) {
@@ -127,30 +132,46 @@ class SimpleIpcProvider implements Provider {
     return new Promise((resolve, reject) => {
       const socket = this.netModule.connect({ path: this.path })
       let data = ''
+      let settled = false
+
+      const settle = (fn: () => void) => {
+        if (settled) return
+        settled = true
+        socket.destroy()
+        fn()
+      }
+
+      const tryParse = (onIncomplete?: () => void) => {
+        try {
+          const json = JSON.parse(data)
+          if (json.error) {
+            settle(() => reject(new Error(json.error.message || JSON.stringify(json.error))))
+          } else {
+            settle(() => resolve(json.result))
+          }
+        } catch (e) {
+          onIncomplete?.()
+        }
+      }
 
       socket.on('connect', () => {
         socket.write(body)
       })
 
+      // Node IPC servers (geth) keep the socket open between requests and never
+      // emit 'end' after a response — the response is complete once the
+      // accumulated buffer parses as JSON.
       socket.on('data', (chunk: Buffer) => {
         data += chunk.toString()
+        tryParse()
       })
 
       socket.on('end', () => {
-        try {
-          const json = JSON.parse(data)
-          if (json.error) {
-            reject(new Error(json.error.message || JSON.stringify(json.error)))
-          } else {
-            resolve(json.result)
-          }
-        } catch (e) {
-          reject(new Error(`Invalid JSON response: ${data}`))
-        }
+        tryParse(() => settle(() => reject(new Error(`Invalid JSON response: ${data}`))))
       })
 
       socket.on('error', (err) => {
-        reject(err)
+        settle(() => reject(err))
       })
     })
   }
@@ -160,6 +181,10 @@ class SimpleIpcProvider implements Provider {
 export function getProviderForKit(url: string, options?: HttpProviderOptions): Provider {
   if (url.endsWith('.ipc')) {
     return new SimpleIpcProvider(url, net)
+  } else if (url.startsWith('ws://') || url.startsWith('wss://')) {
+    // web3's `new Web3(url)` auto-detected WebSocket URLs; keep supporting them
+    const transport = webSocket(url)({})
+    return { request: transport.request as Provider['request'] }
   } else {
     return new SimpleHttpProvider(url, options)
   }
