@@ -2,6 +2,7 @@ import { coerceValueForType } from './viem-abi-coder'
 import {
   encodeAbiParameters,
   decodeAbiParameters,
+  decodeEventLog,
   toFunctionHash,
   toEventHash,
   type AbiParameter,
@@ -146,19 +147,46 @@ describe('#coerceValueForType - bytesN', () => {
 })
 
 describe('viem decodeEventLog', () => {
-  it('decodes a basic event log', () => {
-    const data = encodeAbiParameters([{ type: 'uint256' }] as AbiParameter[], [BigInt(100)])
-    const topics = [
-      '0x0000000000000000000000000000000000000000000000000000000000000001',
-      '0x0000000000000000000000000000000000000000000000000000000000000002',
-    ]
-    // Basic event log encoding/decoding is tested through explorer
-    expect(data).toBeDefined()
-    expect(topics.length).toBe(2)
+  // ERC-20 Transfer(address indexed from, address indexed to, uint256 value)
+  const transferEvent = {
+    type: 'event',
+    name: 'Transfer',
+    inputs: [
+      { type: 'address', name: 'from', indexed: true },
+      { type: 'address', name: 'to', indexed: true },
+      { type: 'uint256', name: 'value', indexed: false },
+    ],
+  } as const
+
+  const from = '0x49635afFcB817A6edDBf23D1eB767e69Ade07b71'
+  const to = '0x5111A8caCa3366389EeaAad8a49027d573588BbB'
+
+  it('decodes indexed and non-indexed args to the original values', () => {
+    const decoded = decodeEventLog({
+      abi: [transferEvent],
+      data: encodeAbiParameters([{ type: 'uint256' }] as AbiParameter[], [BigInt(100)]),
+      topics: [
+        toEventHash('Transfer(address,address,uint256)'),
+        encodeAbiParameters([{ type: 'address' }] as AbiParameter[], [from]),
+        encodeAbiParameters([{ type: 'address' }] as AbiParameter[], [to]),
+      ],
+    })
+    expect(decoded.eventName).toBe('Transfer')
+    expect(decoded.args).toEqual({ from, to, value: BigInt(100) })
   })
 
-  it('handles encoding with no indexed parameters', () => {
-    const data = encodeAbiParameters([{ type: 'uint256' }] as AbiParameter[], [BigInt(42)])
-    expect(data).toBeDefined()
+  it('decodes events with no indexed parameters', () => {
+    const valueOnlyEvent = {
+      type: 'event',
+      name: 'ValueSet',
+      inputs: [{ type: 'uint256', name: 'value', indexed: false }],
+    } as const
+    const decoded = decodeEventLog({
+      abi: [valueOnlyEvent],
+      data: encodeAbiParameters([{ type: 'uint256' }] as AbiParameter[], [BigInt(42)]),
+      topics: [toEventHash('ValueSet(uint256)')],
+    })
+    expect(decoded.eventName).toBe('ValueSet')
+    expect(decoded.args).toEqual({ value: BigInt(42) })
   })
 })
