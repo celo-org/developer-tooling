@@ -663,8 +663,8 @@ export class ReleaseGoldWrapper extends BaseWrapperForGoverning<typeof releaseGo
    * @param validatorGroup The group to revoke the vote for.
    * @param value The amount of gold to revoke.
    */
-  revokePendingVotes = (group: Address, value: BigNumber) =>
-    this.revokePending(this.address, group, value)
+  revokePendingVotes = (group: Address, value: BigNumber, txParams?: Omit<CeloTx, 'data'>) =>
+    this.revokePending(this.address, group, value, txParams)
 
   private _revokeActive = (args: any[], txParams?: Omit<CeloTx, 'data'>) =>
     this.contract.write.revokeActive(args as any, txParams as any)
@@ -698,8 +698,8 @@ export class ReleaseGoldWrapper extends BaseWrapperForGoverning<typeof releaseGo
    * @param group The group to revoke the vote for.
    * @param value The amount of gold to revoke.
    */
-  revokeActiveVotes = (group: Address, value: BigNumber) =>
-    this.revokeActive(this.address, group, value)
+  revokeActiveVotes = (group: Address, value: BigNumber, txParams?: Omit<CeloTx, 'data'>) =>
+    this.revokeActive(this.address, group, value, txParams)
 
   /**
    * Revokes value from pending/active aggregate
@@ -739,7 +739,10 @@ export class ReleaseGoldWrapper extends BaseWrapperForGoverning<typeof releaseGo
   revokeValueFromVotes = (group: Address, value: BigNumber) =>
     this.revoke(this.address, group, value)
 
-  revokeAllVotesForGroup = async (group: Address): Promise<`0x${string}`[]> => {
+  revokeAllVotesForGroup = async (
+    group: Address,
+    txParams?: Omit<CeloTx, 'data'>
+  ): Promise<`0x${string}`[]> => {
     const hashes: `0x${string}`[] = []
     const electionContract = await this.contracts.getElection()
     const { pending, active } = await electionContract.getVotesForGroupByAccount(
@@ -747,20 +750,22 @@ export class ReleaseGoldWrapper extends BaseWrapperForGoverning<typeof releaseGo
       group
     )
     if (pending.isGreaterThan(0)) {
-      hashes.push(await this.revokePendingVotes(group, pending))
+      hashes.push(await this.revokePendingVotes(group, pending, txParams))
     }
     if (active.isGreaterThan(0)) {
-      hashes.push(await this.revokeActiveVotes(group, active))
+      hashes.push(await this.revokeActiveVotes(group, active, txParams))
     }
     return hashes
   }
 
-  revokeAllVotesForAllGroups = async (): Promise<`0x${string}`[]> => {
+  revokeAllVotesForAllGroups = async (
+    txParams?: Omit<CeloTx, 'data'>
+  ): Promise<`0x${string}`[]> => {
     const electionContract = await this.contracts.getElection()
     const groups = await electionContract.getGroupsVotedForByAccount(this.address)
     const hashes: `0x${string}`[] = []
     for (const group of groups) {
-      const groupHashes = await this.revokeAllVotesForGroup(group)
+      const groupHashes = await this.revokeAllVotesForGroup(group, txParams)
       hashes.push(...groupHashes)
     }
     return hashes

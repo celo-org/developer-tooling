@@ -66,9 +66,11 @@ export default class AdminRevoke extends ReleaseGoldBaseCommand {
       const electionVotes = await election.getTotalVotesByAccount(contractAddress)
       const isElectionVoting = electionVotes.isGreaterThan(0)
 
-      // handle election votes
+      // handle election votes — must be sent by the vote signer, not the default account
       if (isElectionVoting) {
-        const hashes = await this.releaseGoldWrapper.revokeAllVotesForAllGroups()
+        const hashes = await this.releaseGoldWrapper.revokeAllVotesForAllGroups({
+          from: voteSigner,
+        })
 
         for (const hash of hashes) {
           await displayViemTx('election: revokeVotes', Promise.resolve(hash), publicClient)
@@ -84,14 +86,18 @@ export default class AdminRevoke extends ReleaseGoldBaseCommand {
         if (isUpvoting) {
           await displayViemTx(
             'governance: revokeUpvote',
-            governance.revokeUpvote(contractAddress),
+            governance.revokeUpvote(contractAddress, { from: voteSigner }),
             publicClient
           )
         }
 
         const isVotingReferendum = await governance.isVotingReferendum(contractAddress)
         if (isVotingReferendum) {
-          await displayViemTx('governance: revokeVotes', governance.revokeVotes(), publicClient)
+          await displayViemTx(
+            'governance: revokeVotes',
+            governance.revokeVotes({ from: voteSigner }),
+            publicClient
+          )
         }
       }
 

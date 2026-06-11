@@ -121,7 +121,7 @@ export abstract class TransferStableBase extends BaseCommand {
           return balanceOfTokenForGas >= totalSpentOnGas && balanceOfTokenToSend >= value
         },
         `Cannot afford to transfer ${stableToken} ${
-          res.flags.feeCurrency ? 'with' + ' ' + res.flags.feeCurrency + ' ' + 'feeCurrency' : ''
+          feeCurrency ? `with ${feeCurrency} feeCurrency ` : ''
         }; try reducing value slightly or using a different feeCurrency`
       )
       // NOTE: fast fail in case feeCurrency isn't whitelisted or invalid
