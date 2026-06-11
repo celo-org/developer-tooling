@@ -189,8 +189,9 @@ testWithAnvilL2('governance:executehotfix cmd', (provider) => {
         })
       ).toEqual(BigInt(HOTFIX_TRANSACTION_TEST_VALUE))
 
-      expect(logMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes)))
-        .toMatchInlineSnapshot(`
+      expect(
+        logMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes))
+      ).toMatchInlineSnapshot(`
         [
           [
             "Running Checks:",
@@ -358,8 +359,9 @@ testWithAnvilL2('governance:executehotfix cmd', (provider) => {
         })
       ).toEqual(0n)
 
-      expect(logMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes)))
-        .toMatchInlineSnapshot(`
+      expect(
+        logMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes))
+      ).toMatchInlineSnapshot(`
         [
           [
             "Running Checks:",

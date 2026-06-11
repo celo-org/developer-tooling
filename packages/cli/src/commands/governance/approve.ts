@@ -209,7 +209,10 @@ export default class Approve extends BaseCommand {
       )
     } else {
       if (id) {
-        await displayViemTx('approveTx', governance.approve(id), publicClient, { abi: governanceABI, displayEventName: logEvent })
+        await displayViemTx('approveTx', governance.approve(id), publicClient, {
+          abi: governanceABI,
+          displayEventName: logEvent,
+        })
       } else {
         await displayViemTx(
           'approveTx',

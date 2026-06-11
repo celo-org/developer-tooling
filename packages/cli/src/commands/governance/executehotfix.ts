@@ -46,9 +46,14 @@ export default class ExecuteHotfix extends BaseCommand {
       .hotfixExecutionTimeLimitNotReached(hash)
       .runChecks()
 
-    await displayViemTx('executeHotfixTx', governance.executeHotfix(hotfix, saltBuff), publicClient, {
-      abi: governanceABI,
-      displayEventName: 'HotfixExecuted',
-    })
+    await displayViemTx(
+      'executeHotfixTx',
+      governance.executeHotfix(hotfix, saltBuff),
+      publicClient,
+      {
+        abi: governanceABI,
+        displayEventName: 'HotfixExecuted',
+      }
+    )
   }
 }
