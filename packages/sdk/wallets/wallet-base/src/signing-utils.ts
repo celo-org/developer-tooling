@@ -399,11 +399,12 @@ export async function encodeTransaction(
 
 // new types have prefix but legacy does not
 function prefixAwareRLPDecode(rlpEncode: string, type: OldTransactionTypes): Uint8Array[] {
+  const hex = ensureLeading0x(rlpEncode) as ViemHex
   if (type === 'celo-legacy' || type === 'ethereum-legacy') {
-    return fromRlp(rlpEncode as ViemHex, 'bytes') as Uint8Array[]
+    return fromRlp(hex, 'bytes') as Uint8Array[]
   }
-
-  return fromRlp(`0x${rlpEncode.slice(4)}` as ViemHex, 'bytes') as Uint8Array[]
+  // strip the 2-char type prefix (e.g. 0x7b) of typed transactions
+  return fromRlp(`0x${hex.slice(4)}` as ViemHex, 'bytes') as Uint8Array[]
 }
 
 function correctLengthOf(type: OldTransactionTypes, includeSig: boolean = true) {
@@ -502,6 +503,9 @@ function getPublicKeyofSignerFromTx(transactionArray: Uint8Array[], type: OldTra
 }
 
 export function getSignerFromTxEIP2718TX(serializedTransaction: string): string {
+  if (!serializedTransaction.startsWith('0x')) {
+    throw new Error('serializedTransaction must be 0x-prefixed (type byte + RLP payload)')
+  }
   const transactionArray = fromRlp(`0x${serializedTransaction.slice(4)}` as ViemHex, 'bytes')
   const signer = getPublicKeyofSignerFromTx(
     transactionArray as Uint8Array[],

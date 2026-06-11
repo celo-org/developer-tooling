@@ -151,7 +151,8 @@ export abstract class BaseCommand extends Command {
   private ledgerTransport: Awaited<ReturnType<(typeof _TransportNodeHid)['open']>> | null = null
 
   get _wallet(): ReadOnlyWallet | undefined {
-    return this._wallet
+    // the wallet lives on the connection; returning this._wallet would recurse
+    return this._kit?.connection.wallet
   }
 
   set _wallet(wallet: ReadOnlyWallet | undefined) {

@@ -24,7 +24,14 @@ export const extractHostFromProvider = (provider: Provider): string => {
   // CeloProvider wraps the underlying provider
   if (provider instanceof CeloProvider) {
     const inner = provider.existingProvider as { host?: string; url?: string }
-    return inner?.host || inner?.url || 'http://localhost:8545'
+    const host = inner?.host || inner?.url
+    if (!host) {
+      // a silent localhost fallback would run the command against a different node
+      throw new Error(
+        `Cannot extract host from wrapped provider ${inner?.constructor?.name ?? 'unknown'}`
+      )
+    }
+    return host
   }
 
   // Direct provider (HttpProvider or SimpleHttpProvider)

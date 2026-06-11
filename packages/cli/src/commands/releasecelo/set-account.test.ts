@@ -17,11 +17,12 @@ testWithAnvilL2('releasegold:set-account cmd', (provider) => {
     kit = newKitFromProvider(provider)
     const accounts = (await kit.connection.getAccounts()) as StrongAddress[]
 
+    // convention across releasecelo tests: beneficiary = accounts[1], releaseOwner = accounts[0]
     contractAddress = await deployReleaseGoldContract(
       provider,
       await createMultisig(kit, [accounts[0], accounts[1]] as StrongAddress[], 2, 2),
-      accounts[0],
       accounts[1],
+      accounts[0],
       accounts[2]
     )
 

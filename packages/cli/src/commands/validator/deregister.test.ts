@@ -66,36 +66,42 @@ testWithAnvilL2('validator:deregister', (provider) => {
         functionName: 'setMaxGroupSize',
         args: [BigInt(5)],
       })
-      await kit.connection.sendTransaction({
-        // @ts-expect-error (.contract)
-        to: validatorContract.contract.address,
-        data: setMaxGroupSizeData,
-        from: ownerAddress,
-      })
+      await kit.connection
+        .sendTransaction({
+          // @ts-expect-error (.contract)
+          to: validatorContract.contract.address,
+          data: setMaxGroupSizeData,
+          from: ownerAddress,
+        })
+        .then((hash) => kit.connection.viemClient.waitForTransactionReceipt({ hash }))
       const setValidatorLockedGoldData = encodeFunctionData({
         // @ts-expect-error (.contract)
         abi: validatorContract.contract.abi,
         functionName: 'setValidatorLockedGoldRequirements',
         args: [BigInt(2), BigInt(10000)],
       })
-      await kit.connection.sendTransaction({
-        // @ts-expect-error (.contract)
-        to: validatorContract.contract.address,
-        data: setValidatorLockedGoldData,
-        from: ownerAddress,
-      })
+      await kit.connection
+        .sendTransaction({
+          // @ts-expect-error (.contract)
+          to: validatorContract.contract.address,
+          data: setValidatorLockedGoldData,
+          from: ownerAddress,
+        })
+        .then((hash) => kit.connection.viemClient.waitForTransactionReceipt({ hash }))
       const setGroupLockedGoldData = encodeFunctionData({
         // @ts-expect-error (.contract)
         abi: validatorContract.contract.abi,
         functionName: 'setGroupLockedGoldRequirements',
         args: [BigInt(2), BigInt(10000)],
       })
-      await kit.connection.sendTransaction({
-        // @ts-expect-error (.contract)
-        to: validatorContract.contract.address,
-        data: setGroupLockedGoldData,
-        from: ownerAddress,
-      })
+      await kit.connection
+        .sendTransaction({
+          // @ts-expect-error (.contract)
+          to: validatorContract.contract.address,
+          data: setGroupLockedGoldData,
+          from: ownerAddress,
+        })
+        .then((hash) => kit.connection.viemClient.waitForTransactionReceipt({ hash }))
     })
     await withImpersonatedAccount(provider, groupAddress, async () => {
       await testLocallyWithNode(
