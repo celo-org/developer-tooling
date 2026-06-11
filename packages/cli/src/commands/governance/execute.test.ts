@@ -183,9 +183,8 @@ testWithAnvilL2('governance:execute cmd', (provider) => {
       })
     ).toEqual(BigInt(PROPOSAL_TRANSACTION_TEST_VALUE))
 
-    expect(
-      logMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes))
-    ).toMatchInlineSnapshot(`
+    expect(logMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes)))
+      .toMatchInlineSnapshot(`
       [
         [
           "Running Checks:",
@@ -207,6 +206,12 @@ testWithAnvilL2('governance:execute cmd', (provider) => {
         ],
         [
           "txHash: 0xtxhash",
+        ],
+        [
+          "ProposalExecuted:",
+        ],
+        [
+          "proposalId: 1",
         ],
       ]
     `)

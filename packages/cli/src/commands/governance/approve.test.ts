@@ -100,9 +100,8 @@ testWithAnvilL2(
                     "executionTimeLimit": "0",
                   }
               `)
-        expect(
-          logMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes))
-        ).toMatchInlineSnapshot(`
+        expect(logMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes)))
+          .toMatchInlineSnapshot(`
                   [
                     [
                       "Running Checks:",
@@ -147,9 +146,8 @@ testWithAnvilL2(
                     "executionTimeLimit": "0",
                   }
               `)
-        expect(
-          logMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes))
-        ).toMatchInlineSnapshot(`
+        expect(logMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes)))
+          .toMatchInlineSnapshot(`
                   [
                     [
                       "Running Checks:",
@@ -212,9 +210,8 @@ testWithAnvilL2(
                     "executionTimeLimit": "0",
                   }
               `)
-        expect(
-          logMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes))
-        ).toMatchInlineSnapshot(`
+        expect(logMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes)))
+          .toMatchInlineSnapshot(`
                   [
                     [
                       "Running Checks:",
@@ -270,9 +267,8 @@ testWithAnvilL2(
                     "executionTimeLimit": "0",
                   }
               `)
-        expect(
-          logMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes))
-        ).toMatchInlineSnapshot(`
+        expect(logMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes)))
+          .toMatchInlineSnapshot(`
                   [
                     [
                       "Running Checks:",
@@ -330,9 +326,8 @@ testWithAnvilL2(
                     "executionTimeLimit": "0",
                   }
               `)
-        expect(
-          logMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes))
-        ).toMatchInlineSnapshot(`
+        expect(logMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes)))
+          .toMatchInlineSnapshot(`
           [
             [
               "Running Checks:",
@@ -354,6 +349,13 @@ testWithAnvilL2(
             ],
             [
               "txHash: 0xtxhash",
+            ],
+            [
+              "HotfixApproved:",
+            ],
+            [
+              "hash: 0xbf670baa773b342120e1af45433a465bbd6fa289a5cf72763d63d95e4e22482d
+          approver: 0x6Ecbe1DB9EF729CBe972C83Fb886247691Fb6beb",
             ],
           ]
         `)
@@ -395,9 +397,8 @@ testWithAnvilL2(
                     "executionTimeLimit": "0",
                   }
               `)
-        expect(
-          logMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes))
-        ).toMatchInlineSnapshot(`
+        expect(logMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes)))
+          .toMatchInlineSnapshot(`
           [
             [
               "Running Checks:",
@@ -419,6 +420,13 @@ testWithAnvilL2(
             ],
             [
               "txHash: 0xtxhash",
+            ],
+            [
+              "HotfixApproved:",
+            ],
+            [
+              "hash: 0xbf670baa773b342120e1af45433a465bbd6fa289a5cf72763d63d95e4e22482d
+          approver: 0x5409ED021D9299bf6814279A6A1411A7e866A631",
             ],
           ]
         `)
@@ -482,36 +490,42 @@ testWithAnvilL2(
                   }
               `)
 
-        expect(
-          logMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes))
-        ).toMatchInlineSnapshot(`
-                  [
-                    [
-                      "Running Checks:",
-                    ],
-                    [
-                      "   ✔  0xf750153fc4211e4Ef325A7fD87d8258222e0b510 is security council address ",
-                    ],
-                    [
-                      "   ✔  0x5409ED021D9299bf6814279A6A1411A7e866A631 is security council multisig signatory ",
-                    ],
-                    [
-                      "   ✔  Hotfix 0xbf670baa773b342120e1af45433a465bbd6fa289a5cf72763d63d95e4e22482d is not already approved by security council ",
-                    ],
-                    [
-                      "   ✔  Hotfix 0xbf670baa773b342120e1af45433a465bbd6fa289a5cf72763d63d95e4e22482d is not already executed ",
-                    ],
-                    [
-                      "All checks passed",
-                    ],
-                    [
-                      "SendTransaction: approveTx",
-                    ],
-                    [
-                      "txHash: 0xtxhash",
-                    ],
-                  ]
-              `)
+        expect(logMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes)))
+          .toMatchInlineSnapshot(`
+          [
+            [
+              "Running Checks:",
+            ],
+            [
+              "   ✔  0xf750153fc4211e4Ef325A7fD87d8258222e0b510 is security council address ",
+            ],
+            [
+              "   ✔  0x5409ED021D9299bf6814279A6A1411A7e866A631 is security council multisig signatory ",
+            ],
+            [
+              "   ✔  Hotfix 0xbf670baa773b342120e1af45433a465bbd6fa289a5cf72763d63d95e4e22482d is not already approved by security council ",
+            ],
+            [
+              "   ✔  Hotfix 0xbf670baa773b342120e1af45433a465bbd6fa289a5cf72763d63d95e4e22482d is not already executed ",
+            ],
+            [
+              "All checks passed",
+            ],
+            [
+              "SendTransaction: approveTx",
+            ],
+            [
+              "txHash: 0xtxhash",
+            ],
+            [
+              "HotfixApproved:",
+            ],
+            [
+              "hash: 0xbf670baa773b342120e1af45433a465bbd6fa289a5cf72763d63d95e4e22482d
+          approver: 0xf750153fc4211e4Ef325A7fD87d8258222e0b510",
+            ],
+          ]
+        `)
         expect(writeMock.mock.calls).toMatchInlineSnapshot(`[]`)
       })
 
@@ -664,9 +678,8 @@ testWithAnvilL2(
                   }
               `)
 
-        expect(
-          logMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes))
-        ).toMatchInlineSnapshot(`
+        expect(logMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes)))
+          .toMatchInlineSnapshot(`
                   [
                     [
                       "Running Checks:",
@@ -752,36 +765,42 @@ testWithAnvilL2(
                     "executionTimeLimit": "0",
                   }
               `)
-        expect(
-          logMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes))
-        ).toMatchInlineSnapshot(`
-                  [
-                    [
-                      "Running Checks:",
-                    ],
-                    [
-                      "   ✔  0xf750153fc4211e4Ef325A7fD87d8258222e0b510 is approver address ",
-                    ],
-                    [
-                      "   ✔  0x5409ED021D9299bf6814279A6A1411A7e866A631 is approver multisig signatory ",
-                    ],
-                    [
-                      "   ✔  Hotfix 0xbf670baa773b342120e1af45433a465bbd6fa289a5cf72763d63d95e4e22482d is not already approved ",
-                    ],
-                    [
-                      "   ✔  Hotfix 0xbf670baa773b342120e1af45433a465bbd6fa289a5cf72763d63d95e4e22482d is not already executed ",
-                    ],
-                    [
-                      "All checks passed",
-                    ],
-                    [
-                      "SendTransaction: approveTx",
-                    ],
-                    [
-                      "txHash: 0xtxhash",
-                    ],
-                  ]
-              `)
+        expect(logMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes)))
+          .toMatchInlineSnapshot(`
+          [
+            [
+              "Running Checks:",
+            ],
+            [
+              "   ✔  0xf750153fc4211e4Ef325A7fD87d8258222e0b510 is approver address ",
+            ],
+            [
+              "   ✔  0x5409ED021D9299bf6814279A6A1411A7e866A631 is approver multisig signatory ",
+            ],
+            [
+              "   ✔  Hotfix 0xbf670baa773b342120e1af45433a465bbd6fa289a5cf72763d63d95e4e22482d is not already approved ",
+            ],
+            [
+              "   ✔  Hotfix 0xbf670baa773b342120e1af45433a465bbd6fa289a5cf72763d63d95e4e22482d is not already executed ",
+            ],
+            [
+              "All checks passed",
+            ],
+            [
+              "SendTransaction: approveTx",
+            ],
+            [
+              "txHash: 0xtxhash",
+            ],
+            [
+              "HotfixApproved:",
+            ],
+            [
+              "hash: 0xbf670baa773b342120e1af45433a465bbd6fa289a5cf72763d63d95e4e22482d
+          approver: 0xf750153fc4211e4Ef325A7fD87d8258222e0b510",
+            ],
+          ]
+        `)
         expect(writeMock.mock.calls).toMatchInlineSnapshot(`[]`)
       })
 
@@ -837,36 +856,42 @@ testWithAnvilL2(
                     "executionTimeLimit": "0",
                   }
               `)
-        expect(
-          logMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes))
-        ).toMatchInlineSnapshot(`
-                  [
-                    [
-                      "Running Checks:",
-                    ],
-                    [
-                      "   ✔  0xf750153fc4211e4Ef325A7fD87d8258222e0b510 is security council address ",
-                    ],
-                    [
-                      "   ✔  0x5409ED021D9299bf6814279A6A1411A7e866A631 is security council multisig signatory ",
-                    ],
-                    [
-                      "   ✔  Hotfix 0xbf670baa773b342120e1af45433a465bbd6fa289a5cf72763d63d95e4e22482d is not already approved by security council ",
-                    ],
-                    [
-                      "   ✔  Hotfix 0xbf670baa773b342120e1af45433a465bbd6fa289a5cf72763d63d95e4e22482d is not already executed ",
-                    ],
-                    [
-                      "All checks passed",
-                    ],
-                    [
-                      "SendTransaction: approveTx",
-                    ],
-                    [
-                      "txHash: 0xtxhash",
-                    ],
-                  ]
-              `)
+        expect(logMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes)))
+          .toMatchInlineSnapshot(`
+          [
+            [
+              "Running Checks:",
+            ],
+            [
+              "   ✔  0xf750153fc4211e4Ef325A7fD87d8258222e0b510 is security council address ",
+            ],
+            [
+              "   ✔  0x5409ED021D9299bf6814279A6A1411A7e866A631 is security council multisig signatory ",
+            ],
+            [
+              "   ✔  Hotfix 0xbf670baa773b342120e1af45433a465bbd6fa289a5cf72763d63d95e4e22482d is not already approved by security council ",
+            ],
+            [
+              "   ✔  Hotfix 0xbf670baa773b342120e1af45433a465bbd6fa289a5cf72763d63d95e4e22482d is not already executed ",
+            ],
+            [
+              "All checks passed",
+            ],
+            [
+              "SendTransaction: approveTx",
+            ],
+            [
+              "txHash: 0xtxhash",
+            ],
+            [
+              "HotfixApproved:",
+            ],
+            [
+              "hash: 0xbf670baa773b342120e1af45433a465bbd6fa289a5cf72763d63d95e4e22482d
+          approver: 0xf750153fc4211e4Ef325A7fD87d8258222e0b510",
+            ],
+          ]
+        `)
         expect(writeMock.mock.calls).toMatchInlineSnapshot(`[]`)
       })
     })
@@ -917,39 +942,44 @@ testWithAnvilL2(
         )
 
         expect(await governance.isApproved(proposalId)).toBe(true)
-        expect(
-          logMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes))
-        ).toMatchInlineSnapshot(`
-                  [
-                    [
-                      "Running Checks:",
-                    ],
-                    [
-                      "   ✔  0xf750153fc4211e4Ef325A7fD87d8258222e0b510 is approver address ",
-                    ],
-                    [
-                      "   ✔  0x5409ED021D9299bf6814279A6A1411A7e866A631 is multisig signatory ",
-                    ],
-                    [
-                      "   ✔  1 is an existing proposal ",
-                    ],
-                    [
-                      "   ✔  1 is in stage Referendum or Execution ",
-                    ],
-                    [
-                      "   ✔  1 not already approved ",
-                    ],
-                    [
-                      "All checks passed",
-                    ],
-                    [
-                      "SendTransaction: approveTx",
-                    ],
-                    [
-                      "txHash: 0xtxhash",
-                    ],
-                  ]
-              `)
+        expect(logMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes)))
+          .toMatchInlineSnapshot(`
+          [
+            [
+              "Running Checks:",
+            ],
+            [
+              "   ✔  0xf750153fc4211e4Ef325A7fD87d8258222e0b510 is approver address ",
+            ],
+            [
+              "   ✔  0x5409ED021D9299bf6814279A6A1411A7e866A631 is multisig signatory ",
+            ],
+            [
+              "   ✔  1 is an existing proposal ",
+            ],
+            [
+              "   ✔  1 is in stage Referendum or Execution ",
+            ],
+            [
+              "   ✔  1 not already approved ",
+            ],
+            [
+              "All checks passed",
+            ],
+            [
+              "SendTransaction: approveTx",
+            ],
+            [
+              "txHash: 0xtxhash",
+            ],
+            [
+              "ProposalApproved:",
+            ],
+            [
+              "proposalId: 1",
+            ],
+          ]
+        `)
         expect(writeMock.mock.calls).toMatchInlineSnapshot(`[]`)
       })
 
@@ -989,9 +1019,8 @@ testWithAnvilL2(
           )
         ).rejects.toThrow("Some checks didn't pass!")
 
-        expect(
-          logMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes))
-        ).toMatchInlineSnapshot(`
+        expect(logMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes)))
+          .toMatchInlineSnapshot(`
           [
             [
               "Running Checks:",
@@ -1045,42 +1074,47 @@ testWithAnvilL2(
           )
         ).resolves.toBeUndefined()
 
-        expect(
-          logMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes))
-        ).toMatchInlineSnapshot(`
-                  [
-                    [
-                      "Running Checks:",
-                    ],
-                    [
-                      "   ✔  0xf750153fc4211e4Ef325A7fD87d8258222e0b510 is approver address ",
-                    ],
-                    [
-                      "   ✔  0x5409ED021D9299bf6814279A6A1411A7e866A631 is multisig signatory ",
-                    ],
-                    [
-                      "   ✔  1 is an existing proposal ",
-                    ],
-                    [
-                      "   ✔  1 is in stage Referendum or Execution ",
-                    ],
-                    [
-                      "   ✔  1 not already approved ",
-                    ],
-                    [
-                      "   ✔  Proposal has not been submitted to multisig ",
-                    ],
-                    [
-                      "All checks passed",
-                    ],
-                    [
-                      "SendTransaction: approveTx",
-                    ],
-                    [
-                      "txHash: 0xtxhash",
-                    ],
-                  ]
-              `)
+        expect(logMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes)))
+          .toMatchInlineSnapshot(`
+          [
+            [
+              "Running Checks:",
+            ],
+            [
+              "   ✔  0xf750153fc4211e4Ef325A7fD87d8258222e0b510 is approver address ",
+            ],
+            [
+              "   ✔  0x5409ED021D9299bf6814279A6A1411A7e866A631 is multisig signatory ",
+            ],
+            [
+              "   ✔  1 is an existing proposal ",
+            ],
+            [
+              "   ✔  1 is in stage Referendum or Execution ",
+            ],
+            [
+              "   ✔  1 not already approved ",
+            ],
+            [
+              "   ✔  Proposal has not been submitted to multisig ",
+            ],
+            [
+              "All checks passed",
+            ],
+            [
+              "SendTransaction: approveTx",
+            ],
+            [
+              "txHash: 0xtxhash",
+            ],
+            [
+              "ProposalApproved:",
+            ],
+            [
+              "proposalId: 1",
+            ],
+          ]
+        `)
       })
 
       it('should confirm existing multisig transaction when --multisigTx is provided', async () => {
@@ -1159,9 +1193,8 @@ testWithAnvilL2(
 
         // The proposal should now be approved
         expect(await governance.isApproved(proposalId)).toBe(true)
-        expect(
-          logMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes))
-        ).toMatchInlineSnapshot(`
+        expect(logMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes)))
+          .toMatchInlineSnapshot(`
           [
             [
               "Running Checks:",
@@ -1192,6 +1225,12 @@ testWithAnvilL2(
             ],
             [
               "txHash: 0xtxhash",
+            ],
+            [
+              "ProposalApproved:",
+            ],
+            [
+              "proposalId: 1",
             ],
           ]
         `)
@@ -1234,9 +1273,8 @@ testWithAnvilL2(
           )
         ).rejects.toThrow("Some checks didn't pass!")
 
-        expect(
-          logMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes))
-        ).toMatchInlineSnapshot(`
+        expect(logMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes)))
+          .toMatchInlineSnapshot(`
                   [
                     [
                       "Running Checks:",
@@ -1319,6 +1357,12 @@ testWithAnvilL2(
             ],
             [
               "txHash: 0xtxhash",
+            ],
+            [
+              "ProposalApproved:",
+            ],
+            [
+              "proposalId: 1",
             ],
           ]
         `)

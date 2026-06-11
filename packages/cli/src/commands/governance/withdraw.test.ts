@@ -173,6 +173,13 @@ testWithAnvilL2(
             [
               "txHash: 0xtxhash",
             ],
+            [
+              "Deposit:",
+            ],
+            [
+              "sender: 0x2EB25B5eb9d5A4f61deb1e4F846343F862eB67D9
+          value: 100000000000000000000",
+            ],
           ]
         `)
         expect(stripAnsiCodesFromNestedArray(errorMock.mock.calls)).toMatchInlineSnapshot(`[]`)

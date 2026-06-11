@@ -1,3 +1,4 @@
+import { governanceABI } from '@celo/abis'
 import { ProposalBuilder, ProposalTransactionJSON } from '@celo/governance'
 import { hexToBuffer } from '@celo/utils/lib/address'
 import { Flags } from '@oclif/core'
@@ -45,6 +46,9 @@ export default class ExecuteHotfix extends BaseCommand {
       .hotfixExecutionTimeLimitNotReached(hash)
       .runChecks()
 
-    await displayViemTx('executeHotfixTx', governance.executeHotfix(hotfix, saltBuff), publicClient)
+    await displayViemTx('executeHotfixTx', governance.executeHotfix(hotfix, saltBuff), publicClient, {
+      abi: governanceABI,
+      displayEventName: 'HotfixExecuted',
+    })
   }
 }

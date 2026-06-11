@@ -1,3 +1,4 @@
+import { governanceABI } from '@celo/abis'
 import { Flags } from '@oclif/core'
 import { BaseCommand } from '../../base'
 import { newCheckBuilder } from '../../utils/checks'
@@ -30,6 +31,9 @@ export default class Execute extends BaseCommand {
       .runChecks()
 
     const governance = await kit.contracts.getGovernance()
-    await displayViemTx('executeTx', governance.execute(id), publicClient)
+    await displayViemTx('executeTx', governance.execute(id), publicClient, {
+      abi: governanceABI,
+      displayEventName: 'ProposalExecuted',
+    })
   }
 }

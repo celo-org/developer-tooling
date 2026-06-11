@@ -1,3 +1,4 @@
+import { governanceABI } from '@celo/abis'
 import { StrongAddress } from '@celo/base'
 import { type Provider } from '@celo/connect'
 import { GovernanceWrapper } from '@celo/contractkit/lib/wrappers/Governance'
@@ -139,6 +140,11 @@ export default class Approve extends BaseCommand {
       if (useMultiSig || useSafe) {
         const dequeue = await governance.getDequeue()
         const proposalIndex = dequeue.findIndex((d) => d.eq(id))
+        if (proposalIndex === -1) {
+          failWith(
+            `Proposal ${id} is not in the dequeue (the concurrent proposal limit may be reached); try again after governance:dequeue`
+          )
+        }
         encodedGovernanceData = governance.encodeFunctionData('approve', [
           id,
           proposalIndex.toString(),
@@ -153,6 +159,8 @@ export default class Approve extends BaseCommand {
     } else {
       failWith('Proposal ID or hotfix must be provided')
     }
+
+    const logEvent = id ? ('ProposalApproved' as const) : ('HotfixApproved' as const)
 
     if (approvalType === 'securityCouncil' && useSafe) {
       await performSafeTransaction(
@@ -172,19 +180,22 @@ export default class Approve extends BaseCommand {
           governance.address,
           encodedGovernanceData!
         ),
-        publicClient
+        publicClient,
+        { abi: governanceABI, displayEventName: logEvent }
       )
     } else if (res.flags.multisigTx && useMultiSig) {
       await displayViemTx(
         'approveTx',
         governanceApproverMultiSig!.confirmTransaction(parseInt(res.flags.multisigTx)),
-        publicClient
+        publicClient,
+        { abi: governanceABI, displayEventName: logEvent }
       )
     } else if (res.flags.submit && useMultiSig) {
       await displayViemTx(
         'approveTx',
         governanceApproverMultiSig!.submitTransaction(governance.address, encodedGovernanceData!),
-        publicClient
+        publicClient,
+        { abi: governanceABI, displayEventName: logEvent }
       )
     } else if (useMultiSig) {
       await displayViemTx(
@@ -193,16 +204,18 @@ export default class Approve extends BaseCommand {
           governance.address,
           encodedGovernanceData!
         ),
-        publicClient
+        publicClient,
+        { abi: governanceABI, displayEventName: logEvent }
       )
     } else {
       if (id) {
-        await displayViemTx('approveTx', governance.approve(id), publicClient)
+        await displayViemTx('approveTx', governance.approve(id), publicClient, { abi: governanceABI, displayEventName: logEvent })
       } else {
         await displayViemTx(
           'approveTx',
           governance.approveHotfix(Buffer.from(hexToBytes(hotfix! as `0x${string}`))),
-          publicClient
+          publicClient,
+          { abi: governanceABI, displayEventName: logEvent }
         )
       }
     }

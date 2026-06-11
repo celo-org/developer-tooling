@@ -1,3 +1,4 @@
+import { multiSigABI } from '@celo/abis'
 import { StrongAddress } from '@celo/base'
 import { ContractKit } from '@celo/contractkit'
 import { MultiSigWrapper } from '@celo/contractkit/lib/wrappers/MultiSig'
@@ -55,7 +56,10 @@ export default class Withdraw extends BaseCommand {
       )
 
       // "Deposit" event is emitted when the MultiSig contract receives the funds
-      await displayViemTx('withdraw', Promise.resolve(multiSigTx), publicClient)
+      await displayViemTx('withdraw', Promise.resolve(multiSigTx), publicClient, {
+        abi: multiSigABI,
+        displayEventName: 'Deposit',
+      })
     } else if (res.flags.useSafe) {
       await performSafeTransaction(
         (await this.getKit()).connection.currentProvider,
