@@ -6,6 +6,7 @@ import { CeloTx } from '@celo/connect'
 import type { Abi } from 'viem'
 import 'bignumber.js'
 
+import { toViemAddress, toViemBigInt } from './BaseWrapper'
 import { Erc20Wrapper } from './Erc20Wrapper'
 
 /**
@@ -49,5 +50,8 @@ export class CeloTokenWrapper<TAbi extends Abi = typeof goldTokenABI> extends Er
     comment: string,
     txParams?: Omit<CeloTx, 'data'>
   ) =>
-    (this.contract as any).write.transferWithComment([to, value, comment] as const, txParams as any)
+    (this.contract as any).write.transferWithComment(
+      [toViemAddress(to), toViemBigInt(value), comment] as const,
+      txParams as any
+    )
 }

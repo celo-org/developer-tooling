@@ -99,7 +99,8 @@ export function hexToNumber(hex?: string): number | undefined {
 }
 
 function isHash(value: string) {
-  return isHex(value) && value.length === 32
+  // 32 bytes = '0x' + 64 hex chars
+  return isHex(value) && value.length === 66
 }
 
 export function parseAccessList(accessListRaw: AccessListRaw | undefined): AccessList {
