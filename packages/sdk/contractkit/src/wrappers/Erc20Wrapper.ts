@@ -5,7 +5,7 @@ import type { Abi } from 'viem'
 // after the move to node 10. This allows types to be inferred without
 // referencing '@celo/utils/node_modules/bignumber.js'
 import BigNumber from 'bignumber.js'
-import { BaseWrapper, valueToBigNumber, toViemAddress } from './BaseWrapper'
+import { BaseWrapper, toViemAddress, toViemBigInt, valueToBigNumber } from './BaseWrapper'
 
 /**
  * ERC-20 contract only containing the non-optional functions
@@ -41,7 +41,10 @@ export class Erc20Wrapper<TAbi extends Abi = typeof ierc20ABI> extends BaseWrapp
    * @return True if the transaction succeeds.
    */
   approve = (spender: string, value: string | number, txParams?: Omit<CeloTx, 'data'>) =>
-    (this.contract as any).write.approve([spender, value] as const, txParams as any)
+    (this.contract as any).write.approve(
+      [toViemAddress(spender), toViemBigInt(value)] as const,
+      txParams as any
+    )
 
   /**
    * Transfers the token from one address to another.
@@ -50,7 +53,10 @@ export class Erc20Wrapper<TAbi extends Abi = typeof ierc20ABI> extends BaseWrapp
    * @return True if the transaction succeeds.
    */
   transfer = (to: string, value: string | number, txParams?: Omit<CeloTx, 'data'>) =>
-    (this.contract as any).write.transfer([to, value] as const, txParams as any)
+    (this.contract as any).write.transfer(
+      [toViemAddress(to), toViemBigInt(value)] as const,
+      txParams as any
+    )
 
   /**
    * Transfers the token from one address to another on behalf of a user.
@@ -64,7 +70,10 @@ export class Erc20Wrapper<TAbi extends Abi = typeof ierc20ABI> extends BaseWrapp
     to: string,
     value: string | number,
     txParams?: Omit<CeloTx, 'data'>
-  ) => (this.contract as any).write.transferFrom([from, to, value] as const, txParams as any)
+  ) => (this.contract as any).write.transferFrom(
+      [toViemAddress(from), toViemAddress(to), toViemBigInt(value)] as const,
+      txParams as any
+    )
 
   /**
    * Gets the balance of the specified address.

@@ -91,29 +91,43 @@ export class ElectionWrapper extends BaseWrapperForGoverning<typeof electionABI>
     return [...res] as Address[]
   }
 
-  private _getTotalVotesForGroup = async (group: string) => {
-    const res = await this.contract.read.getTotalVotesForGroup([toViemAddress(group)])
+  private _getTotalVotesForGroup = async (group: string, blockNumber?: number) => {
+    const res = await this.contract.read.getTotalVotesForGroup(
+      [toViemAddress(group)],
+      blockNumber !== undefined ? { blockNumber: BigInt(blockNumber) } : {}
+    )
     return valueToBigNumber(res.toString())
   }
 
-  private _getActiveVotesForGroup = async (group: string) => {
-    const res = await this.contract.read.getActiveVotesForGroup([toViemAddress(group)])
+  private _getActiveVotesForGroup = async (group: string, blockNumber?: number) => {
+    const res = await this.contract.read.getActiveVotesForGroup(
+      [toViemAddress(group)],
+      blockNumber !== undefined ? { blockNumber: BigInt(blockNumber) } : {}
+    )
     return valueToBigNumber(res.toString())
   }
 
-  private _getPendingVotesForGroupByAccount = async (group: string, account: string) => {
-    const res = await this.contract.read.getPendingVotesForGroupByAccount([
-      toViemAddress(group),
-      toViemAddress(account),
-    ])
+  private _getPendingVotesForGroupByAccount = async (
+    group: string,
+    account: string,
+    blockNumber?: number
+  ) => {
+    const res = await this.contract.read.getPendingVotesForGroupByAccount(
+      [toViemAddress(group), toViemAddress(account)],
+      blockNumber !== undefined ? { blockNumber: BigInt(blockNumber) } : {}
+    )
     return valueToBigNumber(res.toString())
   }
 
-  private _getActiveVotesForGroupByAccount = async (group: string, account: string) => {
-    const res = await this.contract.read.getActiveVotesForGroupByAccount([
-      toViemAddress(group),
-      toViemAddress(account),
-    ])
+  private _getActiveVotesForGroupByAccount = async (
+    group: string,
+    account: string,
+    blockNumber?: number
+  ) => {
+    const res = await this.contract.read.getActiveVotesForGroupByAccount(
+      [toViemAddress(group), toViemAddress(account)],
+      blockNumber !== undefined ? { blockNumber: BigInt(blockNumber) } : {}
+    )
     return valueToBigNumber(res.toString())
   }
 
@@ -255,8 +269,8 @@ export class ElectionWrapper extends BaseWrapperForGoverning<typeof electionABI>
    * @param group The address of the validator group.
    * @return The total votes for `group`.
    */
-  async getTotalVotesForGroup(group: Address, _blockNumber?: number): Promise<BigNumber> {
-    return this._getTotalVotesForGroup(group)
+  async getTotalVotesForGroup(group: Address, blockNumber?: number): Promise<BigNumber> {
+    return this._getTotalVotesForGroup(group, blockNumber)
   }
 
   /**
@@ -278,8 +292,8 @@ export class ElectionWrapper extends BaseWrapperForGoverning<typeof electionABI>
    * @param group The address of the validator group.
    * @return The active votes for `group`.
    */
-  async getActiveVotesForGroup(group: Address, _blockNumber?: number): Promise<BigNumber> {
-    return this._getActiveVotesForGroup(group)
+  async getActiveVotesForGroup(group: Address, blockNumber?: number): Promise<BigNumber> {
+    return this._getActiveVotesForGroup(group, blockNumber)
   }
 
   /**
@@ -295,10 +309,10 @@ export class ElectionWrapper extends BaseWrapperForGoverning<typeof electionABI>
   async getVotesForGroupByAccount(
     account: Address,
     group: Address,
-    _blockNumber?: number
+    blockNumber?: number
   ): Promise<GroupVote> {
-    const pending = await this._getPendingVotesForGroupByAccount(group, account)
-    const active = await this._getActiveVotesForGroupByAccount(group, account)
+    const pending = await this._getPendingVotesForGroupByAccount(group, account, blockNumber)
+    const active = await this._getActiveVotesForGroupByAccount(group, account, blockNumber)
 
     return {
       group,

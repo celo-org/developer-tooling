@@ -1,7 +1,7 @@
 import { odisPaymentsABI } from '@celo/abis'
 import { Address, CeloTx } from '@celo/connect'
 import { BigNumber } from 'bignumber.js'
-import { BaseWrapper, toViemAddress, valueToBigNumber } from './BaseWrapper'
+import { BaseWrapper, toViemAddress, toViemBigInt, valueToBigNumber } from './BaseWrapper'
 
 export class OdisPaymentsWrapper extends BaseWrapper<typeof odisPaymentsABI> {
   /**
@@ -20,7 +20,10 @@ export class OdisPaymentsWrapper extends BaseWrapper<typeof odisPaymentsABI> {
    * @dev Throws if USDm transfer fails.
    */
   payInCUSD = (account: Address, value: number | string, txParams?: Omit<CeloTx, 'data'>) =>
-    this.contract.write.payInCUSD([toViemAddress(account), BigInt(value)] as const, txParams as any)
+    this.contract.write.payInCUSD(
+      [toViemAddress(account), toViemBigInt(value)] as const,
+      txParams as any
+    )
 }
 
 export type OdisPaymentsWrapperType = OdisPaymentsWrapper

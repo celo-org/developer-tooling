@@ -234,15 +234,16 @@ export class AttestationsWrapper extends BaseWrapper<typeof attestationsABI> {
   }
 
   /**
-   * Returns the attestation signer for the specified account.
-   * @param account The address of token rewards are accumulated in.
+   * Returns the pending withdrawal amount for the given token and account.
+   * @param token The address of the token rewards are accumulated in.
    * @param account The address of the account.
    * @return The reward amount.
    */
-  getPendingWithdrawals = async (account: string, token: string) => {
+  getPendingWithdrawals = async (token: string, account: string) => {
+    // on-chain arg order is (token, account) — keep the historical parameter order
     const res = await this.contract.read.pendingWithdrawals([
-      toViemAddress(account),
       toViemAddress(token),
+      toViemAddress(account),
     ])
     return valueToBigNumber(res.toString())
   }

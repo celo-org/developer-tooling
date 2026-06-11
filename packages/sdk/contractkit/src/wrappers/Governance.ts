@@ -1,5 +1,5 @@
 import { governanceABI } from '@celo/abis'
-import { pad } from 'viem'
+
 import {
   bufferToHex,
   ensureLeading0x,
@@ -196,7 +196,7 @@ export class GovernanceWrapper extends BaseWrapperForGoverning<typeof governance
   private _getDequeue = async () => this.contract.read.getDequeue()
 
   private _getHotfixRecord = async (hash: string): Promise<HotfixRecord> => {
-    const res = await this.contract.read.getHotfixRecord([pad(hash as `0x${string}`, { size: 32 })])
+    const res = await this.contract.read.getHotfixRecord([hash as `0x${string}`])
     return {
       approved: res[0],
       councilApproved: res[1],
@@ -897,7 +897,15 @@ export class GovernanceWrapper extends BaseWrapperForGoverning<typeof governance
     txParams?: Omit<CeloTx, 'data'>
   ): Promise<`0x${string}`> {
     const proposalIndex = await this.getDequeueIndex(proposalID)
-    const voteNum = Object.keys(VoteValue).indexOf(vote)
+    // explicit mapping to the on-chain Proposals.VoteValue enum — must not
+    // depend on the declaration order of the TS enum
+    const voteNumMap: Record<keyof typeof VoteValue, number> = {
+      None: 0,
+      Abstain: 1,
+      No: 2,
+      Yes: 3,
+    }
+    const voteNum = voteNumMap[vote]
     return this.contract.write.vote(
       [toViemBigInt(proposalID), BigInt(proposalIndex), voteNum],
       txParams as any
@@ -983,7 +991,7 @@ export class GovernanceWrapper extends BaseWrapperForGoverning<typeof governance
    */
   approveHotfix = (hash: Buffer, txParams?: Omit<CeloTx, 'data'>) =>
     this.contract.write.approveHotfix(
-      [pad(bufferToHex(hash) as `0x${string}`, { size: 32 })],
+      [bufferToHex(hash) as `0x${string}`],
       txParams as any
     )
 
@@ -993,7 +1001,7 @@ export class GovernanceWrapper extends BaseWrapperForGoverning<typeof governance
    */
   prepareHotfix = (hash: Buffer, txParams?: Omit<CeloTx, 'data'>) =>
     this.contract.write.prepareHotfix(
-      [pad(bufferToHex(hash) as `0x${string}`, { size: 32 })],
+      [bufferToHex(hash) as `0x${string}`],
       txParams as any
     )
 
@@ -1011,7 +1019,7 @@ export class GovernanceWrapper extends BaseWrapperForGoverning<typeof governance
         params[1] as `0x${string}`[],
         params[2] as `0x${string}`,
         params[3].map((v) => BigInt(v)),
-        pad(params[4] as `0x${string}`, { size: 32 }),
+        params[4] as `0x${string}`,
       ],
       txParams as any
     )

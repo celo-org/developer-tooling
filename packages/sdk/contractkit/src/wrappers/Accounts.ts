@@ -435,14 +435,16 @@ export class AccountsWrapper extends BaseWrapper<typeof accountsABI> {
         this.writeOverrides(txParams)
       )
     } else {
+      // r/s are bytes32 — viem rejects under-sized byte values like '0x0'
+      const zeroBytes32 = `0x${'0'.repeat(64)}` as `0x${string}`
       return this.contract.write.setAccount(
         [
           name,
           dataEncryptionKey as `0x${string}`,
           toViemAddress(walletAddress),
           0,
-          '0x0' as `0x${string}`,
-          '0x0' as `0x${string}`,
+          zeroBytes32,
+          zeroBytes32,
         ] as const,
         this.writeOverrides(txParams)
       )

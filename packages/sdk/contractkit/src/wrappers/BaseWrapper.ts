@@ -59,7 +59,10 @@ export abstract class BaseWrapper<TAbi extends readonly unknown[] = AbiItem[]> {
         this._version = ContractVersion.fromRaw(decoded)
       }
     }
-    return this._version!
+    if (!this._version) {
+      throw new Error(`Contract at ${this.address} does not implement getVersionNumber()`)
+    }
+    return this._version
   }
 
   protected async onlyVersionOrGreater(version: ContractVersion) {
@@ -92,7 +95,10 @@ export abstract class BaseWrapper<TAbi extends readonly unknown[] = AbiItem[]> {
     const eventAbi = (this.contract.abi as unknown as AbiItem[]).find(
       (item: AbiItem) => item.type === 'event' && item.name === event
     )
-    if (!eventAbi) return []
+    if (!eventAbi) {
+      // parity with web3, which threw "Event doesn't exist in this contract"
+      throw new Error(`Event "${event}" doesn't exist in this contract`)
+    }
 
     const fromBlock =
       options.fromBlock != null
@@ -115,32 +121,30 @@ export abstract class BaseWrapper<TAbi extends readonly unknown[] = AbiItem[]> {
             : BigInt(options.toBlock)
         : undefined
 
-    try {
-      const logs = await this.client.getLogs({
-        address: this.contract.address,
-        event: eventAbi as any,
-        fromBlock,
-        toBlock,
-      })
+    // RPC errors (e.g. block range limits) must propagate — an empty array is
+    // indistinguishable from "no events". viem's getLogs already skips logs it
+    // cannot decode (strict mode is off by default).
+    const logs = await this.client.getLogs({
+      address: this.contract.address,
+      event: eventAbi as any,
+      fromBlock,
+      toBlock,
+    })
 
-      return logs.map((log) => {
-        const decoded = log as typeof log & { args?: Record<string, unknown> }
-        return {
-          event: eventAbi.name!,
-          address: log.address,
-          returnValues: decoded.args ?? {},
-          logIndex: log.logIndex!,
-          transactionIndex: log.transactionIndex!,
-          transactionHash: log.transactionHash!,
-          blockHash: log.blockHash!,
-          blockNumber: Number(log.blockNumber!),
-          raw: { data: log.data, topics: log.topics as string[] },
-        }
-      })
-    } catch {
-      // Event decoding may fail for proxy contracts; return empty gracefully
-      return []
-    }
+    return logs.map((log) => {
+      const decoded = log as typeof log & { args?: Record<string, unknown> }
+      return {
+        event: eventAbi.name!,
+        address: log.address,
+        returnValues: decoded.args ?? {},
+        logIndex: log.logIndex!,
+        transactionIndex: log.transactionIndex!,
+        transactionHash: log.transactionHash!,
+        blockHash: log.blockHash!,
+        blockNumber: Number(log.blockNumber!),
+        raw: { data: log.data, topics: log.topics as string[] },
+      }
+    })
   }
 
   events: Record<string, AbiItem> = (this.contract.abi as unknown as AbiItem[])

@@ -153,7 +153,8 @@ testWithAnvilL2('Governance Wrapper', (provider) => {
       it('gets hotfix record', async () => {
         const kit = newKitFromProvider(provider)
         const governance = await kit.contracts.getGovernance()
-        const hotfixHash = Buffer.from('0x', 'hex')
+        // a syntactically valid (32-byte) hash that doesn't correspond to any hotfix
+        const hotfixHash = Buffer.alloc(32)
 
         const hotfixRecordL2 = await governance.getHotfixRecord(hotfixHash)
         expect(hotfixRecordL2).toMatchInlineSnapshot(`

@@ -20,6 +20,7 @@ export class EscrowWrapper extends BaseWrapper<typeof escrowABI> {
       token: res[2] as string,
       value: res[3].toString(),
       sentIndex: res[4].toString(),
+      receivedIndex: res[5].toString(),
       timestamp: res[6].toString(),
       expirySeconds: res[7].toString(),
       minAttestations: res[8].toString(),
