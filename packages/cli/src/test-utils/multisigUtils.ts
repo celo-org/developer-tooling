@@ -78,7 +78,7 @@ export async function createMultisig(
     to: proxy.address,
     data: initData,
   })
-  await kit.connection.sendTransaction({
+  const initHash = await kit.connection.sendTransaction({
     from: kit.defaultAccount,
     to: proxy.address,
     data: initData,
@@ -86,7 +86,8 @@ export async function createMultisig(
     maxPriorityFeePerGas: priorityFee,
     maxFeePerGas: (BigInt(baseFee) + BigInt(priorityFee)).toString(),
   })
-  // Hash is returned directly from sendTransaction
+  // the ownership transfer below depends on the proxy being initialized
+  await kit.connection.viemClient.waitForTransactionReceipt({ hash: initHash })
   const changeOwnerData = encodeFunctionData({
     abi: proxy.abi,
     functionName: '_transferOwnership',
@@ -97,7 +98,7 @@ export async function createMultisig(
     to: proxy.address,
     data: changeOwnerData,
   })
-  await kit.connection.sendTransaction({
+  const changeOwnerHash = await kit.connection.sendTransaction({
     from: kit.defaultAccount,
     to: proxy.address,
     data: changeOwnerData,
@@ -105,7 +106,7 @@ export async function createMultisig(
     maxPriorityFeePerGas: priorityFee,
     maxFeePerGas: (BigInt(baseFee) + BigInt(priorityFee)).toString(),
   })
-  // Hash is returned directly from sendTransaction
+  await kit.connection.viemClient.waitForTransactionReceipt({ hash: changeOwnerHash })
 
   return proxyAddress as StrongAddress
 }

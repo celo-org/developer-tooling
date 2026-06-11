@@ -621,6 +621,7 @@ testWithAnvilL2(
 
         const expectedInput = encodeFunctionData({
           abi: [structAbiDefinition] as any,
+          functionName: 'mint',
           args: [JSON.parse(transactionsWithStruct[0].args[0])] as any,
         })
 

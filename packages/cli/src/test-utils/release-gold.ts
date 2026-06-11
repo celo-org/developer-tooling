@@ -61,12 +61,13 @@ export async function deployReleaseGoldContract(
           REGISTRY_CONTRACT_ADDRESS,
         ],
       })
-      await connection.sendTransaction({
+      const initHash = await connection.sendTransaction({
         to: contract.address,
         data: initData,
         from: ownerMultisigAddress,
       })
-      // Hash is returned directly from sendTransaction
+      // tests use the contract immediately — make sure initialization is mined
+      await connection.viemClient.waitForTransactionReceipt({ hash: initHash })
     },
     new BigNumber(parseEther('1').toString())
   )

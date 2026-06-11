@@ -90,8 +90,13 @@ export function jsonRpcCall<O>(provider: Provider, method: string, params: unkno
   return provider.request({ method, params }) as Promise<O>
 }
 
-export function evmRevert(provider: Provider, snapId: string): Promise<void> {
-  return jsonRpcCall(provider, 'evm_revert', [snapId])
+export async function evmRevert(provider: Provider, snapId: string): Promise<void> {
+  // anvil returns false for an unknown/already-consumed snapshot id; silently
+  // continuing would run subsequent tests against unreverted state
+  const reverted = await jsonRpcCall<boolean>(provider, 'evm_revert', [snapId])
+  if (!reverted) {
+    throw new Error(`evm_revert failed for snapshot ${snapId} (stale or already consumed)`)
+  }
 }
 
 export function evmSnapshot(provider: Provider) {
