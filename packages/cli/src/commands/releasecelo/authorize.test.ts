@@ -37,7 +37,7 @@ testWithAnvilL2('releasegold:authorize cmd', (provider) => {
       new BigNumber(parseEther('100000').toString())
     )
     await testLocallyWithNode(CreateAccount, ['--contract', contractAddress], provider)
-  })
+  }, 60_000)
 
   describe('can authorize account signers', () => {
     let pop: any

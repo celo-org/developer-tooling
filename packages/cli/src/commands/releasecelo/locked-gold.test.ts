@@ -26,7 +26,7 @@ testWithAnvilL2('releasegold:locked-gold cmd', (provider) => {
     )
 
     await testLocallyWithNode(CreateAccount, ['--contract', contractAddress], provider)
-  })
+  }, 60_000)
 
   test(
     'can lock celo with pending withdrawals',

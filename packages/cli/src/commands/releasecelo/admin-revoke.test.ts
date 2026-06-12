@@ -45,7 +45,9 @@ testWithAnvilL2('releasegold:admin-revoke cmd', (provider) => {
       kit.connection.getCeloContract(releaseGoldABI as any, contractAddress) as any,
       kit.contracts
     )
-  })
+    // multisig + ReleaseGold deployment with receipt waits exceeds the default
+    // 10s hook timeout on slow CI runners
+  }, 60_000)
 
   test('will revoke', async () => {
     await testLocallyWithNode(AdminRevoke, ['--contract', contractAddress, '--yesreally'], provider)

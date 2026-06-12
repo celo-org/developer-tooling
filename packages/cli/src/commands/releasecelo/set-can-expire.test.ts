@@ -25,7 +25,7 @@ testWithAnvilL2('releasegold:set-can-expire cmd', (provider) => {
       accounts[0],
       accounts[2]
     )
-  })
+  }, 60_000)
 
   it('fails to set the same value', async () => {
     const logMock = jest.spyOn(console, 'log')

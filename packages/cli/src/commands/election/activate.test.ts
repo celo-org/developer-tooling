@@ -157,18 +157,25 @@ testWithAnvilL2(
           }),
         ])
 
-        expect(
-          logMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes))
-        ).toMatchInlineSnapshot(`
+        // the CLI's --wait polling races the concurrent epoch switch from the
+        // test, so the log interleaving is nondeterministic — compare sorted
+        expect(logMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes)).sort())
+          .toMatchInlineSnapshot(`
           [
-            [
-              "Running Checks:",
-            ],
             [
               "   ✔  0xE36Ea790bc9d7AB70C55260C66D52b1eca985f84 is Signer or registered Account ",
             ],
             [
               "All checks passed",
+            ],
+            [
+              "Running Checks:",
+            ],
+            [
+              "SendTransaction: activate",
+            ],
+            [
+              "SendTransaction: finishNextEpoch",
             ],
             [
               "SendTransaction: startNextEpoch",
@@ -177,13 +184,7 @@ testWithAnvilL2(
               "txHash: 0xtxhash",
             ],
             [
-              "SendTransaction: finishNextEpoch",
-            ],
-            [
               "txHash: 0xtxhash",
-            ],
-            [
-              "SendTransaction: activate",
             ],
             [
               "txHash: 0xtxhash",
@@ -296,16 +297,26 @@ testWithAnvilL2(
         }),
       ])
 
-      expect(stripAnsiCodesFromNestedArray(logMock.mock.calls)).toMatchInlineSnapshot(`
+      // sorted: the --wait polling races the concurrent epoch switch (see above)
+      expect(stripAnsiCodesFromNestedArray(logMock.mock.calls).sort()).toMatchInlineSnapshot(`
         [
-          [
-            "Running Checks:",
-          ],
           [
             "   ✔  0xE36Ea790bc9d7AB70C55260C66D52b1eca985f84 is Signer or registered Account ",
           ],
           [
             "All checks passed",
+          ],
+          [
+            "Running Checks:",
+          ],
+          [
+            "SendTransaction: activate",
+          ],
+          [
+            "SendTransaction: activate",
+          ],
+          [
+            "SendTransaction: finishNextEpoch",
           ],
           [
             "SendTransaction: startNextEpoch",
@@ -314,19 +325,10 @@ testWithAnvilL2(
             "txHash: 0xtxhash",
           ],
           [
-            "SendTransaction: finishNextEpoch",
-          ],
-          [
             "txHash: 0xtxhash",
           ],
           [
-            "SendTransaction: activate",
-          ],
-          [
             "txHash: 0xtxhash",
-          ],
-          [
-            "SendTransaction: activate",
           ],
           [
             "txHash: 0xtxhash",

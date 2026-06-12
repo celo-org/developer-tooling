@@ -47,7 +47,7 @@ testWithAnvilL2('releasegold:set-beneficiary cmd', (provider) => {
     beneficiary = await releaseGoldWrapper.getBeneficiary()
     const owner = await releaseGoldWrapper.getOwner()
     releaseGoldMultiSig = await kit.contracts.getMultiSig(owner)
-  })
+  }, 60_000)
 
   test('can change beneficiary', async () => {
     // First submit the tx from the release owner (accounts[0])

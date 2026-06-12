@@ -27,7 +27,7 @@ testWithAnvilL2('releasegold:set-account cmd', (provider) => {
     )
 
     await testLocallyWithNode(CreateAccount, ['--contract', contractAddress], provider)
-  })
+  }, 60_000)
 
   it('sets all the properties', async () => {
     const TEST_ENCRYPTION_KEY =

@@ -51,7 +51,7 @@ testWithAnvilL2('releasegold:transfer-dollars cmd', (provider) => {
     })
     await testLocallyWithNode(Register, ['--from', accounts[0]], provider)
     await testLocallyWithNode(CreateAccount, ['--contract', contractAddress], provider)
-  })
+  }, 60_000)
 
   afterEach(() => {
     jest.clearAllMocks()

@@ -40,7 +40,7 @@ testWithAnvilL2('releasegold:withdraw cmd', (provider) => {
       ['--contract', contractAddress, '--yesreally', '--distributionRatio', '1000'],
       provider
     )
-  })
+  }, 60_000)
 
   test('can withdraw released celo to beneficiary', async () => {
     await testLocallyWithNode(

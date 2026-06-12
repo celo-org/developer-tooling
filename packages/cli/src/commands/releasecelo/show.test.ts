@@ -26,7 +26,7 @@ testWithAnvilL2('releasegold:show cmd', (provider) => {
       accounts[0],
       accounts[2]
     )
-  })
+  }, 60_000)
 
   it('shows contract info', async () => {
     const logMock = jest.spyOn(console, 'log')

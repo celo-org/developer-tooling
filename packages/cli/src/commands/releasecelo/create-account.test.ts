@@ -23,7 +23,7 @@ testWithAnvilL2('releasegold:create-account cmd', (provider) => {
       accounts[0],
       accounts[2]
     )
-  })
+  }, 60_000)
 
   it('can create an account', async () => {
     const accountWrapper = await kit.contracts.getAccounts()

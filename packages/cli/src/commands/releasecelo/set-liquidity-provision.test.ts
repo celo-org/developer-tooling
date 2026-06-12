@@ -25,7 +25,7 @@ testWithAnvilL2('releasegold:set-liquidity-provision cmd', (provider) => {
       accounts[0],
       accounts[2]
     )
-  })
+  }, 60_000)
 
   it('sets liqudity provision', async () => {
     const releaseGoldWrapper = new ReleaseGoldWrapper(

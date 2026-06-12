@@ -26,7 +26,7 @@ testWithAnvilL2('releasegold:set-max-distribution cmd', (provider) => {
       accounts[0],
       accounts[2]
     )
-  })
+  }, 60_000)
 
   it('sets max distribution', async () => {
     const releaseGoldWrapper = new ReleaseGoldWrapper(

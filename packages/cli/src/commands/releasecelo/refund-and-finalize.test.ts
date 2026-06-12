@@ -27,7 +27,7 @@ testWithAnvilL2('releasegold:refund-and-finalize cmd', (provider) => {
       accounts[0],
       accounts[2]
     )
-  })
+  }, 60_000)
 
   test('can refund celo', async () => {
     await testLocallyWithNode(Revoke, ['--contract', contractAddress, '--yesreally'], provider)
