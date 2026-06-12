@@ -18,9 +18,7 @@ import { CLIError } from '@oclif/core/lib/errors'
 import { ArgOutput, FlagOutput, Input, ParserOutput } from '@oclif/core/lib/interfaces/parser'
 import chalk from 'chalk'
 import {
-  createPublicClient,
   createWalletClient,
-  extractChain,
   http,
   isAddressEqual,
   MethodNotFoundRpcError,
@@ -30,6 +28,7 @@ import {
 import { privateKeyToAccount } from 'viem/accounts'
 import { celo, celoSepolia } from 'viem/chains'
 import { ipc } from 'viem/node'
+import createCeloPublicClient from './packages-to-be/public-client'
 import createRpcWalletClient from './packages-to-be/rpc-client'
 import { failWith } from './utils/cli'
 import { CustomFlags } from './utils/command'
@@ -220,39 +219,7 @@ export abstract class BaseCommand extends Command {
       const nodeUrl = await this.getNodeUrl()
       ux.action.start(`Connecting to Node ${nodeUrl}`)
       const transport = await this.getTransport()
-
-      // Create an intermediate client to get the chain id
-      const intermediateClient = createPublicClient({
-        transport,
-      })
-      const chainId = await intermediateClient.getChainId()
-      const extractedChain = extractChain({
-        chains: [celo, celoSepolia],
-        id: chainId as typeof celo.id | typeof celoSepolia.id,
-      })
-
-      if (extractedChain) {
-        this.publicClient = createPublicClient({
-          transport,
-          batch: { multicall: true },
-          chain: extractedChain,
-        })
-      } else {
-        // we might be connecting to a dev chain or anvil fork or another testnet
-        this.publicClient = createPublicClient({
-          transport,
-          chain: {
-            name: 'Custom Celo Chain',
-            id: chainId,
-            nativeCurrency: celo.nativeCurrency,
-            formatters: celo.formatters,
-            serializers: celo.serializers,
-            rpcUrls: {
-              default: { http: [nodeUrl] },
-            },
-          } as unknown as PublicCeloClient['chain'],
-        })
-      }
+      this.publicClient = await createCeloPublicClient({ transport, nodeUrl })
       ux.action.stop()
     }
 

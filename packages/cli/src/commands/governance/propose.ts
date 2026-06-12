@@ -12,6 +12,7 @@ import {
   addExistingProposalIDToBuilder,
   addExistingProposalJSONFileToBuilder,
   checkProposal,
+  simulateProposalOnRpc,
 } from '../../utils/governance'
 import { createSafe, performSafeTransaction, safeTransactionMetadata } from '../../utils/safe'
 export default class Propose extends BaseCommand {
@@ -30,7 +31,17 @@ export default class Propose extends BaseCommand {
       description: 'Amount of Celo to attach to proposal',
     }),
     from: CustomFlags.address({ required: true, description: "Proposer's address" }),
-    force: Flags.boolean({ description: 'Skip execution check', default: false }),
+    force: Flags.boolean({
+      description: 'Skip execution check',
+      default: false,
+      exclusive: ['simulate'],
+    }),
+    simulate: Flags.string({
+      required: false,
+      description:
+        'RPC URL of a forked node (e.g. anvil) to simulate the proposal against. Each proposal transaction is actually sent (not eth_call) from the Governance contract address, which the node must have unlocked (e.g. anvil --auto-impersonate). Replaces the default eth_call simulation. Useful for proposals where the success of one tx depends on a previous one succeeding.',
+      exclusive: ['force'],
+    }),
     noInfo: Flags.boolean({ description: 'Skip printing the proposal info', default: false }),
     descriptionURL: CustomFlags.proposalDescriptionURL({
       required: true,
@@ -116,7 +127,9 @@ export default class Propose extends BaseCommand {
     }
 
     if (!res.flags.force) {
-      const ok = await checkProposal(proposal, kit)
+      const ok = res.flags.simulate
+        ? await simulateProposalOnRpc(proposal, res.flags.simulate, governance.address)
+        : await checkProposal(proposal, kit, governance.address)
       if (!ok) {
         return
       }

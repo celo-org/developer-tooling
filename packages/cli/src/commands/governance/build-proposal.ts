@@ -55,6 +55,7 @@ export default class BuildProposal extends BaseCommand {
     output.forEach((tx) => builder.addJsonTx(tx))
     const proposal = await builder.build()
 
-    await checkProposal(proposal, kit)
+    const governance = await kit.contracts.getGovernance()
+    await checkProposal(proposal, kit, governance.address)
   }
 }

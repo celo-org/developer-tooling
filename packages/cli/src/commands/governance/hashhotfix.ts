@@ -34,15 +34,16 @@ export default class HashHotfix extends BaseCommand {
     jsonTransactions.forEach((tx) => builder.addJsonTx(tx))
     const hotfix = await builder.build()
 
+    const governance = await kit.contracts.getGovernance()
+
     if (!res.flags.force) {
-      const ok = await checkProposal(hotfix, kit)
+      const ok = await checkProposal(hotfix, kit, governance.address)
       if (!ok) {
         return
       }
     }
 
     // Combine with the salt and hash the proposal.
-    const governance = await kit.contracts.getGovernance()
     const saltBuff = Buffer.from(trimLeading0x(res.flags.salt), 'hex')
     console.log(`salt: ${res.flags.salt}, buf: ${saltBuff.toString('hex')}`)
     const hash = await governance.getHotfixHash(hotfix, saltBuff)
