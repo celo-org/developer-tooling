@@ -159,8 +159,9 @@ testWithAnvilL2(
 
         // the CLI's --wait polling races the concurrent epoch switch from the
         // test, so the log interleaving is nondeterministic — compare sorted
-        expect(logMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes)).sort())
-          .toMatchInlineSnapshot(`
+        expect(
+          logMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes)).sort()
+        ).toMatchInlineSnapshot(`
           [
             [
               "   ✔  0xE36Ea790bc9d7AB70C55260C66D52b1eca985f84 is Signer or registered Account ",
