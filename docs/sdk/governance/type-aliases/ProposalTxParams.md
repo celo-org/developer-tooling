@@ -1,4 +1,4 @@
-[**@celo/governance v5.1.9**](../README.md)
+[**@celo/governance v5.1.10**](../README.md)
 
 ***
 
@@ -8,4 +8,4 @@
 
 > **ProposalTxParams** = `Pick`\<`ProposalTransaction`, `"to"` \| `"value"`\>
 
-Defined in: [proposals.ts:217](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/governance/src/proposals.ts#L217)
+Defined in: [proposals.ts:228](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/governance/src/proposals.ts#L228)

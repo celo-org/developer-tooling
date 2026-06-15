@@ -1,4 +1,4 @@
-[**@celo/contractkit v10.0.3**](../README.md)
+[**@celo/contractkit v11.0.0**](../README.md)
 
 ***
 
@@ -8,4 +8,4 @@
 
 > **CeloTokenContract** = `StableTokenContract` \| [`CeloToken`](../enumerations/CeloContract.md#celotoken) \| [`GoldToken`](../enumerations/CeloContract.md#goldtoken)
 
-Defined in: [contractkit/src/base.ts:42](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/base.ts#L42)
+Defined in: [contractkit/src/base.ts:41](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/base.ts#L41)

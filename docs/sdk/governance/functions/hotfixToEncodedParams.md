@@ -1,4 +1,4 @@
-[**@celo/governance v5.1.9**](../README.md)
+[**@celo/governance v5.1.10**](../README.md)
 
 ***
 
@@ -6,13 +6,13 @@
 
 # Function: hotfixToEncodedParams()
 
-> **hotfixToEncodedParams**(`kit`, `proposal`, `salt`): `string`
+> **hotfixToEncodedParams**(`_kit`, `proposal`, `salt`): `` `0x${string}` ``
 
-Defined in: [proposals.ts:30](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/governance/src/proposals.ts#L30)
+Defined in: [proposals.ts:38](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/governance/src/proposals.ts#L38)
 
 ## Parameters
 
-### kit
+### \_kit
 
 `ContractKit`
 
@@ -26,4 +26,4 @@ Defined in: [proposals.ts:30](https://github.com/celo-org/developer-tooling/blob
 
 ## Returns
 
-`string`
+`` `0x${string}` ``

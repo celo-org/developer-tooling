@@ -1,4 +1,4 @@
-[**@celo/governance v5.1.9**](../README.md)
+[**@celo/governance v5.1.10**](../README.md)
 
 ***
 
@@ -8,7 +8,7 @@
 
 > **hotfixToHash**(`kit`, `proposal`, `salt`): `Buffer`
 
-Defined in: [proposals.ts:36](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/governance/src/proposals.ts#L36)
+Defined in: [proposals.ts:44](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/governance/src/proposals.ts#L44)
 
 ## Parameters
 

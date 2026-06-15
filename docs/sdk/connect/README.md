@@ -1,4 +1,4 @@
-**@celo/connect v7.0.0**
+**@celo/connect v8.0.0**
 
 ***
 
@@ -31,16 +31,17 @@ Please use GitHub to:
 ### Basic
 
 ```typescript
-import { Connection, CeloProvider } from '@celo/connect'
+import { Connection } from '@celo/connect'
 
-const web3 = new Web3("YOUR_RPC_URL")
-const connection = new Connection(web3)
+const connection = new Connection('YOUR_RPC_URL')
 ```
 
 For a raw transaction:
 
 ```ts
-const oneCelo = connection.web3.utils.toWei('1', 'ether')
+import { parseEther } from 'viem'
+
+const oneCelo = parseEther('1')
 
 const tx = connection.sendTransaction({
   from: myAddress,

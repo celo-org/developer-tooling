@@ -1,5 +1,66 @@
 # Changelog
 
+## 9.0.0
+
+### Major Changes
+
+- [#780](https://github.com/celo-org/developer-tooling/pull/780) [`95a84a4`](https://github.com/celo-org/developer-tooling/commit/95a84a4ac6c18278e94ef98549c1606dcd5a496f) Thanks [@pahor167](https://github.com/pahor167)! - Remove the deprecated `kit.web3` shim and migrate contractkit to viem-native contract interaction. Use `kit.connection.viemClient` for reads and the wrapper methods for writes. Adds `newKitFromProvider()` as the recommended factory for building a kit from an EIP-1193 provider.
+
+### Minor Changes
+
+- [#743](https://github.com/celo-org/developer-tooling/pull/743) [`a695c5c`](https://github.com/celo-org/developer-tooling/commit/a695c5c510dad78028744e1537ca3954f1aef86b) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - Add new flags to `governance:approve` command for better multisig transaction control:
+
+  - `--submit`: Force submission of approval transaction to multisig without checking for prior confirmations onchain. Use with caution - this bypasses the check for existing submissions. Example: `celocli governance:approve --proposalID 99 --from 0x... --useMultiSig --submit`
+
+  - `--multisigTx`: Specify exact multisig transaction ID to confirm, rather than searching onchain. Useful when you know the transaction ID from offchain sources. Example: `celocli governance:approve --proposalID 99 --from 0x... --useMultiSig --multisigTx 5`
+
+  Both flags depend on `--proposalID` and `--useMultiSig` being provided.
+
+- [#775](https://github.com/celo-org/developer-tooling/pull/775) [`1c83cf2`](https://github.com/celo-org/developer-tooling/commit/1c83cf2bbb6fbbe42c5a7dded99c71194966c3f9) Thanks [@martinvol](https://github.com/martinvol)! - Add `--simulate` flag to `governance:propose` command to simulate proposal execution against a forked node (e.g. anvil) before submitting on-chain.
+
+  Unlike the default `eth_call`-based simulation, `--simulate` actually sends each proposal transaction sequentially from the Governance contract address (which the node must have unlocked, e.g. `anvil --auto-impersonate`). This means transactions execute against cumulative state changes — useful for proposals where the success of one transaction depends on a previous one succeeding. If any transaction fails, the proposal is not submitted and the decoded revert reason is printed.
+
+  Example: `celocli governance:propose --jsonTransactions ./transactions.json --deposit 100e18 --from 0x... --descriptionURL https://... --simulate http://127.0.0.1:8545`
+
+- [#777](https://github.com/celo-org/developer-tooling/pull/777) [`f5482b5`](https://github.com/celo-org/developer-tooling/commit/f5482b5a5beeae5827d84a7fd9848841b461c044) Thanks [@martinvol](https://github.com/martinvol)! - Remove ContractKit's dependency on the Mento `Reserve` and `StableToken` ABIs and repoint the Celo stable tokens onto a viem-native ABI.
+
+  - Removed the `ReserveWrapper`, `CeloContract.Reserve`, `ContractKit.getReserve()`, the `reserve` field of `NetworkConfig`, and the `ReserveProxy` init entry.
+  - `StableToken` / `StableTokenEUR` / `StableTokenBRL` now use a composed `stableTokenViemAbi` (viem's `erc20Abi` + `transferWithComment` from `ICeloToken` + the StableToken admin/`initialize` methods) instead of `@celo/abis` `stableTokenABI`/`reserveABI`. This drops the Mento ABI dependency without waiting on a new `@celo/abis` release.
+
+- [#780](https://github.com/celo-org/developer-tooling/pull/780) [`95a84a4`](https://github.com/celo-org/developer-tooling/commit/95a84a4ac6c18278e94ef98549c1606dcd5a496f) Thanks [@pahor167](https://github.com/pahor167)! - **Remove rpc-contract.ts, PromiEvent, and legacy Contract interface from @celo/connect**
+
+  - Deleted `rpc-contract.ts`, `promi-event.ts`, and `viem-contract.ts` — replaced with native viem `getContract()` / `GetContractReturnType`
+  - `CeloTxObject.send()` now returns `Promise<string>` (tx hash) instead of `PromiEvent<CeloTxReceipt>`
+  - Removed `Connection.createContract()` — use `Connection.getCeloContract()` instead
+  - Removed `PromiEvent<T>` and `Contract` interfaces from types
+  - Removed the public exports `CeloTransactionObject`, `toTransactionObject`, `CeloTxObject`, `RpcCaller`, and `TransactionResult` (the old `celo-transaction-object`, `rpc-caller`, and `tx-result` modules)
+  - Contract deployment rewritten to use viem's `encodeDeployData` + `connection.sendTransaction()`
+  - All contractkit wrappers, CLI commands, and test files updated
+
+  **Breaking changes in @celo/contractkit**
+
+  - `kit.sendTransaction()` now returns `Promise<\`0x${string}\`>`(the transaction hash) instead of a`TransactionResult`; use `kit.connection.viemClient.waitForTransactionReceipt({ hash })` to wait for inclusion
+  - All wrapper write methods now return the transaction hash (a `Promise<string>`) instead of `CeloTransactionObject<T>`; replace `.send()` / `.sendAndWaitForReceipt()` with `await kit.connection.viemClient.waitForTransactionReceipt({ hash })`
+  - Removed the deprecated `kit.web3` shim — use `kit.connection.viemClient` (reads) and wrapper methods (writes)
+  - Removed `kit.isListening()` and `kit.isSyncing()` (no direct replacement; query the node via `kit.connection.viemClient.request({ method: 'net_listening' })` or `{ method: 'eth_syncing' }` if needed)
+  - Removed the deprecated `kit.gasPriceSuggestionMultiplier` property
+  - Removed the `CeloToken` type re-export — use `CeloTokenContract`
+
+### Patch Changes
+
+- [#743](https://github.com/celo-org/developer-tooling/pull/743) [`a695c5c`](https://github.com/celo-org/developer-tooling/commit/a695c5c510dad78028744e1537ca3954f1aef86b) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - Updates logic for submiting/confirming transaction with multisig to only search thru non executed transactions
+
+- [#780](https://github.com/celo-org/developer-tooling/pull/780) [`95a84a4`](https://github.com/celo-org/developer-tooling/commit/95a84a4ac6c18278e94ef98549c1606dcd5a496f) Thanks [@pahor167](https://github.com/pahor167)! - Remove debug console.log statements from lockedcelo:delegate command that were leaking internal values to stdout
+
+- Updated dependencies [[`a695c5c`](https://github.com/celo-org/developer-tooling/commit/a695c5c510dad78028744e1537ca3954f1aef86b), [`95a84a4`](https://github.com/celo-org/developer-tooling/commit/95a84a4ac6c18278e94ef98549c1606dcd5a496f), [`a695c5c`](https://github.com/celo-org/developer-tooling/commit/a695c5c510dad78028744e1537ca3954f1aef86b), [`f5482b5`](https://github.com/celo-org/developer-tooling/commit/f5482b5a5beeae5827d84a7fd9848841b461c044), [`95a84a4`](https://github.com/celo-org/developer-tooling/commit/95a84a4ac6c18278e94ef98549c1606dcd5a496f), [`95a84a4`](https://github.com/celo-org/developer-tooling/commit/95a84a4ac6c18278e94ef98549c1606dcd5a496f), [`95a84a4`](https://github.com/celo-org/developer-tooling/commit/95a84a4ac6c18278e94ef98549c1606dcd5a496f), [`95a84a4`](https://github.com/celo-org/developer-tooling/commit/95a84a4ac6c18278e94ef98549c1606dcd5a496f)]:
+  - @celo/contractkit@11.0.0
+  - @celo/wallet-ledger@8.0.4
+  - @celo/connect@8.0.0
+  - @celo/explorer@5.1.0
+  - @celo/governance@5.1.10
+  - @celo/wallet-hsm-azure@8.0.4
+  - @celo/wallet-local@8.0.4
+
 ## 8.0.3
 
 ### Patch Changes

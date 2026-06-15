@@ -1,4 +1,4 @@
-[**@celo/transactions-uri v5.0.15**](../README.md)
+[**@celo/transactions-uri v5.0.16**](../README.md)
 
 ***
 
@@ -8,7 +8,7 @@
 
 > **parseUri**(`uri`): `CeloTx`
 
-Defined in: [tx-uri.ts:26](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/transactions-uri/src/tx-uri.ts#L26)
+Defined in: [tx-uri.ts:23](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/transactions-uri/src/tx-uri.ts#L23)
 
 ## Parameters
 

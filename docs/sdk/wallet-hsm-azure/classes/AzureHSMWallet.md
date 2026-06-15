@@ -1,4 +1,4 @@
-[**@celo/wallet-hsm-azure v8.0.3**](../README.md)
+[**@celo/wallet-hsm-azure v8.0.4**](../README.md)
 
 ***
 
@@ -6,7 +6,7 @@
 
 # Class: AzureHSMWallet
 
-Defined in: [wallet-hsm-azure/src/azure-hsm-wallet.ts:11](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-hsm-azure/src/azure-hsm-wallet.ts#L11)
+Defined in: [wallet-hsm-azure/src/azure-hsm-wallet.ts:12](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-hsm-azure/src/azure-hsm-wallet.ts#L12)
 
 ## Extends
 
@@ -22,7 +22,7 @@ Defined in: [wallet-hsm-azure/src/azure-hsm-wallet.ts:11](https://github.com/cel
 
 > **new AzureHSMWallet**(`vaultName`): `AzureHSMWallet`
 
-Defined in: [wallet-hsm-azure/src/azure-hsm-wallet.ts:14](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-hsm-azure/src/azure-hsm-wallet.ts#L14)
+Defined in: [wallet-hsm-azure/src/azure-hsm-wallet.ts:15](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-hsm-azure/src/azure-hsm-wallet.ts#L15)
 
 #### Parameters
 
@@ -144,7 +144,7 @@ Get a list of accounts in the remote wallet
 
 > **getAddressFromKeyName**(`keyName`): `Promise`\<`string`\>
 
-Defined in: [wallet-hsm-azure/src/azure-hsm-wallet.ts:50](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-hsm-azure/src/azure-hsm-wallet.ts#L50)
+Defined in: [wallet-hsm-azure/src/azure-hsm-wallet.ts:51](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-hsm-azure/src/azure-hsm-wallet.ts#L51)
 
 Returns the EVM address for the given key
 Useful for initially getting the 'from' field given a keyName
