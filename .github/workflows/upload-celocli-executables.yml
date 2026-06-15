@@ -24,14 +24,14 @@ jobs:
       commit: ${{ steps.setupVars.outputs.commit }}
     steps:
       - name: Checkout Repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           ref: ${{ inputs.ref }}
           fetch-depth: 0
           fetch-tags: true
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version: 24
 
@@ -39,7 +39,7 @@ jobs:
         run: sudo corepack enable yarn
         shell: bash
       # must call twice because of chicken and egg problem with yarn and node
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v6
         with:
           node-version: 24
           cache: 'yarn'
@@ -106,20 +106,20 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout Repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           ref: ${{ inputs.ref }}
           fetch-depth: 0
           fetch-tags: true
       - name: Setup Node.js 24.x
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version: 24
       - name: 'enable corepack for yarn'
         run: corepack enable yarn
         shell: bash
       # must call twice because of chicken and egg problem with yarn and node
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v6
         with:
           node-version: '24'
           cache: 'yarn'
@@ -166,7 +166,7 @@ jobs:
           dynamic-secrets: '{"/dynamic-secrets/keys/github/homebrew-brew/contents=write":"HOMEBREW_BREW_TOKEN"}'
 
       - name: Checkout Repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           ref: ${{ inputs.ref }}
           fetch-depth: 0
@@ -177,7 +177,7 @@ jobs:
         uses: Homebrew/actions/setup-homebrew@master
 
       - name: Checkout Celo Homebrew Tap
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           repository: 'celo-org/homebrew-brew'
           path: '/home/runner/work/developer-tooling/developer-tooling/homebrew-brew'
@@ -185,14 +185,14 @@ jobs:
           token: ${{ env.HOMEBREW_BREW_TOKEN }}
 
       - name: Setup Node.js 24.x
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version: 24
       - name: 'enable corepack for yarn'
         run: sudo corepack enable yarn
         shell: bash
       # must call twice because of chicken and egg problem with yarn and node
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v6
         with:
           node-version: '24'
           cache: 'yarn'
