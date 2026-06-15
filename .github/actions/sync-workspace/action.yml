@@ -11,18 +11,18 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - uses: actions/setup-node@v4
+    - uses: actions/setup-node@v6
       with:
         node-version: '24'
     - name: "enable corepack for yarn"
       run : sudo corepack enable yarn
       shell: bash
     # must call twice because of chicken and egg problem with yarn and node
-    - uses: actions/setup-node@v4
+    - uses: actions/setup-node@v6
       with:
         node-version: '24'
         cache: 'yarn'
-    - uses: actions/cache/restore@v3
+    - uses: actions/cache/restore@v5
       id: cache_node
       env:
         REBUILD_PACKAGE: ${{ inputs.rebuild-package }}
@@ -36,7 +36,7 @@ runs:
         enableCrossOsArchive: true
         fail-on-cache-miss: "!${{ fromJSON(env.REBUILD_PACKAGE) }}"
     - name: Restore build artifacts cache
-      uses: actions/cache/restore@v3
+      uses: actions/cache/restore@v5
       id: cache_build_artifacts
       env:
         REBUILD_PACKAGE: ${{ inputs.rebuild-package }}

@@ -2,7 +2,7 @@ import { Flags } from '@oclif/core'
 import BigNumber from 'bignumber.js'
 import { BaseCommand } from '../../base'
 import { newCheckBuilder } from '../../utils/checks'
-import { displaySendTx } from '../../utils/cli'
+import { displayViemTx } from '../../utils/cli'
 import { CustomFlags } from '../../utils/command'
 
 export default class ValidatorGroupCommission extends BaseCommand {
@@ -33,6 +33,7 @@ export default class ValidatorGroupCommission extends BaseCommand {
 
   async run() {
     const kit = await this.getKit()
+    const publicClient = await this.getPublicClient()
     const res = await this.parse(ValidatorGroupCommission)
 
     if (!(res.flags['queue-update'] || res.flags.apply)) {
@@ -51,8 +52,8 @@ export default class ValidatorGroupCommission extends BaseCommand {
         // .signerAccountIsValidatorGroup()
         .runChecks()
 
-      const tx = await validators.setNextCommissionUpdate(commission)
-      await displaySendTx('setNextCommissionUpdate', tx)
+      const tx = validators.setNextCommissionUpdate(commission)
+      await displayViemTx('setNextCommissionUpdate', tx, publicClient)
     } else if (res.flags.apply) {
       await newCheckBuilder(this, res.flags.from)
         .isSignerOrAccount()
@@ -62,8 +63,8 @@ export default class ValidatorGroupCommission extends BaseCommand {
         .hasCommissionUpdateDelayPassed()
         .runChecks()
 
-      const tx = await validators.updateCommission()
-      await displaySendTx('updateCommission', tx)
+      const tx = validators.updateCommission()
+      await displayViemTx('updateCommission', tx, publicClient)
     }
   }
 }

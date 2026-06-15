@@ -63,8 +63,6 @@ export abstract class TransferStableBase extends BaseCommand {
     )![0] as StableToken
     let stableTokenContract: StableTokenContract<typeof wallet>
     try {
-      // @ts-expect-error - this should be StableTokenContract by for some
-      // reason it returns `any`
       stableTokenContract = await this._stableCurrencyContract(wallet.extend(publicActions))
     } catch {
       failWith(`The ${stableToken} token was not deployed yet`)
@@ -121,7 +119,7 @@ export abstract class TransferStableBase extends BaseCommand {
           return balanceOfTokenForGas >= totalSpentOnGas && balanceOfTokenToSend >= value
         },
         `Cannot afford to transfer ${stableToken} ${
-          res.flags.feeCurrency ? 'with' + ' ' + res.flags.feeCurrency + ' ' + 'feeCurrency' : ''
+          feeCurrency ? `with ${feeCurrency} feeCurrency ` : ''
         }; try reducing value slightly or using a different feeCurrency`
       )
       // NOTE: fast fail in case feeCurrency isn't whitelisted or invalid

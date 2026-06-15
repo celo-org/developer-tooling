@@ -2,7 +2,7 @@ import { Flags } from '@oclif/core'
 import prompts from 'prompts'
 import { BaseCommand } from '../../base'
 import { newCheckBuilder } from '../../utils/checks'
-import { displaySendTx, humanizeRequirements } from '../../utils/cli'
+import { displayViemTx, humanizeRequirements } from '../../utils/cli'
 import { CustomArgs, CustomFlags } from '../../utils/command'
 
 export default class ValidatorGroupMembers extends BaseCommand {
@@ -38,6 +38,7 @@ export default class ValidatorGroupMembers extends BaseCommand {
 
   async run() {
     const kit = await this.getKit()
+    const publicClient = await this.getPublicClient()
     const res = await this.parse(ValidatorGroupMembers)
     const validatorAddress = res.args.arg1 as string
     if (!(res.flags.accept || res.flags.remove || typeof res.flags.reorder === 'number')) {
@@ -71,14 +72,15 @@ export default class ValidatorGroupMembers extends BaseCommand {
           process.exit(0)
         }
       }
-      const tx = await validators.addMember(validatorGroup, validatorAddress)
-      await displaySendTx('addMember', tx)
+      const tx = validators.addMember(validatorGroup, validatorAddress)
+      await displayViemTx('addMember', tx, publicClient)
     } else if (res.flags.remove) {
-      await displaySendTx('removeMember', validators.removeMember(validatorAddress))
+      await displayViemTx('removeMember', validators.removeMember(validatorAddress), publicClient)
     } else if (res.flags.reorder != null) {
-      await displaySendTx(
+      await displayViemTx(
         'reorderMember',
-        await validators.reorderMember(validatorGroup, validatorAddress, res.flags.reorder)
+        validators.reorderMember(validatorGroup, validatorAddress, res.flags.reorder),
+        publicClient
       )
     }
   }

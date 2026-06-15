@@ -2,7 +2,7 @@ import { CeloContract } from '@celo/contractkit'
 import { Args, Flags } from '@oclif/core'
 import BigNumber from 'bignumber.js'
 import { BaseCommand } from '../../base'
-import { displaySendTx, failWith } from '../../utils/cli'
+import { displayViemTx, failWith } from '../../utils/cli'
 import { CustomFlags } from '../../utils/command'
 
 export default class ReportPrice extends BaseCommand {
@@ -33,15 +33,17 @@ export default class ReportPrice extends BaseCommand {
 
   async run() {
     const kit = await this.getKit()
+    const publicClient = await this.getPublicClient()
     const res = await this.parse(ReportPrice)
     const sortedOracles = await kit.contracts.getSortedOracles()
     const value = new BigNumber(res.flags.value)
 
-    await displaySendTx(
+    await displayViemTx(
       'sortedOracles.report',
-      await sortedOracles
+      sortedOracles
         .report(res.args.arg1 as string, value, res.flags.from)
-        .catch((e) => failWith(e))
+        .catch((e) => failWith(e)),
+      publicClient
     )
     this.log(`Reported oracle value: ${value.toString()} ${res.args.arg1} == 1 CELO`)
   }

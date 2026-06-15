@@ -1,13 +1,13 @@
 import { testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
-import { stripAnsiCodesFromNestedArray, testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
+import { stripAnsiCodesFromNestedArray, testLocallyWithNode } from '../../test-utils/cliUtils'
 import Parameters from './parameters'
 
 process.env.NO_SYNCCHECK = 'true'
 
-testWithAnvilL2('network:parameters', (web3) => {
+testWithAnvilL2('network:parameters', (provider) => {
   test('runs', async () => {
     const spy = jest.spyOn(console, 'log')
-    await testLocallyWithWeb3Node(Parameters, [], web3)
+    await testLocallyWithNode(Parameters, [], provider)
     expect(stripAnsiCodesFromNestedArray(spy.mock.calls)).toMatchInlineSnapshot(`
       [
         [
@@ -44,13 +44,6 @@ testWithAnvilL2('network:parameters', (web3) => {
       LockedCelo: 
         totalLockedGold: 120000000000000000000000 (~1.200e+23)
         unlockingPeriod: 6 hours
-      Reserve: 
-        frozenReserveGoldDays: 0 
-        frozenReserveGoldStartBalance: 0 
-        frozenReserveGoldStartDay: 20278 (~2.028e+4)
-        otherReserveAddresses: 
-
-        tobinTaxStalenessThreshold: 3153600000 (~3.154e+9)
       SortedOracles: 
         reportExpiry: 5 minutes
       Validators: 

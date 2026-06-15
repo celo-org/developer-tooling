@@ -1,5 +1,5 @@
 import { newCheckBuilder } from '../../utils/checks'
-import { displaySendTx } from '../../utils/cli'
+import { displayViemTx } from '../../utils/cli'
 import { ReleaseGoldBaseCommand } from '../../utils/release-gold-base'
 export default class CreateAccount extends ReleaseGoldBaseCommand {
   static description = 'Creates a new account for the ReleaseGold instance'
@@ -14,6 +14,7 @@ export default class CreateAccount extends ReleaseGoldBaseCommand {
 
   async run() {
     const kit = await this.getKit()
+    const publicClient = await this.getPublicClient()
     const isRevoked = await this.releaseGoldWrapper.isRevoked()
     await newCheckBuilder(this)
       .isNotAccount(this.releaseGoldWrapper.address)
@@ -21,6 +22,6 @@ export default class CreateAccount extends ReleaseGoldBaseCommand {
       .runChecks()
 
     kit.defaultAccount = await this.releaseGoldWrapper.getBeneficiary()
-    await displaySendTx('createAccount', this.releaseGoldWrapper.createAccount())
+    await displayViemTx('createAccount', this.releaseGoldWrapper.createAccount(), publicClient)
   }
 }

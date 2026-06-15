@@ -3,7 +3,7 @@ import { Flags } from '@oclif/core'
 
 import BigNumber from 'bignumber.js'
 import { newCheckBuilder } from '../../utils/checks'
-import { binaryPrompt, displaySendTx } from '../../utils/cli'
+import { binaryPrompt, displayViemTx } from '../../utils/cli'
 import { CustomFlags } from '../../utils/command'
 import { ReleaseGoldBaseCommand } from '../../utils/release-gold-base'
 
@@ -36,6 +36,7 @@ export default class LockedCelo extends ReleaseGoldBaseCommand {
 
   async run() {
     const kit = await this.getKit()
+    const publicClient = await this.getPublicClient()
     const { flags } = await this.parse(LockedCelo)
     const value = new BigNumber(flags.value)
     const contractAddress = await this.contractAddress()
@@ -56,9 +57,9 @@ export default class LockedCelo extends ReleaseGoldBaseCommand {
       await newCheckBuilder(this, contractAddress)
         .hasEnoughCelo(contractAddress, lockValue)
         .runChecks()
-      const txos = await this.releaseGoldWrapper.relockGold(relockValue)
-      for (const txo of txos) {
-        await displaySendTx('lockedCeloRelock', txo, { from: beneficiary })
+      const hashes = await this.releaseGoldWrapper.relockGold(relockValue)
+      for (const hash of hashes) {
+        await displayViemTx('lockedCeloRelock', Promise.resolve(hash), publicClient)
       }
       if (lockValue.gt(new BigNumber(0))) {
         const accounts = await kit.contracts.getAccounts()
@@ -82,11 +83,19 @@ export default class LockedCelo extends ReleaseGoldBaseCommand {
             return
           }
         }
-        await displaySendTx('lockedCeloLock', this.releaseGoldWrapper.lockGold(lockValue))
+        await displayViemTx(
+          'lockedCeloLock',
+          this.releaseGoldWrapper.lockGold(lockValue),
+          publicClient
+        )
       }
     } else if (flags.action === 'unlock') {
       await checkBuilder.isNotVoting(contractAddress).hasEnoughLockedGoldToUnlock(value).runChecks()
-      await displaySendTx('lockedCeloUnlock', this.releaseGoldWrapper.unlockGold(flags.value))
+      await displayViemTx(
+        'lockedCeloUnlock',
+        this.releaseGoldWrapper.unlockGold(flags.value),
+        publicClient
+      )
     } else if (flags.action === 'withdraw') {
       await checkBuilder.runChecks()
       const currentTime = Math.round(new Date().getTime() / 1000)
@@ -99,7 +108,11 @@ export default class LockedCelo extends ReleaseGoldBaseCommand {
             console.log(
               `Found available pending withdrawal of value ${pendingWithdrawal.value.toFixed()}, withdrawing`
             )
-            await displaySendTx('lockedGoldWithdraw', this.releaseGoldWrapper.withdrawLockedGold(i))
+            await displayViemTx(
+              'lockedGoldWithdraw',
+              this.releaseGoldWrapper.withdrawLockedGold(i),
+              publicClient
+            )
             madeWithdrawal = true
           }
         }

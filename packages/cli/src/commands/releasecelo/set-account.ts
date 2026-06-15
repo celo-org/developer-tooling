@@ -1,6 +1,6 @@
 import { Flags } from '@oclif/core'
 import { newCheckBuilder } from '../../utils/checks'
-import { displaySendTx } from '../../utils/cli'
+import { displayViemTx } from '../../utils/cli'
 import { ReleaseGoldBaseCommand } from '../../utils/release-gold-base'
 export default class SetAccount extends ReleaseGoldBaseCommand {
   static description =
@@ -31,6 +31,7 @@ export default class SetAccount extends ReleaseGoldBaseCommand {
 
   async run() {
     const kit = await this.getKit()
+    const publicClient = await this.getPublicClient()
     const { flags } = await this.parse(SetAccount)
     const isRevoked = await this.releaseGoldWrapper.isRevoked()
 
@@ -39,6 +40,7 @@ export default class SetAccount extends ReleaseGoldBaseCommand {
       .addCheck('Contract is not revoked', () => !isRevoked)
       .runChecks()
 
+    kit.defaultAccount = await this.releaseGoldWrapper.getBeneficiary()
     let tx: any
     if (flags.property === 'name') {
       tx = this.releaseGoldWrapper.setAccountName(flags.value)
@@ -50,7 +52,6 @@ export default class SetAccount extends ReleaseGoldBaseCommand {
       return this.error(`Invalid property provided`)
     }
 
-    kit.defaultAccount = await this.releaseGoldWrapper.getBeneficiary()
-    await displaySendTx('setAccount' + flags.property + 'Tx', tx)
+    await displayViemTx('setAccount' + flags.property + 'Tx', tx, publicClient)
   }
 }

@@ -1,6 +1,8 @@
-import { Flags } from '@oclif/core'
+import { Flags, ux } from '@oclif/core'
+import { encodeDeployData } from 'viem'
+import { waitForTransactionReceipt } from 'viem/actions'
 import { BaseCommand } from '../../base'
-import { displayWeb3Tx } from '../../utils/cli'
+import { printValueMap } from '../../utils/cli'
 import { CustomFlags } from '../../utils/command'
 import { deprecationOptions } from '../../utils/notice'
 const DKG = require('./DKG.json')
@@ -25,13 +27,26 @@ export default class DKGDeploy extends BaseCommand {
   async run() {
     const kit = await this.getKit()
     const res = await this.parse(DKGDeploy)
-    const web3 = kit.connection.web3
-    const dkg = new web3.eth.Contract(DKG.abi)
+    const data = encodeDeployData({
+      abi: DKG.abi,
+      bytecode: DKG.bytecode,
+      args: [res.flags.threshold, res.flags.phaseDuration],
+    })
 
-    await displayWeb3Tx(
-      'deployDKG',
-      dkg.deploy({ data: DKG.bytecode, arguments: [res.flags.threshold, res.flags.phaseDuration] }),
-      { from: res.flags.from }
-    )
+    ux.action.start('Sending Transaction: deployDKG')
+    const hash = await kit.connection.sendTransaction({
+      from: res.flags.from,
+      data,
+    })
+    const receipt = await waitForTransactionReceipt(kit.connection.viemClient, {
+      hash,
+    })
+    ux.action.stop()
+    printValueMap({
+      txHash: receipt.transactionHash,
+      contractAddress: receipt.contractAddress,
+      blockNumber: receipt.blockNumber.toString(),
+      status: receipt.status,
+    })
   }
 }

@@ -1,14 +1,13 @@
-import Web3 from 'web3'
 import { CeloContract } from './base'
 import { CeloTokenInfo, CeloTokens, StableToken, Token } from './celo-tokens'
-import { ContractKit, newKitFromWeb3 } from './kit'
+import { ContractKit, newKit } from './kit'
 
 describe('CeloTokens', () => {
   let kit: ContractKit
   let celoTokens: CeloTokens
 
   beforeEach(() => {
-    kit = newKitFromWeb3(new Web3('http://localhost:8545'))
+    kit = newKit('http://localhost:8545')
     celoTokens = kit.celoTokens
   })
 

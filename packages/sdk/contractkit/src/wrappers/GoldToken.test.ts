@@ -1,25 +1,26 @@
-import { GoldToken, newGoldToken } from '@celo/abis/web3/GoldToken'
+import { goldTokenABI } from '@celo/abis'
 import { StrongAddress } from '@celo/base'
 import { testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
-import { newKitFromWeb3 } from '../kit'
+import BigNumber from 'bignumber.js'
+import { newKitFromProvider } from '../kit'
 import { GoldTokenWrapper } from './GoldTokenWrapper'
 
 // TODO checking for account balance directly won't work because of missing transfer precompile
 // instead we can check for the Transfer event instead and/or lowered allowance value (they both
 // happen after the call to transfer precompile)
-testWithAnvilL2('GoldToken Wrapper', (web3) => {
-  const ONE_GOLD = web3.utils.toWei('1', 'ether')
+testWithAnvilL2('GoldToken Wrapper', (provider) => {
+  const ONE_GOLD = new BigNumber('1e18').toFixed()
 
-  const kit = newKitFromWeb3(web3)
+  const kit = newKitFromProvider(provider)
   let accounts: StrongAddress[] = []
   let goldToken: GoldTokenWrapper
-  let goldTokenContract: GoldToken
+  let goldTokenContract: any
 
   beforeAll(async () => {
-    accounts = (await web3.eth.getAccounts()) as StrongAddress[]
+    accounts = await kit.connection.getAccounts()
     kit.defaultAccount = accounts[0]
     goldToken = await kit.contracts.getGoldToken()
-    goldTokenContract = newGoldToken(web3, goldToken.address)
+    goldTokenContract = kit.connection.getCeloContract(goldTokenABI as any, goldToken.address)
   })
 
   it('checks balance', () => expect(goldToken.balanceOf(accounts[0])).resolves.toBeBigNumber())
@@ -32,36 +33,52 @@ testWithAnvilL2('GoldToken Wrapper', (web3) => {
     const before = await goldToken.allowance(accounts[0], accounts[1])
     expect(before).toEqBigNumber(0)
 
-    await goldToken.approve(accounts[1], ONE_GOLD).sendAndWaitForReceipt()
+    const hash = await goldToken.approve(accounts[1], ONE_GOLD)
+    await kit.connection.viemClient.waitForTransactionReceipt({ hash: hash })
     const after = await goldToken.allowance(accounts[0], accounts[1])
     expect(after).toEqBigNumber(ONE_GOLD)
   })
 
   it('transfers', async () => {
-    await goldToken.transfer(accounts[1], ONE_GOLD).sendAndWaitForReceipt()
+    const hash = await goldToken.transfer(accounts[1], ONE_GOLD)
+    await kit.connection.viemClient.waitForTransactionReceipt({ hash: hash })
 
-    const events = await goldTokenContract.getPastEvents('Transfer', { fromBlock: 'latest' })
+    const events = await kit.connection.viemClient.getContractEvents({
+      abi: goldTokenContract.abi as any,
+      address: goldTokenContract.address as `0x${string}`,
+      eventName: 'Transfer',
+      fromBlock: 'latest',
+    })
 
     expect(events.length).toBe(1)
-    expect(events[0].returnValues.from).toEqual(accounts[0])
-    expect(events[0].returnValues.to).toEqual(accounts[1])
-    expect(events[0].returnValues.value).toEqual(ONE_GOLD)
+    const args = (events[0] as any).args
+    expect(args.from).toEqual(accounts[0])
+    expect(args.to).toEqual(accounts[1])
+    expect(args.value.toString()).toEqual(ONE_GOLD)
   })
 
   it('transfers from', async () => {
     // account1 approves account0
-    await goldToken.approve(accounts[0], ONE_GOLD).sendAndWaitForReceipt({ from: accounts[1] })
+    const approveHash = await goldToken.approve(accounts[0], ONE_GOLD, { from: accounts[1] })
+    await kit.connection.viemClient.waitForTransactionReceipt({ hash: approveHash })
 
     expect(await goldToken.allowance(accounts[1], accounts[0])).toEqBigNumber(ONE_GOLD)
 
-    await goldToken.transferFrom(accounts[1], accounts[3], ONE_GOLD).sendAndWaitForReceipt()
+    const transferHash = await goldToken.transferFrom(accounts[1], accounts[3], ONE_GOLD)
+    await kit.connection.viemClient.waitForTransactionReceipt({ hash: transferHash })
 
-    const events = await goldTokenContract.getPastEvents('Transfer', { fromBlock: 'latest' })
+    const events = await kit.connection.viemClient.getContractEvents({
+      abi: goldTokenContract.abi as any,
+      address: goldTokenContract.address as `0x${string}`,
+      eventName: 'Transfer',
+      fromBlock: 'latest',
+    })
 
     expect(events.length).toBe(1)
-    expect(events[0].returnValues.from).toEqual(accounts[1])
-    expect(events[0].returnValues.to).toEqual(accounts[3])
-    expect(events[0].returnValues.value).toEqual(ONE_GOLD)
+    const args = (events[0] as any).args
+    expect(args.from).toEqual(accounts[1])
+    expect(args.to).toEqual(accounts[3])
+    expect(args.value.toString()).toEqual(ONE_GOLD)
     expect(await goldToken.allowance(accounts[1], accounts[0])).toEqBigNumber(0)
   })
 })

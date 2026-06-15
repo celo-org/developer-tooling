@@ -147,11 +147,17 @@ export function Encrypt(pubKeyTo: PubKey, plaintext: Uint8Array) {
   const ephemPubKey = Buffer.from(secp256k1.getPublicKey(ephemPrivKey, false))
   const ephemPubKeyEncoded = Buffer.from(ephemPubKey)
   if (typeof pubKeyTo === 'string') {
-    pubKeyTo = secp256k1.ProjectivePoint.fromHex(pubKeyTo).toRawBytes()
+    // explicit uncompressed form (65 bytes) — toRawBytes() defaults to compressed
+    pubKeyTo = secp256k1.ProjectivePoint.fromHex(pubKeyTo).toRawBytes(false)
   }
 
-  const pubKeyToEncoded = Buffer.concat([Buffer.from([0x04]), pubKeyTo as Buffer])
-  const px = secp256k1.getSharedSecret(ephemPrivKey, pubKeyToEncoded).slice(1)
+  // Ensure the public key is in uncompressed form (65 bytes, starting with 0x04).
+  // HSM wallets may provide 64-byte raw keys (X+Y without prefix).
+  let pubKeyBuf = pubKeyTo instanceof Uint8Array ? pubKeyTo : Buffer.from(pubKeyTo as any)
+  if (pubKeyBuf.length === 64) {
+    pubKeyBuf = Buffer.concat([Buffer.from([0x04]), pubKeyBuf])
+  }
+  const px = secp256k1.getSharedSecret(ephemPrivKey, pubKeyBuf).slice(1)
 
   // NOTE:
   // Can't swap to proper hkdf implementation because then there's ALWAYS a mac mismatch
