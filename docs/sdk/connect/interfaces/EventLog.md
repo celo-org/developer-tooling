@@ -1,4 +1,4 @@
-[**@celo/connect v7.0.0**](../README.md)
+[**@celo/connect v8.0.0**](../README.md)
 
 ***
 
@@ -6,7 +6,9 @@
 
 # Interface: EventLog
 
-Defined in: node\_modules/web3-core/types/index.d.ts:229
+Defined in: [packages/sdk/connect/src/types.ts:76](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L76)
+
+Event log entry
 
 ## Properties
 
@@ -14,7 +16,7 @@ Defined in: node\_modules/web3-core/types/index.d.ts:229
 
 > **address**: `string`
 
-Defined in: node\_modules/web3-core/types/index.d.ts:231
+Defined in: [packages/sdk/connect/src/types.ts:78](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L78)
 
 ***
 
@@ -22,7 +24,7 @@ Defined in: node\_modules/web3-core/types/index.d.ts:231
 
 > **blockHash**: `string`
 
-Defined in: node\_modules/web3-core/types/index.d.ts:236
+Defined in: [packages/sdk/connect/src/types.ts:84](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L84)
 
 ***
 
@@ -30,7 +32,7 @@ Defined in: node\_modules/web3-core/types/index.d.ts:236
 
 > **blockNumber**: `number`
 
-Defined in: node\_modules/web3-core/types/index.d.ts:237
+Defined in: [packages/sdk/connect/src/types.ts:85](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L85)
 
 ***
 
@@ -38,7 +40,7 @@ Defined in: node\_modules/web3-core/types/index.d.ts:237
 
 > **event**: `string`
 
-Defined in: node\_modules/web3-core/types/index.d.ts:230
+Defined in: [packages/sdk/connect/src/types.ts:77](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L77)
 
 ***
 
@@ -46,7 +48,7 @@ Defined in: node\_modules/web3-core/types/index.d.ts:230
 
 > **logIndex**: `number`
 
-Defined in: node\_modules/web3-core/types/index.d.ts:233
+Defined in: [packages/sdk/connect/src/types.ts:81](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L81)
 
 ***
 
@@ -54,7 +56,7 @@ Defined in: node\_modules/web3-core/types/index.d.ts:233
 
 > `optional` **raw**: `object`
 
-Defined in: node\_modules/web3-core/types/index.d.ts:238
+Defined in: [packages/sdk/connect/src/types.ts:86](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L86)
 
 #### data
 
@@ -62,15 +64,15 @@ Defined in: node\_modules/web3-core/types/index.d.ts:238
 
 #### topics
 
-> **topics**: `any`[]
+> **topics**: `string`[]
 
 ***
 
 ### returnValues
 
-> **returnValues**: `any`
+> **returnValues**: `Record`\<`string`, `any`\>
 
-Defined in: node\_modules/web3-core/types/index.d.ts:232
+Defined in: [packages/sdk/connect/src/types.ts:80](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L80)
 
 ***
 
@@ -78,7 +80,7 @@ Defined in: node\_modules/web3-core/types/index.d.ts:232
 
 > **transactionHash**: `string`
 
-Defined in: node\_modules/web3-core/types/index.d.ts:235
+Defined in: [packages/sdk/connect/src/types.ts:83](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L83)
 
 ***
 
@@ -86,4 +88,4 @@ Defined in: node\_modules/web3-core/types/index.d.ts:235
 
 > **transactionIndex**: `number`
 
-Defined in: node\_modules/web3-core/types/index.d.ts:234
+Defined in: [packages/sdk/connect/src/types.ts:82](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L82)

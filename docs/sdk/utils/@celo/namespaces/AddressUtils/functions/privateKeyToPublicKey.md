@@ -6,9 +6,9 @@
 
 # Function: privateKeyToPublicKey()
 
-> **privateKeyToPublicKey**(`privateKey`): `string`
+> **privateKeyToPublicKey**(`privateKey`): `` `0x${string}` ``
 
-Defined in: [packages/sdk/utils/src/address.ts:35](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/address.ts#L35)
+Defined in: [packages/sdk/utils/src/address.ts:41](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/address.ts#L41)
 
 ## Parameters
 
@@ -18,4 +18,4 @@ Defined in: [packages/sdk/utils/src/address.ts:35](https://github.com/celo-org/d
 
 ## Returns
 
-`string`
+`` `0x${string}` ``

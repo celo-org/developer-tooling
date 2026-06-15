@@ -1,4 +1,4 @@
-[**@celo/contractkit v10.0.3**](../README.md)
+[**@celo/contractkit v11.0.0**](../README.md)
 
 ***
 
@@ -6,7 +6,7 @@
 
 # Class: ContractKit
 
-Defined in: [contractkit/src/kit.ts:89](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L89)
+Defined in: [contractkit/src/kit.ts:83](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L83)
 
 ## Constructors
 
@@ -14,7 +14,7 @@ Defined in: [contractkit/src/kit.ts:89](https://github.com/celo-org/developer-to
 
 > **new ContractKit**(`connection`): `ContractKit`
 
-Defined in: [contractkit/src/kit.ts:102](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L102)
+Defined in: [contractkit/src/kit.ts:93](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L93)
 
 #### Parameters
 
@@ -28,13 +28,13 @@ Defined in: [contractkit/src/kit.ts:102](https://github.com/celo-org/developer-t
 
 ## Properties
 
-### \_web3Contracts
+### \_contracts
 
-> `readonly` **\_web3Contracts**: `Web3ContractCache`
+> `readonly` **\_contracts**: `ContractCache`
 
-Defined in: [contractkit/src/kit.ts:93](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L93)
+Defined in: [contractkit/src/kit.ts:87](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L87)
 
-factory for core contract's native web3 wrappers
+factory for core contract's native contract wrappers
 
 ***
 
@@ -42,7 +42,7 @@ factory for core contract's native web3 wrappers
 
 > `readonly` **celoTokens**: [`CeloTokens`](CeloTokens.md)
 
-Defined in: [contractkit/src/kit.ts:97](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L97)
+Defined in: [contractkit/src/kit.ts:91](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L91)
 
 helper for interacting with CELO & stable tokens
 
@@ -52,7 +52,7 @@ helper for interacting with CELO & stable tokens
 
 > `readonly` **connection**: `Connection`
 
-Defined in: [contractkit/src/kit.ts:102](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L102)
+Defined in: [contractkit/src/kit.ts:93](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L93)
 
 ***
 
@@ -60,21 +60,9 @@ Defined in: [contractkit/src/kit.ts:102](https://github.com/celo-org/developer-t
 
 > `readonly` **contracts**: `WrapperCache`
 
-Defined in: [contractkit/src/kit.ts:95](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L95)
+Defined in: [contractkit/src/kit.ts:89](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L89)
 
 factory for core contract's kit wrappers
-
-***
-
-### ~~gasPriceSuggestionMultiplier~~
-
-> **gasPriceSuggestionMultiplier**: `number` = `5`
-
-Defined in: [contractkit/src/kit.ts:100](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L100)
-
-#### Deprecated
-
-no longer needed since gasPrice is available on node rpc
 
 ***
 
@@ -82,7 +70,7 @@ no longer needed since gasPrice is available on node rpc
 
 > `readonly` **registry**: `AddressRegistry`
 
-Defined in: [contractkit/src/kit.ts:91](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L91)
+Defined in: [contractkit/src/kit.ts:85](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L85)
 
 core contract's address registry
 
@@ -94,7 +82,7 @@ core contract's address registry
 
 > **get** **defaultAccount**(): `undefined` \| `` `0x${string}` ``
 
-Defined in: [contractkit/src/kit.ts:230](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L230)
+Defined in: [contractkit/src/kit.ts:220](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L220)
 
 ##### Returns
 
@@ -104,7 +92,7 @@ Defined in: [contractkit/src/kit.ts:230](https://github.com/celo-org/developer-t
 
 > **set** **defaultAccount**(`address`): `void`
 
-Defined in: [contractkit/src/kit.ts:226](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L226)
+Defined in: [contractkit/src/kit.ts:216](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L216)
 
 ##### Parameters
 
@@ -124,7 +112,7 @@ Defined in: [contractkit/src/kit.ts:226](https://github.com/celo-org/developer-t
 
 > **get** **defaultFeeCurrency**(): `undefined` \| `` `0x${string}` ``
 
-Defined in: [contractkit/src/kit.ts:246](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L246)
+Defined in: [contractkit/src/kit.ts:236](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L236)
 
 ##### Returns
 
@@ -134,7 +122,7 @@ Defined in: [contractkit/src/kit.ts:246](https://github.com/celo-org/developer-t
 
 > **set** **defaultFeeCurrency**(`address`): `void`
 
-Defined in: [contractkit/src/kit.ts:242](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L242)
+Defined in: [contractkit/src/kit.ts:232](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L232)
 
 ##### Parameters
 
@@ -154,7 +142,7 @@ Defined in: [contractkit/src/kit.ts:242](https://github.com/celo-org/developer-t
 
 > **get** **gasInflationFactor**(): `number`
 
-Defined in: [contractkit/src/kit.ts:238](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L238)
+Defined in: [contractkit/src/kit.ts:228](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L228)
 
 ##### Returns
 
@@ -164,7 +152,7 @@ Defined in: [contractkit/src/kit.ts:238](https://github.com/celo-org/developer-t
 
 > **set** **gasInflationFactor**(`factor`): `void`
 
-Defined in: [contractkit/src/kit.ts:234](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L234)
+Defined in: [contractkit/src/kit.ts:224](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L224)
 
 ##### Parameters
 
@@ -176,27 +164,13 @@ Defined in: [contractkit/src/kit.ts:234](https://github.com/celo-org/developer-t
 
 `void`
 
-***
-
-### web3
-
-#### Get Signature
-
-> **get** **web3**(): `Web3`
-
-Defined in: [contractkit/src/kit.ts:277](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L277)
-
-##### Returns
-
-`Web3`
-
 ## Methods
 
 ### addAccount()
 
 > **addAccount**(`privateKey`): `void`
 
-Defined in: [contractkit/src/kit.ts:222](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L222)
+Defined in: [contractkit/src/kit.ts:212](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L212)
 
 #### Parameters
 
@@ -214,7 +188,7 @@ Defined in: [contractkit/src/kit.ts:222](https://github.com/celo-org/developer-t
 
 > **getEpochNumberOfBlock**(`blockNumber`): `Promise`\<`number`\>
 
-Defined in: [contractkit/src/kit.ts:208](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L208)
+Defined in: [contractkit/src/kit.ts:198](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L198)
 
 #### Parameters
 
@@ -232,7 +206,7 @@ Defined in: [contractkit/src/kit.ts:208](https://github.com/celo-org/developer-t
 
 > **getEpochSize**(): `Promise`\<`number`\>
 
-Defined in: [contractkit/src/kit.ts:190](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L190)
+Defined in: [contractkit/src/kit.ts:180](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L180)
 
 #### Returns
 
@@ -246,7 +220,7 @@ epoch duration (in seconds)
 
 > **getFirstBlockNumberForEpoch**(`epochNumber`): `Promise`\<`number`\>
 
-Defined in: [contractkit/src/kit.ts:196](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L196)
+Defined in: [contractkit/src/kit.ts:186](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L186)
 
 #### Parameters
 
@@ -264,7 +238,7 @@ Defined in: [contractkit/src/kit.ts:196](https://github.com/celo-org/developer-t
 
 > **getHumanReadableNetworkConfig**(): `Promise`\<[`NetworkConfig`](../interfaces/NetworkConfig.md) \| `Record`\<`never`, `unknown`\>\>
 
-Defined in: [contractkit/src/kit.ts:173](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L173)
+Defined in: [contractkit/src/kit.ts:163](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L163)
 
 #### Returns
 
@@ -276,7 +250,7 @@ Defined in: [contractkit/src/kit.ts:173](https://github.com/celo-org/developer-t
 
 > **getLastBlockNumberForEpoch**(`epochNumber`): `Promise`\<`number`\>
 
-Defined in: [contractkit/src/kit.ts:202](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L202)
+Defined in: [contractkit/src/kit.ts:192](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L192)
 
 #### Parameters
 
@@ -294,7 +268,7 @@ Defined in: [contractkit/src/kit.ts:202](https://github.com/celo-org/developer-t
 
 > **getNetworkConfig**(`humanReadable`): `Promise`\<[`NetworkConfig`](../interfaces/NetworkConfig.md) \| `Record`\<`never`, `unknown`\>\>
 
-Defined in: [contractkit/src/kit.ts:130](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L130)
+Defined in: [contractkit/src/kit.ts:121](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L121)
 
 #### Parameters
 
@@ -312,7 +286,7 @@ Defined in: [contractkit/src/kit.ts:130](https://github.com/celo-org/developer-t
 
 > **getTotalBalance**(`address`): `Promise`\<`AccountBalance`\>
 
-Defined in: [contractkit/src/kit.ts:113](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L113)
+Defined in: [contractkit/src/kit.ts:104](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L104)
 
 #### Parameters
 
@@ -330,7 +304,7 @@ Defined in: [contractkit/src/kit.ts:113](https://github.com/celo-org/developer-t
 
 > **getWallet**(): `undefined` \| `ReadOnlyWallet`
 
-Defined in: [contractkit/src/kit.ts:109](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L109)
+Defined in: [contractkit/src/kit.ts:100](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L100)
 
 #### Returns
 
@@ -338,35 +312,11 @@ Defined in: [contractkit/src/kit.ts:109](https://github.com/celo-org/developer-t
 
 ***
 
-### isListening()
-
-> **isListening**(): `Promise`\<`boolean`\>
-
-Defined in: [contractkit/src/kit.ts:250](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L250)
-
-#### Returns
-
-`Promise`\<`boolean`\>
-
-***
-
-### isSyncing()
-
-> **isSyncing**(): `Promise`\<`boolean`\>
-
-Defined in: [contractkit/src/kit.ts:254](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L254)
-
-#### Returns
-
-`Promise`\<`boolean`\>
-
-***
-
 ### sendTransaction()
 
-> **sendTransaction**(`tx`): `Promise`\<`TransactionResult`\>
+> **sendTransaction**(`tx`): `Promise`\<`` `0x${string}` ``\>
 
-Defined in: [contractkit/src/kit.ts:258](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L258)
+Defined in: [contractkit/src/kit.ts:240](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L240)
 
 #### Parameters
 
@@ -376,29 +326,7 @@ Defined in: [contractkit/src/kit.ts:258](https://github.com/celo-org/developer-t
 
 #### Returns
 
-`Promise`\<`TransactionResult`\>
-
-***
-
-### sendTransactionObject()
-
-> **sendTransactionObject**(`txObj`, `tx?`): `Promise`\<`TransactionResult`\>
-
-Defined in: [contractkit/src/kit.ts:262](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L262)
-
-#### Parameters
-
-##### txObj
-
-`CeloTxObject`\<`any`\>
-
-##### tx?
-
-`Omit`\<`CeloTx`, `"data"`\>
-
-#### Returns
-
-`Promise`\<`TransactionResult`\>
+`Promise`\<`` `0x${string}` ``\>
 
 ***
 
@@ -406,7 +334,7 @@ Defined in: [contractkit/src/kit.ts:262](https://github.com/celo-org/developer-t
 
 > **setFeeCurrency**(`address`): `void`
 
-Defined in: [contractkit/src/kit.ts:180](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L180)
+Defined in: [contractkit/src/kit.ts:170](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L170)
 
 Set an addressed to use to pay for gas fees
 
@@ -432,7 +360,7 @@ Throws if supplied address is not a valid hexadecimal address
 
 > **signTypedData**(`signer`, `typedData`): `Promise`\<`Signature`\>
 
-Defined in: [contractkit/src/kit.ts:269](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L269)
+Defined in: [contractkit/src/kit.ts:244](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L244)
 
 #### Parameters
 
@@ -454,7 +382,7 @@ Defined in: [contractkit/src/kit.ts:269](https://github.com/celo-org/developer-t
 
 > **stop**(): `void`
 
-Defined in: [contractkit/src/kit.ts:273](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L273)
+Defined in: [contractkit/src/kit.ts:248](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L248)
 
 #### Returns
 

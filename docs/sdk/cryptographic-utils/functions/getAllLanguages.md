@@ -8,7 +8,7 @@
 
 > **getAllLanguages**(): [`MnemonicLanguages`](../enumerations/MnemonicLanguages.md)[]
 
-Defined in: [cryptographic-utils/src/account.ts:175](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/cryptographic-utils/src/account.ts#L175)
+Defined in: [cryptographic-utils/src/account.ts:168](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/cryptographic-utils/src/account.ts#L168)
 
 ## Returns
 

@@ -8,7 +8,7 @@
 
 > `const` **IstanbulUtils**: `object`
 
-Defined in: [packages/sdk/utils/src/istanbul.ts:71](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/istanbul.ts#L71)
+Defined in: [packages/sdk/utils/src/istanbul.ts:75](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/istanbul.ts#L75)
 
 ## Type declaration
 

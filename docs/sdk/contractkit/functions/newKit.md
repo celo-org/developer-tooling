@@ -1,4 +1,4 @@
-[**@celo/contractkit v10.0.3**](../README.md)
+[**@celo/contractkit v11.0.0**](../README.md)
 
 ***
 
@@ -8,7 +8,7 @@
 
 > **newKit**(`url`, `wallet?`, `options?`): [`ContractKit`](../classes/ContractKit.md)
 
-Defined in: [contractkit/src/kit.ts:37](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L37)
+Defined in: [contractkit/src/kit.ts:31](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L31)
 
 Creates a new instance of `ContractKit` given a nodeUrl
 
@@ -28,9 +28,9 @@ to reuse or add a wallet different than the default (example ledger-wallet)
 
 ### options?
 
-`HttpProviderOptions`
+[`HttpProviderOptions`](../type-aliases/HttpProviderOptions.md)
 
-to pass to the Web3 HttpProvider constructor
+to pass to the HttpProvider constructor
 
 ## Returns
 

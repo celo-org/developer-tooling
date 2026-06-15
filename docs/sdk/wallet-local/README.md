@@ -1,8 +1,8 @@
-**@celo/wallet-local v8.0.3**
+**@celo/wallet-local v8.0.4**
 
 ***
 
-# @celo/wallet-local v8.0.3
+# @celo/wallet-local v8.0.4
 
 ## Classes
 

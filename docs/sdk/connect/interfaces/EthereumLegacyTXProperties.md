@@ -1,4 +1,4 @@
-[**@celo/connect v7.0.0**](../README.md)
+[**@celo/connect v8.0.0**](../README.md)
 
 ***
 
@@ -6,7 +6,7 @@
 
 # Interface: EthereumLegacyTXProperties
 
-Defined in: [packages/sdk/connect/src/types.ts:92](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L92)
+Defined in: [packages/sdk/connect/src/types.ts:153](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L153)
 
 ## Extends
 
@@ -18,7 +18,7 @@ Defined in: [packages/sdk/connect/src/types.ts:92](https://github.com/celo-org/d
 
 > **gas**: `string`
 
-Defined in: [packages/sdk/connect/src/types.ts:60](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L60)
+Defined in: [packages/sdk/connect/src/types.ts:121](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L121)
 
 #### Inherited from
 
@@ -30,7 +30,7 @@ Defined in: [packages/sdk/connect/src/types.ts:60](https://github.com/celo-org/d
 
 > **gasPrice**: `string`
 
-Defined in: [packages/sdk/connect/src/types.ts:93](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L93)
+Defined in: [packages/sdk/connect/src/types.ts:154](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L154)
 
 ***
 
@@ -38,7 +38,7 @@ Defined in: [packages/sdk/connect/src/types.ts:93](https://github.com/celo-org/d
 
 > **hash**: `string`
 
-Defined in: [packages/sdk/connect/src/types.ts:67](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L67)
+Defined in: [packages/sdk/connect/src/types.ts:128](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L128)
 
 #### Inherited from
 
@@ -50,7 +50,7 @@ Defined in: [packages/sdk/connect/src/types.ts:67](https://github.com/celo-org/d
 
 > **input**: `string`
 
-Defined in: [packages/sdk/connect/src/types.ts:63](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L63)
+Defined in: [packages/sdk/connect/src/types.ts:124](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L124)
 
 #### Inherited from
 
@@ -62,7 +62,7 @@ Defined in: [packages/sdk/connect/src/types.ts:63](https://github.com/celo-org/d
 
 > **nonce**: `string`
 
-Defined in: [packages/sdk/connect/src/types.ts:59](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L59)
+Defined in: [packages/sdk/connect/src/types.ts:120](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L120)
 
 #### Inherited from
 
@@ -74,7 +74,7 @@ Defined in: [packages/sdk/connect/src/types.ts:59](https://github.com/celo-org/d
 
 > **r**: `string`
 
-Defined in: [packages/sdk/connect/src/types.ts:64](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L64)
+Defined in: [packages/sdk/connect/src/types.ts:125](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L125)
 
 #### Inherited from
 
@@ -86,7 +86,7 @@ Defined in: [packages/sdk/connect/src/types.ts:64](https://github.com/celo-org/d
 
 > **s**: `string`
 
-Defined in: [packages/sdk/connect/src/types.ts:65](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L65)
+Defined in: [packages/sdk/connect/src/types.ts:126](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L126)
 
 #### Inherited from
 
@@ -98,7 +98,7 @@ Defined in: [packages/sdk/connect/src/types.ts:65](https://github.com/celo-org/d
 
 > **to**: `string`
 
-Defined in: [packages/sdk/connect/src/types.ts:61](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L61)
+Defined in: [packages/sdk/connect/src/types.ts:122](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L122)
 
 #### Inherited from
 
@@ -110,7 +110,7 @@ Defined in: [packages/sdk/connect/src/types.ts:61](https://github.com/celo-org/d
 
 > **type**: `"ethereum-legacy"`
 
-Defined in: [packages/sdk/connect/src/types.ts:94](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L94)
+Defined in: [packages/sdk/connect/src/types.ts:155](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L155)
 
 #### Overrides
 
@@ -122,7 +122,7 @@ Defined in: [packages/sdk/connect/src/types.ts:94](https://github.com/celo-org/d
 
 > **v**: `string`
 
-Defined in: [packages/sdk/connect/src/types.ts:66](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L66)
+Defined in: [packages/sdk/connect/src/types.ts:127](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L127)
 
 #### Inherited from
 
@@ -134,7 +134,7 @@ Defined in: [packages/sdk/connect/src/types.ts:66](https://github.com/celo-org/d
 
 > **value**: `string`
 
-Defined in: [packages/sdk/connect/src/types.ts:62](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L62)
+Defined in: [packages/sdk/connect/src/types.ts:123](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L123)
 
 #### Inherited from
 

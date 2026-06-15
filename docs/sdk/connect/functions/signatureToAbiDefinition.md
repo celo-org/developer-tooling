@@ -1,4 +1,4 @@
-[**@celo/connect v7.0.0**](../README.md)
+[**@celo/connect v8.0.0**](../README.md)
 
 ***
 
@@ -8,7 +8,7 @@
 
 > **signatureToAbiDefinition**(`fnSignature`): [`ABIDefinition`](../interfaces/ABIDefinition.md)
 
-Defined in: [packages/sdk/connect/src/utils/abi-utils.ts:34](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/utils/abi-utils.ts#L34)
+Defined in: [packages/sdk/connect/src/utils/abi-utils.ts:36](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/utils/abi-utils.ts#L36)
 
 Parses solidity function signature
 

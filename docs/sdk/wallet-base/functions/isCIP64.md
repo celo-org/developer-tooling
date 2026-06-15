@@ -1,4 +1,4 @@
-[**@celo/wallet-base v8.0.3**](../README.md)
+[**@celo/wallet-base v8.0.4**](../README.md)
 
 ***
 
@@ -8,7 +8,7 @@
 
 > **isCIP64**(`tx`): `boolean`
 
-Defined in: [wallets/wallet-base/src/signing-utils.ts:313](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-base/src/signing-utils.ts#L313)
+Defined in: [wallets/wallet-base/src/signing-utils.ts:312](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-base/src/signing-utils.ts#L312)
 
 ## Parameters
 

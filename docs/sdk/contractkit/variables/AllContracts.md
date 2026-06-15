@@ -1,4 +1,4 @@
-[**@celo/contractkit v10.0.3**](../README.md)
+[**@celo/contractkit v11.0.0**](../README.md)
 
 ***
 
@@ -8,4 +8,4 @@
 
 > `const` **AllContracts**: [`CeloContract`](../enumerations/CeloContract.md)[]
 
-Defined in: [contractkit/src/base.ts:52](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/base.ts#L52)
+Defined in: [contractkit/src/base.ts:46](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/base.ts#L46)

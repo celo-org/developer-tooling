@@ -1,4 +1,4 @@
-[**@celo/wallet-hsm-aws v8.0.3**](../README.md)
+[**@celo/wallet-hsm-aws v8.0.4**](../README.md)
 
 ***
 
@@ -44,7 +44,7 @@ Defined in: [wallet-hsm-aws/src/aws-hsm-signer.ts:25](https://github.com/celo-or
 
 > **computeSharedSecret**(`_publicKey`): `Promise`\<`Buffer`\>
 
-Defined in: [wallet-hsm-aws/src/aws-hsm-signer.ts:117](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-hsm-aws/src/aws-hsm-signer.ts#L117)
+Defined in: [wallet-hsm-aws/src/aws-hsm-signer.ts:121](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-hsm-aws/src/aws-hsm-signer.ts#L121)
 
 #### Parameters
 
@@ -66,7 +66,7 @@ Defined in: [wallet-hsm-aws/src/aws-hsm-signer.ts:117](https://github.com/celo-o
 
 > **decrypt**(`_ciphertext`): `Promise`\<`Buffer`\>
 
-Defined in: [wallet-hsm-aws/src/aws-hsm-signer.ts:111](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-hsm-aws/src/aws-hsm-signer.ts#L111)
+Defined in: [wallet-hsm-aws/src/aws-hsm-signer.ts:115](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-hsm-aws/src/aws-hsm-signer.ts#L115)
 
 #### Parameters
 
@@ -88,7 +88,7 @@ Defined in: [wallet-hsm-aws/src/aws-hsm-signer.ts:111](https://github.com/celo-o
 
 > **getNativeKey**(): `string`
 
-Defined in: [wallet-hsm-aws/src/aws-hsm-signer.ts:107](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-hsm-aws/src/aws-hsm-signer.ts#L107)
+Defined in: [wallet-hsm-aws/src/aws-hsm-signer.ts:111](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-hsm-aws/src/aws-hsm-signer.ts#L111)
 
 #### Returns
 
@@ -158,7 +158,7 @@ is the RLPEncoded transaction object
 
 > **signTypedData**(`typedData`): `Promise`\<`Signature`\>
 
-Defined in: [wallet-hsm-aws/src/aws-hsm-signer.ts:96](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-hsm-aws/src/aws-hsm-signer.ts#L96)
+Defined in: [wallet-hsm-aws/src/aws-hsm-signer.ts:100](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-hsm-aws/src/aws-hsm-signer.ts#L100)
 
 #### Parameters
 

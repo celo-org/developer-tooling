@@ -1,4 +1,4 @@
-[**@celo/contractkit v10.0.3**](../README.md)
+[**@celo/contractkit v11.0.0**](../README.md)
 
 ***
 
@@ -194,19 +194,11 @@ Defined in: [contractkit/src/base.ts:27](https://github.com/celo-org/developer-t
 
 ***
 
-### Reserve
-
-> **Reserve**: `"Reserve"`
-
-Defined in: [contractkit/src/base.ts:28](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/base.ts#L28)
-
-***
-
 ### ScoreManager
 
 > **ScoreManager**: `"ScoreManager"`
 
-Defined in: [contractkit/src/base.ts:29](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/base.ts#L29)
+Defined in: [contractkit/src/base.ts:28](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/base.ts#L28)
 
 ***
 
@@ -214,7 +206,7 @@ Defined in: [contractkit/src/base.ts:29](https://github.com/celo-org/developer-t
 
 > **SortedOracles**: `"SortedOracles"`
 
-Defined in: [contractkit/src/base.ts:30](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/base.ts#L30)
+Defined in: [contractkit/src/base.ts:29](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/base.ts#L29)
 
 ***
 
@@ -222,7 +214,7 @@ Defined in: [contractkit/src/base.ts:30](https://github.com/celo-org/developer-t
 
 > **StableToken**: `"StableToken"`
 
-Defined in: [contractkit/src/base.ts:31](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/base.ts#L31)
+Defined in: [contractkit/src/base.ts:30](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/base.ts#L30)
 
 ***
 
@@ -230,7 +222,7 @@ Defined in: [contractkit/src/base.ts:31](https://github.com/celo-org/developer-t
 
 > **StableTokenBRL**: `"StableTokenBRL"`
 
-Defined in: [contractkit/src/base.ts:33](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/base.ts#L33)
+Defined in: [contractkit/src/base.ts:32](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/base.ts#L32)
 
 ***
 
@@ -238,7 +230,7 @@ Defined in: [contractkit/src/base.ts:33](https://github.com/celo-org/developer-t
 
 > **StableTokenEUR**: `"StableTokenEUR"`
 
-Defined in: [contractkit/src/base.ts:32](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/base.ts#L32)
+Defined in: [contractkit/src/base.ts:31](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/base.ts#L31)
 
 ***
 
@@ -254,4 +246,4 @@ Defined in: [contractkit/src/base.ts:24](https://github.com/celo-org/developer-t
 
 > **Validators**: `"Validators"`
 
-Defined in: [contractkit/src/base.ts:34](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/base.ts#L34)
+Defined in: [contractkit/src/base.ts:33](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/base.ts#L33)

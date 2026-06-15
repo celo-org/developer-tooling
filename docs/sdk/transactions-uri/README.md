@@ -1,8 +1,8 @@
-**@celo/transactions-uri v5.0.15**
+**@celo/transactions-uri v5.0.16**
 
 ***
 
-# @celo/transactions-uri v5.0.15
+# @celo/transactions-uri v5.0.16
 
 ## Functions
 
