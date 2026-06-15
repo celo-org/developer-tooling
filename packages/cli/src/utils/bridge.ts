@@ -1,5 +1,5 @@
 import { StrongAddress } from '@celo/base'
-import { createPublicClient, http, type Chain } from 'viem'
+import { type Chain, createPublicClient, http } from 'viem'
 import { mainnet, sepolia } from 'viem/chains'
 import { chainConfig, publicActionsL1 } from 'viem/op-stack'
 import { defineChain } from 'viem/utils'

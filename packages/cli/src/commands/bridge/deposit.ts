@@ -2,17 +2,17 @@ import { Flags, ux } from '@oclif/core'
 import { createPublicClient, createWalletClient, http, isAddressEqual } from 'viem'
 import { privateKeyToAccount } from 'viem/accounts'
 import { BaseCommand } from '../../base'
-import { printValueMap } from '../../utils/cli'
-import { CustomFlags } from '../../utils/command'
 import {
   BRIDGE_CONFIG,
-  SYSTEM_CONFIG_ABI,
+  type BridgeNetwork,
   ERC20_APPROVE_ABI,
   OPTIMISM_PORTAL_DEPOSIT_ABI,
+  SYSTEM_CONFIG_ABI,
   validateNetwork,
   verifyL1ChainId,
-  type BridgeNetwork,
 } from '../../utils/bridge'
+import { printValueMap } from '../../utils/cli'
+import { CustomFlags } from '../../utils/command'
 
 export default class BridgeDeposit extends BaseCommand {
   static description =

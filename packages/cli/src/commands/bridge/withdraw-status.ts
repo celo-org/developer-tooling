@@ -2,16 +2,16 @@ import { Flags, ux } from '@oclif/core'
 import { createPublicClient, http } from 'viem'
 import { publicActionsL2 } from 'viem/op-stack'
 import { BaseCommand } from '../../base'
-import { printValueMap } from '../../utils/cli'
-import { CustomFlags } from '../../utils/command'
 import {
-  WITHDRAWAL_STATUS_LABELS,
-  validateNetwork,
-  getL2OpChain,
   createL1PublicClient,
+  getL2OpChain,
+  validateNetwork,
   verifyL1ChainId,
   verifyL2ChainId,
+  WITHDRAWAL_STATUS_LABELS,
 } from '../../utils/bridge'
+import { printValueMap } from '../../utils/cli'
+import { CustomFlags } from '../../utils/command'
 
 export default class BridgeWithdrawStatus extends BaseCommand {
   static description =

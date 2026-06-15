@@ -4,17 +4,17 @@ import { createPublicClient, createWalletClient, http, isAddressEqual } from 'vi
 import { privateKeyToAccount } from 'viem/accounts'
 import { getWithdrawals, publicActionsL2, walletActionsL1 } from 'viem/op-stack'
 import { BaseCommand } from '../../base'
-import { printValueMap } from '../../utils/cli'
-import { CustomFlags } from '../../utils/command'
 import {
   BRIDGE_CONFIG,
-  validateNetwork,
-  getL2OpChain,
+  type BridgeNetwork,
   createL1PublicClient,
+  getL2OpChain,
+  validateNetwork,
   verifyL1ChainId,
   verifyL2ChainId,
-  type BridgeNetwork,
 } from '../../utils/bridge'
+import { printValueMap } from '../../utils/cli'
+import { CustomFlags } from '../../utils/command'
 
 export default class BridgeWithdrawFinalize extends BaseCommand {
   static description =

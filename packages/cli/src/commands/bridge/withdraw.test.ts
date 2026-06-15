@@ -1,7 +1,7 @@
+import BridgeWithdrawFinalize from './withdraw-finalize'
 import BridgeWithdrawInit from './withdraw-init'
 import BridgeWithdrawProve from './withdraw-prove'
 import BridgeWithdrawStatus from './withdraw-status'
-import BridgeWithdrawFinalize from './withdraw-finalize'
 
 // Inline testLocally to avoid importing cliUtils which pulls in @celo/dev-utils
 async function testLocally(command: any, argv: string[]) {
