@@ -75,6 +75,17 @@ describe('Connection', () => {
           (BigInt(BASE_FEE_PER) * multiple) / BigInt(100) + BigInt(PRIORITYFEE)
         )
       })
+      it('does not inflate maxFeePerGas when maxPriorityFeePerGas is a decimal string', async () => {
+        // Regression: a decimal-string priority fee must be parsed as decimal.
+        // The old code ran `.toString(16)` on it (String#toString ignores the
+        // radix argument), turning '200000' into 0x200000 and inflating the fee ~10x.
+        const result = await connection.setFeeMarketGas({
+          maxPriorityFeePerGas: PRIORITYFEE.toString(),
+        })
+        expect(BigInt(result.maxFeePerGas as string)).toEqual(
+          (BigInt(BASE_FEE_PER) * multiple) / BigInt(100) + BigInt(PRIORITYFEE)
+        )
+      })
     })
   })
 })
