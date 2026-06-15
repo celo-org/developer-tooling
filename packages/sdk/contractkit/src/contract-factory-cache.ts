@@ -21,10 +21,8 @@ import {
   odisPaymentsABI,
   proxyABI,
   registryABI,
-  reserveABI,
   scoreManagerABI,
   sortedOraclesABI,
-  stableTokenABI,
   uniswapFeeHandlerSellerABI,
   validatorsABI,
 } from '@celo/abis'
@@ -33,6 +31,7 @@ import debugFactory from 'debug'
 import { AddressRegistry } from './address-registry'
 import { CeloContract, ProxyContracts } from './base'
 import { StableToken } from './celo-tokens'
+import { stableTokenViemAbi } from './stable-token-abi'
 
 const debug = debugFactory('kit:contract-factory-cache')
 
@@ -65,12 +64,11 @@ export const TypedContractABIs = {
   [CeloContract.MultiSig]: multiSigABI,
   [CeloContract.OdisPayments]: odisPaymentsABI,
   [CeloContract.Registry]: registryABI,
-  [CeloContract.Reserve]: reserveABI,
   [CeloContract.ScoreManager]: scoreManagerABI,
   [CeloContract.SortedOracles]: sortedOraclesABI,
-  [CeloContract.StableToken]: stableTokenABI,
-  [CeloContract.StableTokenEUR]: stableTokenABI,
-  [CeloContract.StableTokenBRL]: stableTokenABI,
+  [CeloContract.StableToken]: stableTokenViemAbi,
+  [CeloContract.StableTokenEUR]: stableTokenViemAbi,
+  [CeloContract.StableTokenBRL]: stableTokenViemAbi,
   [CeloContract.Validators]: validatorsABI,
 } as const
 
@@ -169,9 +167,6 @@ export class ContractCache {
   }
   getRegistry() {
     return this.getContract(CeloContract.Registry)
-  }
-  getReserve() {
-    return this.getContract(CeloContract.Reserve)
   }
   getScoreManager() {
     return this.getContract(CeloContract.ScoreManager)

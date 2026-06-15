@@ -19,7 +19,6 @@ import { GovernanceWrapper } from './wrappers/Governance'
 import { LockedGoldWrapper } from './wrappers/LockedGold'
 import { MultiSigWrapper } from './wrappers/MultiSig'
 import { OdisPaymentsWrapper } from './wrappers/OdisPayments'
-import { ReserveWrapper } from './wrappers/Reserve'
 import { ScoreManagerWrapper } from './wrappers/ScoreManager'
 import { SortedOraclesWrapper } from './wrappers/SortedOracles'
 import { StableTokenWrapper } from './wrappers/StableTokenWrapper'
@@ -37,7 +36,6 @@ const WrapperFactories = {
   [CeloContract.CeloToken]: GoldTokenWrapper,
   [CeloContract.MultiSig]: MultiSigWrapper,
   [CeloContract.OdisPayments]: OdisPaymentsWrapper,
-  [CeloContract.Reserve]: ReserveWrapper,
   [CeloContract.ScoreManager]: ScoreManagerWrapper,
   [CeloContract.StableToken]: StableTokenWrapper,
   [CeloContract.StableTokenEUR]: StableTokenWrapper,
@@ -86,7 +84,6 @@ interface WrapperCacheMap {
   [CeloContract.LockedGold]?: LockedGoldWrapper
   [CeloContract.MultiSig]?: MultiSigWrapper
   [CeloContract.OdisPayments]?: OdisPaymentsWrapper
-  [CeloContract.Reserve]?: ReserveWrapper
   [CeloContract.ScoreManager]?: ScoreManagerWrapper
   [CeloContract.SortedOracles]?: SortedOraclesWrapper
   [CeloContract.StableToken]?: StableTokenWrapper
@@ -167,9 +164,6 @@ export class WrapperCache implements ContractCacheType {
   }
   getOdisPayments() {
     return this.getContract(CeloContract.OdisPayments)
-  }
-  getReserve() {
-    return this.getContract(CeloContract.Reserve)
   }
   getScoreManager() {
     return this.getContract(CeloContract.ScoreManager)

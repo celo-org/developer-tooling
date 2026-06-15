@@ -1,16 +1,11 @@
-import {
-  accountsABI,
-  goldTokenABI,
-  stableTokenABI,
-  stableTokenBrlABI,
-  stableTokenEurABI,
-} from '@celo/abis'
+import { accountsABI, goldTokenABI } from '@celo/abis'
 import { StableToken } from '@celo/base'
 import { AbiItem, Connection } from '@celo/connect'
 import { AddressRegistry } from './address-registry'
 import { CeloContract } from './base'
 import { ContractCacheType } from './basic-contract-cache-type'
 import { stableTokenInfos } from './celo-tokens'
+import { stableTokenViemAbi } from './stable-token-abi'
 import { AccountsWrapper } from './wrappers/Accounts'
 import { GoldTokenWrapper } from './wrappers/GoldTokenWrapper'
 import { StableTokenWrapper } from './wrappers/StableTokenWrapper'
@@ -30,15 +25,15 @@ const MINIMUM_CONTRACTS: Record<string, MinContractEntry> = {
     wrapper: GoldTokenWrapper,
   },
   [CeloContract.StableToken]: {
-    abi: stableTokenABI,
+    abi: stableTokenViemAbi,
     wrapper: StableTokenWrapper,
   },
   [CeloContract.StableTokenBRL]: {
-    abi: stableTokenBrlABI,
+    abi: stableTokenViemAbi,
     wrapper: StableTokenWrapper,
   },
   [CeloContract.StableTokenEUR]: {
-    abi: stableTokenEurABI,
+    abi: stableTokenViemAbi,
     wrapper: StableTokenWrapper,
   },
 }
