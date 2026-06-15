@@ -3,11 +3,10 @@ import { StrongAddress } from '@celo/base'
 import { type Provider } from '@celo/connect'
 import { GovernanceWrapper } from '@celo/contractkit/lib/wrappers/Governance'
 import { MultiSigWrapper } from '@celo/contractkit/lib/wrappers/MultiSig'
-import { hexToBytes } from 'viem'
 import { Flags } from '@oclif/core'
 import fetch from 'cross-fetch'
 import debugFactory from 'debug'
-import { Hex } from 'viem'
+import { Hex, hexToBytes } from 'viem'
 import { BaseCommand } from '../../base'
 import { newCheckBuilder } from '../../utils/checks'
 import { displayViemTx, failWith } from '../../utils/cli'
@@ -186,7 +185,7 @@ export default class Approve extends BaseCommand {
     } else if (res.flags.multisigTx && useMultiSig) {
       await displayViemTx(
         'approveTx',
-        governanceApproverMultiSig!.confirmTransaction(parseInt(res.flags.multisigTx)),
+        governanceApproverMultiSig!.confirmTransaction(parseInt(res.flags.multisigTx, 10)),
         publicClient,
         { abi: governanceABI, displayEventName: logEvent }
       )
