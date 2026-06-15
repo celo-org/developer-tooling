@@ -1,11 +1,11 @@
 import { ABIDefinition, Address, decodeParametersToObject, parseDecodedParams } from '@celo/connect'
-import type { Block, Transaction } from 'viem'
-import { toChecksumAddress } from '@celo/utils/lib/address'
 import { CeloContract, ContractKit } from '@celo/contractkit'
 import { PROXY_ABI } from '@celo/contractkit/lib/proxy'
+import { toChecksumAddress } from '@celo/utils/lib/address'
 import { fromFixed } from '@celo/utils/lib/fixidity'
 import BigNumber from 'bignumber.js'
 import debugFactory from 'debug'
+import type { Block, Transaction } from 'viem'
 import {
   ContractDetails,
   ContractMapping,
@@ -87,10 +87,16 @@ export class BlockExplorer {
   }
 
   async fetchBlockByHash(blockHash: string): Promise<Block> {
-    return this.kit.connection.viemClient.getBlock({ blockHash: blockHash as `0x${string}` })
+    return this.kit.connection.viemClient.getBlock({
+      blockHash: blockHash as `0x${string}`,
+      includeTransactions: true,
+    })
   }
   async fetchBlock(blockNumber: number): Promise<Block> {
-    return this.kit.connection.viemClient.getBlock({ blockNumber: BigInt(blockNumber) })
+    return this.kit.connection.viemClient.getBlock({
+      blockNumber: BigInt(blockNumber),
+      includeTransactions: true,
+    })
   }
 
   async fetchBlockRange(from: number, to: number): Promise<Block[]> {
