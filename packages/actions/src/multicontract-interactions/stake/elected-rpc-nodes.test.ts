@@ -7,11 +7,28 @@ import { getElectedRpcNodes } from './elected-rpc-nodes.js'
 const forkBlockNumber = 37227707
 const forkUrl = celo.rpcUrls.default.http[0]
 
+// The public forno RPC is not an archive node: it eventually prunes the state
+// at the pinned fork block, after which anvil's fork can't serve it and reads
+// revert with "-32000 ... historical state ... is not available". Skip rather
+// than fail so a pruning window doesn't turn into red CI on unrelated PRs.
+const isPrunedHistoricalState = (error: unknown): boolean =>
+  /historical state .* is not available/.test(
+    error instanceof Error ? error.message : String(error)
+  )
+
 viem_testWithAnvil(
   'getElectedRpcNodes',
   (client) => {
-    it('returns elected rpc nodes with names and scores', async () => {
-      const nodes = await getElectedRpcNodes(client as PublicCeloClient)
+    it('returns elected rpc nodes with names and scores', async (ctx) => {
+      let nodes: Awaited<ReturnType<typeof getElectedRpcNodes>>
+      try {
+        nodes = await getElectedRpcNodes(client as PublicCeloClient)
+      } catch (error) {
+        if (isPrunedHistoricalState(error)) {
+          ctx.skip(`fork RPC pruned state at block ${forkBlockNumber}`)
+        }
+        throw error
+      }
       expect(Array.isArray(nodes)).toBe(true)
       for (const node of nodes as any[]) {
         expect(typeof node.address).toBe('string')

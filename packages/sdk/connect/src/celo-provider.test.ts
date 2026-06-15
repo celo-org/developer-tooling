@@ -1,16 +1,6 @@
-import Web3 from 'web3'
 import { CeloProvider } from './celo-provider'
 import { Connection } from './connection'
-import {
-  Address,
-  Callback,
-  CeloTx,
-  EncodedTransaction,
-  Error,
-  JsonRpcPayload,
-  JsonRpcResponse,
-  Provider,
-} from './types'
+import { Address, CeloTx, EncodedTransaction, Provider } from './types'
 import { ReadOnlyWallet } from './wallet'
 
 const ACCOUNT_ADDRESS1 = '0x1234567890123456789012345678901234567890'
@@ -66,8 +56,9 @@ class MockWallet implements ReadOnlyWallet {
 
 // These tests verify the signTransaction WITHOUT the ParamsPopulator
 describe('CeloProvider', () => {
-  let mockCallback: any
+  let mockRequest: jest.Mock
   let mockProvider: Provider
+  let connection: Connection
   let celoProvider: CeloProvider
   const interceptedByCeloProvider = [
     'eth_sendTransaction',
@@ -81,45 +72,26 @@ describe('CeloProvider', () => {
   ]
 
   beforeEach(() => {
-    mockCallback = jest.fn((payload: JsonRpcPayload, callback: Callback<JsonRpcResponse>): any => {
-      const response: JsonRpcResponse = {
-        jsonrpc: payload.jsonrpc,
-        id: Number(payload.id),
-        result: {
-          params: payload.params,
-          method: payload.method,
-        },
+    mockRequest = jest.fn(async ({ method, params }: { method: string; params?: any[] }) => {
+      return {
+        params: params ?? [],
+        method,
       }
-      callback(null, response)
     })
     mockProvider = {
-      send: mockCallback,
+      request: mockRequest,
     }
 
-    const web3 = new Web3()
-    web3.setProvider(mockProvider as any)
-    const connection = new Connection(web3, new MockWallet())
-    celoProvider = connection.web3.currentProvider as any as CeloProvider
+    connection = new Connection(mockProvider, new MockWallet())
+    celoProvider = connection.currentProvider
   })
 
   describe("when celo provider don't have any local account", () => {
     interceptedByCeloProvider.forEach((method: string) => {
-      test(`fowards the call to '${method}' to the original provider`, (done) => {
-        const payload: JsonRpcPayload = {
-          id: 0,
-          jsonrpc: '2.0',
-          method,
-          params: ['1', '2'],
-        }
-        const callback: Callback<JsonRpcResponse> = (
-          _error: Error | null,
-          _result?: JsonRpcResponse
-        ) => {
-          expect(mockCallback.mock.calls.length).toBe(1)
-          expect(mockCallback.mock.calls[0][0].method).toBe(method)
-          done()
-        }
-        celoProvider.send(payload, callback)
+      test(`forwards the call to '${method}' to the original provider`, async () => {
+        await celoProvider.request({ method, params: ['1', '2'] })
+        expect(mockRequest.mock.calls.length).toBe(1)
+        expect(mockRequest.mock.calls[0][0].method).toBe(method)
       })
     })
   })
@@ -187,74 +159,44 @@ describe('CeloProvider', () => {
     }
 
     beforeEach(() => {
-      celoProvider.addAccount(ACCOUNT_ADDRESS1)
+      connection.addAccount(ACCOUNT_ADDRESS1)
     })
 
     describe('but tries to use it with a different account', () => {
       interceptedByCeloProvider.forEach((method: string) => {
-        test(`forwards the call to '${method}' to the original provider`, (done) => {
-          const payload: JsonRpcPayload = {
-            id: 0,
-            jsonrpc: '2.0',
+        test(`forwards the call to '${method}' to the original provider`, async () => {
+          await celoProvider.request({
             method,
             params: paramsForMethod(method, ACCOUNT_ADDRESS2, ACCOUNT_ADDRESS1),
-          }
-          const callback: Callback<JsonRpcResponse> = (
-            _error: Error | null,
-            _result?: JsonRpcResponse
-          ) => {
-            expect(mockCallback.mock.calls.length).toBe(1)
-            expect(mockCallback.mock.calls[0][0].method).toBe(method)
-            done()
-          }
-          celoProvider.send(payload, callback)
+          })
+          expect(mockRequest.mock.calls.length).toBe(1)
+          expect(mockRequest.mock.calls[0][0].method).toBe(method)
         })
       })
     })
 
     describe('using that account', () => {
-      test("call 'send' with 'eth_sendTransaction' signs and send a eth_sendRawTransaction to the original provider", (done) => {
-        const payload: JsonRpcPayload = {
-          id: 0,
-          jsonrpc: '2.0',
+      test("'eth_sendTransaction' signs and sends eth_sendRawTransaction to the original provider", async () => {
+        await celoProvider.request({
           method: 'eth_sendTransaction',
           params: paramsForMethod('eth_sendTransaction', ACCOUNT_ADDRESS1, ACCOUNT_ADDRESS2),
-        }
-        const callback: Callback<JsonRpcResponse> = (
-          _error: Error | null,
-          _result?: JsonRpcResponse
-        ) => {
-          expect(mockCallback.mock.calls.length).toBe(1)
-          expect(mockCallback.mock.calls[0][0].method).toBe('eth_sendRawTransaction')
-          done()
-        }
-        celoProvider.send(payload, callback)
+        })
+        expect(mockRequest.mock.calls.length).toBe(1)
+        expect(mockRequest.mock.calls[0][0].method).toBe('eth_sendRawTransaction')
       })
 
-      test.todo(
-        "call 'send' with 'eth_signTypedData' signs the message and don't call the original provider"
-      )
+      test.todo("'eth_signTypedData' signs the message and doesn't call the original provider")
 
       interceptedByCeloProvider
         .filter((x) => x !== 'eth_sendTransaction' && !x.startsWith('eth_signTypedData'))
         .forEach((method: string) => {
-          test(`call 'send' with '${method}' signs the message and don't call the original provider`, (done) => {
-            const payload: JsonRpcPayload = {
-              id: 0,
-              jsonrpc: '2.0',
+          test(`'${method}' signs the message and doesn't call the original provider`, async () => {
+            const result = await celoProvider.request({
               method,
               params: paramsForMethod(method, ACCOUNT_ADDRESS1, ACCOUNT_ADDRESS2),
-            }
-            const callback: Callback<JsonRpcResponse> = (
-              error: Error | null,
-              result?: JsonRpcResponse
-            ) => {
-              expect(error).toBeNull()
-              expect(result).not.toBeFalsy()
-              expect(mockCallback.mock.calls.length).toBe(0)
-              done()
-            }
-            celoProvider.send(payload, callback)
+            })
+            expect(result).toBeTruthy()
+            expect(mockRequest.mock.calls.length).toBe(0)
           })
         })
     })

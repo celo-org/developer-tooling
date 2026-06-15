@@ -1,7 +1,7 @@
 import { StrongAddress } from '@celo/base'
 import { BaseCommand } from '../../base'
 import { newCheckBuilder } from '../../utils/checks'
-import { displaySendTx } from '../../utils/cli'
+import { displayViemTx } from '../../utils/cli'
 import { CustomArgs } from '../../utils/command'
 
 export default class ResetSlashingMultiplier extends BaseCommand {
@@ -19,6 +19,7 @@ export default class ResetSlashingMultiplier extends BaseCommand {
 
   async run() {
     const kit = await this.getKit()
+    const publicClient = await this.getPublicClient()
     const { args } = await this.parse(ResetSlashingMultiplier)
     const address = args.arg1 as StrongAddress
 
@@ -32,6 +33,10 @@ export default class ResetSlashingMultiplier extends BaseCommand {
       .resetSlashingmultiplierPeriodPassed()
       .runChecks()
 
-    await displaySendTx('reset-slashing-multiplier', validators.resetSlashingMultiplier())
+    await displayViemTx(
+      'reset-slashing-multiplier',
+      validators.resetSlashingMultiplier(),
+      publicClient
+    )
   }
 }

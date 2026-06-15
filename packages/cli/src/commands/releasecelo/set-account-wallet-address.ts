@@ -1,6 +1,6 @@
 import { Flags } from '@oclif/core'
 import { newCheckBuilder } from '../../utils/checks'
-import { displaySendTx } from '../../utils/cli'
+import { displayViemTx } from '../../utils/cli'
 import { CustomFlags } from '../../utils/command'
 import { ReleaseGoldBaseCommand } from '../../utils/release-gold-base'
 
@@ -28,6 +28,7 @@ export default class SetAccountWalletAddress extends ReleaseGoldBaseCommand {
 
   async run() {
     const kit = await this.getKit()
+    const publicClient = await this.getPublicClient()
     const { flags } = await this.parse(SetAccountWalletAddress)
     const isRevoked = await this.releaseGoldWrapper.isRevoked()
 
@@ -58,9 +59,10 @@ export default class SetAccountWalletAddress extends ReleaseGoldBaseCommand {
     }
 
     kit.defaultAccount = await this.releaseGoldWrapper.getBeneficiary()
-    await displaySendTx(
+    await displayViemTx(
       'setAccountWalletAddressTx',
-      this.releaseGoldWrapper.setAccountWalletAddress(flags.walletAddress, sig.v, sig.r, sig.s)
+      this.releaseGoldWrapper.setAccountWalletAddress(flags.walletAddress, sig.v, sig.r, sig.s),
+      publicClient
     )
   }
 }

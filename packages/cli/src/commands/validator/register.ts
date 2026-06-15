@@ -3,7 +3,7 @@ import { Flags } from '@oclif/core'
 import humanizeDuration from 'humanize-duration'
 import { BaseCommand } from '../../base'
 import { newCheckBuilder } from '../../utils/checks'
-import { binaryPrompt, displaySendTx } from '../../utils/cli'
+import { binaryPrompt, displayViemTx } from '../../utils/cli'
 import { CustomFlags } from '../../utils/command'
 
 export default class ValidatorRegister extends BaseCommand {
@@ -22,6 +22,7 @@ export default class ValidatorRegister extends BaseCommand {
 
   async run() {
     const kit = await this.getKit()
+    const publicClient = await this.getPublicClient()
     const res = await this.parse(ValidatorRegister)
 
     const validators = await kit.contracts.getValidators()
@@ -50,12 +51,19 @@ export default class ValidatorRegister extends BaseCommand {
       .signerMeetsValidatorBalanceRequirements()
       .runChecks()
 
-    await displaySendTx('registerValidator', validators.registerValidatorNoBls(res.flags.ecdsaKey))
+    await displayViemTx(
+      'registerValidator',
+      validators.registerValidatorNoBls(res.flags.ecdsaKey),
+      publicClient
+    )
 
     // register encryption key on accounts contract
     // TODO: Use a different key data encryption
-    const pubKey = await addressToPublicKey(res.flags.from, kit.web3.eth.sign)
+    const pubKey = await addressToPublicKey(
+      res.flags.from,
+      kit.connection.sign.bind(kit.connection)
+    )
     const setKeyTx = accounts.setAccountDataEncryptionKey(pubKey)
-    await displaySendTx('Set encryption key', setKeyTx)
+    await displayViemTx('Set encryption key', setKeyTx, publicClient)
   }
 }

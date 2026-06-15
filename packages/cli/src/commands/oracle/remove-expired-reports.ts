@@ -1,7 +1,7 @@
 import { CeloContract } from '@celo/contractkit'
 import { Args } from '@oclif/core'
 import { BaseCommand } from '../../base'
-import { displaySendTx, failWith } from '../../utils/cli'
+import { displayViemTx, failWith } from '../../utils/cli'
 import { CustomFlags } from '../../utils/command'
 
 export default class RemoveExpiredReports extends BaseCommand {
@@ -31,10 +31,11 @@ export default class RemoveExpiredReports extends BaseCommand {
 
   async run() {
     const kit = await this.getKit()
+    const publicClient = await this.getPublicClient()
     const res = await this.parse(RemoveExpiredReports)
 
     const sortedOracles = await kit.contracts.getSortedOracles().catch((e) => failWith(e))
-    const txo = await sortedOracles.removeExpiredReports(res.args.arg1 as string)
-    await displaySendTx('removeExpiredReports', txo)
+    const txo = sortedOracles.removeExpiredReports(res.args.arg1 as string)
+    await displayViemTx('removeExpiredReports', txo, publicClient)
   }
 }

@@ -1,17 +1,18 @@
-import Web3 from 'web3'
+import { Provider } from '@celo/connect'
+import { getAddress, keccak256, toBytes } from 'viem'
 import migrationOverride from './migration-override.json'
 import { jsonRpcCall } from './test-utils'
 
 export const NetworkConfig = migrationOverride
 
-export async function timeTravel(seconds: number, web3: Web3) {
-  await jsonRpcCall(web3, 'evm_increaseTime', [seconds])
-  await jsonRpcCall(web3, 'evm_mine', [])
+export async function timeTravel(seconds: number, provider: Provider) {
+  await jsonRpcCall(provider, 'evm_increaseTime', [seconds])
+  await jsonRpcCall(provider, 'evm_mine', [])
 }
 
-export async function mineBlocks(blocks: number, web3: Web3) {
+export async function mineBlocks(blocks: number, provider: Provider) {
   for (let i = 0; i < blocks; i++) {
-    await jsonRpcCall(web3, 'evm_mine', [])
+    await jsonRpcCall(provider, 'evm_mine', [])
   }
 }
 /**
@@ -19,29 +20,32 @@ export async function mineBlocks(blocks: number, web3: Web3) {
  */
 export async function getContractFromEvent(
   eventSignature: string,
-  web3: Web3,
+  provider: Provider,
   filter?: {
     expectedData?: string
     index?: number
   }
 ): Promise<string> {
-  const logs = await web3.eth.getPastLogs({
-    topics: [web3.utils.sha3(eventSignature)],
-    fromBlock: 'earliest',
-    toBlock: 'latest',
-  })
+  const topic = keccak256(toBytes(eventSignature))
+  const logs = await jsonRpcCall<any[]>(provider, 'eth_getLogs', [
+    {
+      topics: [topic],
+      fromBlock: 'earliest',
+      toBlock: 'latest',
+    },
+  ])
   if (logs.length === 0) {
     throw new Error(`Error: contract could not be found matching signature ${eventSignature}`)
   }
   const logIndex = filter?.index ?? 0
   if (!filter?.expectedData) {
-    return logs[logIndex].address
+    return getAddress(logs[logIndex].address)
   }
-  const filteredLogs = logs.filter((log) => log.data === filter.expectedData)
+  const filteredLogs = logs.filter((log: { data: string }) => log.data === filter.expectedData)
   if (filteredLogs.length === 0) {
     throw new Error(
       `Error: contract could not be found matching signature ${eventSignature} with data ${filter.expectedData}`
     )
   }
-  return filteredLogs[logIndex ?? 0].address
+  return getAddress(filteredLogs[logIndex ?? 0].address)
 }

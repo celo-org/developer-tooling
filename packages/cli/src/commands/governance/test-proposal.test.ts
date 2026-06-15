@@ -1,10 +1,10 @@
 import { PROXY_ADMIN_ADDRESS } from '@celo/connect'
+import { newKitFromProvider } from '@celo/contractkit'
 import { setCode, testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
 import * as celoGovernance from '@celo/governance'
 import fs from 'fs'
 import path from 'node:path'
-import Web3 from 'web3'
-import { stripAnsiCodesAndTxHashes, testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
+import { stripAnsiCodesAndTxHashes, testLocallyWithNode } from '../../test-utils/cliUtils'
 import TestProposal from './test-proposal'
 
 process.env.NO_SYNCCHECK = 'true'
@@ -17,7 +17,7 @@ jest.mock('@celo/governance', () => {
   }
 })
 
-testWithAnvilL2('governance:test-proposal cmd', (web3: Web3) => {
+testWithAnvilL2('governance:test-proposal cmd', (provider) => {
   const PROPOSAL_TRANSACTION_TEST_KEY = '3'
   const PROPOSAL_TRANSACTION_TEST_VALUE = '4'
   const PROPOSAL_TRANSACTIONS = [
@@ -50,15 +50,16 @@ testWithAnvilL2('governance:test-proposal cmd', (web3: Web3) => {
         return {} as any
       })
 
-    await setCode(web3, PROXY_ADMIN_ADDRESS, TEST_TRANSACTIONS_BYTECODE)
+    await setCode(provider, PROXY_ADMIN_ADDRESS, TEST_TRANSACTIONS_BYTECODE)
 
-    const [account] = await web3.eth.getAccounts()
+    const kit = newKitFromProvider(provider)
+    const [account] = await kit.connection.getAccounts()
     const logMock = jest.spyOn(console, 'log')
 
-    await testLocallyWithWeb3Node(
+    await testLocallyWithNode(
       TestProposal,
       ['--jsonTransactions', PROPOSAL_TRANSACTIONS_FILE_PATH, '--from', account],
-      web3
+      provider
     )
 
     // Verify we're passing correct arguments to 'proposalToJSON'

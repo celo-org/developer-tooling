@@ -11,7 +11,7 @@ import {
   recoverKeyIndex,
   thirtyTwo,
 } from '@celo/wallet-hsm'
-import * as ethUtil from '@ethereumjs/util'
+import { keccak_256 } from '@noble/hashes/sha3'
 import { KMS } from 'aws-sdk'
 import { BigNumber } from 'bignumber.js'
 
@@ -82,8 +82,12 @@ export class AwsHsmSigner implements Signer {
   }
 
   async signPersonalMessage(data: string): Promise<Signature> {
-    const dataBuff = ethUtil.toBuffer(ensureLeading0x(data))
-    const msgHashBuff = ethUtil.hashPersonalMessage(dataBuff) as Buffer
+    const dataBytes = Buffer.from(trimLeading0x(ensureLeading0x(data)), 'hex')
+    const prefix = Buffer.from(`\x19Ethereum Signed Message:\n${dataBytes.length}`)
+    const combined = new Uint8Array(prefix.length + dataBytes.length)
+    combined.set(prefix)
+    combined.set(dataBytes, prefix.length)
+    const msgHashBuff = Buffer.from(keccak_256(combined))
     const { v, r, s } = await this.sign(msgHashBuff)
 
     return {

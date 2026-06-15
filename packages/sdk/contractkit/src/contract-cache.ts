@@ -1,10 +1,9 @@
-import { IERC20 } from '@celo/abis/web3/IERC20'
 import { Connection } from '@celo/connect'
 import { AddressRegistry } from './address-registry'
 import { CeloContract } from './base'
 import { ContractCacheType } from './basic-contract-cache-type'
 import { StableToken, stableTokenInfos } from './celo-tokens'
-import { Web3ContractCache } from './web3-contract-cache'
+import { ContractCache } from './contract-factory-cache'
 import { AccountsWrapper } from './wrappers/Accounts'
 import { AttestationsWrapper } from './wrappers/Attestations'
 import { ElectionWrapper } from './wrappers/Election'
@@ -75,7 +74,7 @@ interface WrapperCacheMap {
   [CeloContract.Election]?: ElectionWrapper
   [CeloContract.EpochManager]?: EpochManagerWrapper
   [CeloContract.EpochRewards]?: EpochRewardsWrapper
-  [CeloContract.ERC20]?: Erc20Wrapper<IERC20>
+  [CeloContract.ERC20]?: Erc20Wrapper
   [CeloContract.Escrow]?: EscrowWrapper
   [CeloContract.FederatedAttestations]?: FederatedAttestationsWrapper
   [CeloContract.FeeCurrencyDirectory]?: FeeCurrencyDirectoryWrapper
@@ -111,7 +110,7 @@ export class WrapperCache implements ContractCacheType {
   private wrapperCache: WrapperCacheMap = {}
   constructor(
     readonly connection: Connection,
-    readonly _web3Contracts: Web3ContractCache,
+    readonly _contracts: ContractCache,
     readonly registry: AddressRegistry
   ) {}
 
@@ -190,7 +189,7 @@ export class WrapperCache implements ContractCacheType {
    */
   public async getContract<C extends ValidWrappers>(contract: C, address?: string) {
     if (this.wrapperCache[contract] == null || address !== undefined) {
-      const instance = await this._web3Contracts.getContract<C>(contract, address)
+      const instance = await this._contracts.getContract(contract, address)
       if (contract === CeloContract.SortedOracles) {
         const Klass = WithRegistry[CeloContract.SortedOracles]
         this.wrapperCache[CeloContract.SortedOracles] = new Klass(
@@ -213,7 +212,7 @@ export class WrapperCache implements ContractCacheType {
   }
 
   public invalidateContract<C extends ValidWrappers>(contract: C) {
-    this._web3Contracts.invalidateContract(contract)
+    this._contracts.invalidateContract(contract)
     this.wrapperCache[contract] = undefined
   }
 }

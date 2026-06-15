@@ -1,4 +1,4 @@
-import { getAddressChunks, isValidAddress } from './address'
+import { getAddressChunks, isValidAddress, isValidChecksumAddress } from './address'
 
 describe(getAddressChunks, () => {
   test('splits the address into chunks of 4 chars', async () => {
@@ -53,6 +53,23 @@ describe(getAddressChunks, () => {
           true
         )
       })
+    })
+  })
+
+  describe('isValidChecksumAddress', () => {
+    const checksummed = '0x52395FA87E9EB5b2FB3ec47a34a196AdA5bcF0D0'
+
+    it('returns true for a correctly EIP-55 checksummed address', () => {
+      expect(isValidChecksumAddress(checksummed)).toBe(true)
+    })
+
+    // viem's isAddress({ strict: true }) accepts this; a checksum validator must not.
+    it('returns false for the same address all-lowercase', () => {
+      expect(isValidChecksumAddress(checksummed.toLowerCase())).toBe(false)
+    })
+
+    it('returns false for a non-address string', () => {
+      expect(isValidChecksumAddress('not-an-address')).toBe(false)
     })
   })
 })

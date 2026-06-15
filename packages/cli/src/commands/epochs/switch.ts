@@ -1,7 +1,7 @@
 import { sleep } from '@celo/base'
 import { Flags } from '@oclif/core'
 import { BaseCommand } from '../../base'
-import { displaySendTx } from '../../utils/cli'
+import { displayViemTx } from '../../utils/cli'
 import { CustomFlags } from '../../utils/command'
 
 export default class Switch extends BaseCommand {
@@ -22,6 +22,7 @@ export default class Switch extends BaseCommand {
 
   async run() {
     const kit = await this.getKit()
+    const publicClient = await this.getPublicClient()
     const res = await this.parse(Switch)
     const address = res.flags.from
 
@@ -39,9 +40,9 @@ export default class Switch extends BaseCommand {
       if (startProcessTx === undefined) {
         return
       }
-      await displaySendTx('startNextEpoch', startProcessTx)
+      await displayViemTx('startNextEpoch', Promise.resolve(startProcessTx), publicClient)
       await sleep(res.flags.delay)
     }
-    await displaySendTx('finishNextEpoch', await epochManager.finishNextEpochProcessTx())
+    await displayViemTx('finishNextEpoch', epochManager.finishNextEpochProcessTx(), publicClient)
   }
 }
