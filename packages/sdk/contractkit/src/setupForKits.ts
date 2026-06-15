@@ -1,9 +1,9 @@
 import { Provider } from '@celo/connect'
-import { webSocket } from 'viem'
-import type { EIP1193RequestFn } from 'viem'
 import * as http from 'http'
 import * as https from 'https'
 import * as net from 'net'
+import type { EIP1193RequestFn } from 'viem'
+import { webSocket } from 'viem'
 
 export type HttpProviderOptions = {
   headers?: { name: string; value: string }[]
@@ -177,14 +177,34 @@ class SimpleIpcProvider implements Provider {
   }
 }
 
+// web3's `new Web3(url)` auto-detected WebSocket URLs; keep supporting them.
+class SimpleWebSocketProvider implements Provider {
+  private readonly transport: ReturnType<ReturnType<typeof webSocket>>
+
+  constructor(url: string) {
+    this.transport = webSocket(url)({})
+  }
+
+  request: EIP1193RequestFn = (args) => (this.transport.request as Provider['request'])(args)
+
+  // viem opens (and caches) the socket lazily on the first request; close it here
+  // or stopProvider() can't reach it and the CLI hangs forever.
+  stop() {
+    void this.transport.value
+      ?.getRpcClient()
+      .then((client) => client.close())
+      .catch(() => {
+        // best-effort teardown; nothing to do if the socket never opened
+      })
+  }
+}
+
 /** @internal */
 export function getProviderForKit(url: string, options?: HttpProviderOptions): Provider {
   if (url.endsWith('.ipc')) {
     return new SimpleIpcProvider(url, net)
   } else if (url.startsWith('ws://') || url.startsWith('wss://')) {
-    // web3's `new Web3(url)` auto-detected WebSocket URLs; keep supporting them
-    const transport = webSocket(url)({})
-    return { request: transport.request as Provider['request'] }
+    return new SimpleWebSocketProvider(url)
   } else {
     return new SimpleHttpProvider(url, options)
   }
