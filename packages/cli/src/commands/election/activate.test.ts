@@ -1,7 +1,13 @@
+import { StrongAddress } from '@celo/base'
+import { Provider } from '@celo/connect'
 import { ContractKit, newKitFromProvider } from '@celo/contractkit'
 import { setBalance, testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
+import { timeTravel } from '@celo/dev-utils/ganache-test'
+import { addressToPublicKey } from '@celo/utils/lib/signatureUtils'
+import * as ViemLedger from '@celo/viem-account-ledger'
 import { ux } from '@oclif/core'
 import BigNumber from 'bignumber.js'
+import { createWalletClient, Hex, http } from 'viem'
 import { generatePrivateKey, privateKeyToAccount, toAccount } from 'viem/accounts'
 import { celo } from 'viem/chains'
 import {
@@ -18,17 +24,10 @@ import {
   stripAnsiCodesFromNestedArray,
   testLocallyWithNode,
 } from '../../test-utils/cliUtils'
+import { mockRpcFetch } from '../../test-utils/mockRpc'
 import { deployMultiCall } from '../../test-utils/multicall'
 import Switch from '../epochs/switch'
 import ElectionActivate from './activate'
-
-import { StrongAddress } from '@celo/base'
-import { timeTravel } from '@celo/dev-utils/ganache-test'
-import { Provider } from '@celo/connect'
-import { addressToPublicKey } from '@celo/utils/lib/signatureUtils'
-import * as ViemLedger from '@celo/viem-account-ledger'
-import { createWalletClient, Hex, http } from 'viem'
-import { mockRpcFetch } from '../../test-utils/mockRpc'
 
 jest.mock('@celo/hw-app-eth')
 jest.mock('@celo/viem-account-ledger')
@@ -342,10 +341,8 @@ testWithAnvilL2(
         (await election.getVotesForGroupByAccount(userAddress, groupAddress)).active
       ).toEqBigNumber(new BigNumber(activateAmount))
       expect(
-        (
-          await election.getVotesForGroupByAccount(userAddress, secondGroupAddress)
-        ).active.isGreaterThanOrEqualTo(new BigNumber(activateAmountGroupTwo))
-      ).toBe(true)
+        (await election.getVotesForGroupByAccount(userAddress, secondGroupAddress)).active
+      ).toEqBigNumber(new BigNumber(activateAmountGroupTwo))
       expect(
         (await election.getVotesForGroupByAccount(newAccount.address, groupAddress)).active
       ).toEqual(new BigNumber(0))
