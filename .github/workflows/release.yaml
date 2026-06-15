@@ -85,7 +85,7 @@ jobs:
 
       - name: Checkout Repo
         if: contains(matrix.package, '@celo/celocli')
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           sparse-checkout: |
             scripts
