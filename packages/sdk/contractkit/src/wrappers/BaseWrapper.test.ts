@@ -1,9 +1,9 @@
 import { NULL_ADDRESS } from '@celo/base'
-import { Connection, Provider } from '@celo/connect'
 import type { AbiItem } from '@celo/connect'
-import { encodeAbiParameters, type AbiParameter } from 'viem'
+import { Connection, Provider } from '@celo/connect'
 import BigNumber from 'bignumber.js'
 import type { PublicClient } from 'viem'
+import { type AbiParameter, encodeAbiParameters } from 'viem'
 import { ContractVersion, newContractVersion } from '../versions'
 import { BaseWrapper, type ContractLike, unixSecondsTimestampToDateString } from './BaseWrapper'
 
@@ -78,6 +78,39 @@ describe('TestWrapper', () => {
         await expect(tw.protectedFunction(v)).resolves.not.toThrow()
       })
     })
+  })
+})
+
+describe('methodIds', () => {
+  it('computes canonical 4-byte selectors for tuple-input functions', () => {
+    const tupleContract: ContractLike<AbiItem[]> = {
+      abi: [
+        {
+          type: 'function' as const,
+          name: 'initialize',
+          inputs: [
+            {
+              type: 'tuple',
+              name: 'config',
+              components: [
+                { name: 'a', type: 'uint256' },
+                { name: 'b', type: 'address' },
+              ],
+            },
+          ],
+          outputs: [],
+        },
+      ],
+      address: NULL_ADDRESS,
+    }
+    class TupleWrapper extends BaseWrapper {
+      constructor() {
+        super(connection, tupleContract as any)
+      }
+    }
+    // Canonical signature is initialize((uint256,address)); the old code joined raw
+    // input types and hashed 'initialize(tuple)' (0x588570a5) instead.
+    expect(new TupleWrapper().methodIds.initialize).toEqual('0xa92d31a9')
   })
 })
 
