@@ -10,7 +10,7 @@
     "esModuleInterop": true,
     "strict": true,
     "declaration": true,
-    "sourceMap": true,
+    "sourceMap": false,
     "declarationMap": true,
     "skipLibCheck": true,
     "noImplicitAny": true,
