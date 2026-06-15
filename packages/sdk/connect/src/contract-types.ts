@@ -1,9 +1,9 @@
 import {
+  defineChain,
   type GetContractReturnType,
+  getContract,
   type PublicClient,
   type WalletClient,
-  defineChain,
-  getContract,
 } from 'viem'
 import { chainConfig as celoChainConfig } from 'viem/celo'
 
@@ -22,6 +22,12 @@ export type CeloContract<TAbi extends readonly unknown[] = readonly unknown[]> =
  * default account is injected when neither is provided, and the `chain`
  * is resolved from the connected RPC to satisfy viem's chain validation.
  */
+// `write`/`estimateGasNs` are `any` by necessity: viem's GetContractReturnType
+// exposes the `.write`/`.estimateGas` namespaces only through conditional types
+// that cannot be indexed on an unconstrained TAbi (`CeloContract<TAbi>['write']`
+// fails to type-check). The proxy is built untyped here; createCeloContract
+// re-asserts the fully-typed CeloContract<TAbi> at the boundary, which is the
+// type consumers actually see.
 function wrapWriteWithAccountMapping(
   write: any,
   estimateGasNs: any,
