@@ -1,16 +1,12 @@
 ---
 '@celo/connect': minor
 '@celo/contractkit': minor
-'@celo/explorer': patch
+'@celo/explorer': minor
 ---
 
-**Migrate internal contract interaction from web3-style RPC Contract to viem-native ViemContract**
+**Migrate internal contract interaction from the web3-style RPC Contract to viem-native `getContract()`**
 
-- Added `ViemContract` type and `createViemTxObject()` function in `@celo/connect`
-- Added `Connection.getViemContract()` factory method
-- Updated all 36 ContractKit wrappers to use viem-native contract interaction
-- Updated `proxyCall`/`proxySend` to accept `ViemContract` + function name strings
-- Migrated CLI commands, dev-utils, and explorer to use new API
-- Deprecated `Connection.createContract()` (kept for backward compatibility with `.deploy()`)
-- Removed the deprecated `kit.web3` shim (use `kit.connection.viemClient` instead)
-- Wrapper method signatures remain the same (`CeloTransactionObject` unchanged at this stage)
+- `@celo/connect` exposes `CeloContract<TAbi>` (viem's `GetContractReturnType`) and `Connection.getCeloContract()` for type-safe `.read`/`.write`/`.estimateGas` access.
+- All 36 ContractKit wrappers now call the viem contract namespaces directly.
+- `@celo/explorer`: `BlockExplorer.tryParseTx` now accepts viem's `Transaction`, and `getBlockByHash`/`getBlockByNumber` return viem block shapes. This is a breaking change for direct callers of these methods (hence the minor bump).
+- CLI commands and dev-utils updated to the new API.
