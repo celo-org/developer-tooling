@@ -1,17 +1,16 @@
-import { StrongAddress, bufferToHex, ensureLeading0x } from '@celo/base/lib/address'
-
-import { type CeloContract, Connection, type EventLog, type PastEventOptions } from '@celo/connect'
+import { bufferToHex, ensureLeading0x, StrongAddress } from '@celo/base/lib/address'
 import type { AbiItem } from '@celo/connect'
-import { coerceArgsForAbi } from '@celo/connect/lib/viem-abi-coder'
+import { type CeloContract, Connection, type EventLog, type PastEventOptions } from '@celo/connect'
 import { decodeParametersToObject } from '@celo/connect/lib/utils/abi-utils'
+import { coerceArgsForAbi } from '@celo/connect/lib/viem-abi-coder'
+import { fromFixed, toFixed } from '@celo/utils/lib/fixidity'
+import BigNumber from 'bignumber.js'
 import type { PublicClient } from 'viem'
 import {
   toFunctionHash,
   toFunctionSelector,
   encodeFunctionData as viemEncodeFunctionData,
 } from 'viem'
-import { fromFixed, toFixed } from '@celo/utils/lib/fixidity'
-import BigNumber from 'bignumber.js'
 import { ContractVersion } from '../versions'
 
 /** @internal Minimal contract shape for proxy helpers. CeloContract satisfies this. */
@@ -128,6 +127,10 @@ export abstract class BaseWrapper<TAbi extends readonly unknown[] = AbiItem[]> {
     // RPC errors (e.g. block range limits) must propagate — an empty array is
     // indistinguishable from "no events". viem's getLogs already skips logs it
     // cannot decode (strict mode is off by default).
+    // Note: PastEventOptions.filter / .topics are intentionally not forwarded —
+    // no in-repo caller uses them and viem's getLogs takes a different (typed
+    // `args`) shape. Numeric returnValues below are viem bigints (web3 returned
+    // strings); consumers normalize via valueToBigNumber, which accepts both.
     const logs = await this.client.getLogs({
       address: this.contract.address,
       event: eventAbi as any,
