@@ -1,4 +1,4 @@
-[**@celo/connect v7.0.0**](../README.md)
+[**@celo/connect v8.0.0**](../README.md)
 
 ***
 
@@ -6,7 +6,7 @@
 
 # Interface: FormattedCeloTx
 
-Defined in: [packages/sdk/connect/src/types.ts:22](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L22)
+Defined in: [packages/sdk/connect/src/types.ts:23](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L23)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [packages/sdk/connect/src/types.ts:22](https://github.com/celo-org/d
 
 > `optional` **accessList**: [`AccessListRaw`](../type-aliases/AccessListRaw.md)
 
-Defined in: [packages/sdk/connect/src/types.ts:35](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L35)
+Defined in: [packages/sdk/connect/src/types.ts:36](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L36)
 
 ***
 
@@ -22,7 +22,7 @@ Defined in: [packages/sdk/connect/src/types.ts:35](https://github.com/celo-org/d
 
 > **chainId**: `number`
 
-Defined in: [packages/sdk/connect/src/types.ts:23](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L23)
+Defined in: [packages/sdk/connect/src/types.ts:24](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L24)
 
 ***
 
@@ -30,7 +30,7 @@ Defined in: [packages/sdk/connect/src/types.ts:23](https://github.com/celo-org/d
 
 > **data**: `undefined` \| `string`
 
-Defined in: [packages/sdk/connect/src/types.ts:26](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L26)
+Defined in: [packages/sdk/connect/src/types.ts:27](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L27)
 
 ***
 
@@ -38,7 +38,7 @@ Defined in: [packages/sdk/connect/src/types.ts:26](https://github.com/celo-org/d
 
 > `optional` **feeCurrency**: [`HexOrMissing`](../type-aliases/HexOrMissing.md)
 
-Defined in: [packages/sdk/connect/src/types.ts:28](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L28)
+Defined in: [packages/sdk/connect/src/types.ts:29](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L29)
 
 ***
 
@@ -46,7 +46,7 @@ Defined in: [packages/sdk/connect/src/types.ts:28](https://github.com/celo-org/d
 
 > **from**: [`HexOrMissing`](../type-aliases/HexOrMissing.md)
 
-Defined in: [packages/sdk/connect/src/types.ts:24](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L24)
+Defined in: [packages/sdk/connect/src/types.ts:25](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L25)
 
 ***
 
@@ -54,7 +54,7 @@ Defined in: [packages/sdk/connect/src/types.ts:24](https://github.com/celo-org/d
 
 > **gas**: [`HexOrMissing`](../type-aliases/HexOrMissing.md)
 
-Defined in: [packages/sdk/connect/src/types.ts:29](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L29)
+Defined in: [packages/sdk/connect/src/types.ts:30](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L30)
 
 ***
 
@@ -62,7 +62,7 @@ Defined in: [packages/sdk/connect/src/types.ts:29](https://github.com/celo-org/d
 
 > `optional` **gasPrice**: `` `0x${string}` ``
 
-Defined in: [packages/sdk/connect/src/types.ts:30](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L30)
+Defined in: [packages/sdk/connect/src/types.ts:31](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L31)
 
 ***
 
@@ -70,7 +70,7 @@ Defined in: [packages/sdk/connect/src/types.ts:30](https://github.com/celo-org/d
 
 > `optional` **maxFeeInFeeCurrency**: `` `0x${string}` ``
 
-Defined in: [packages/sdk/connect/src/types.ts:33](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L33)
+Defined in: [packages/sdk/connect/src/types.ts:34](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L34)
 
 ***
 
@@ -78,7 +78,7 @@ Defined in: [packages/sdk/connect/src/types.ts:33](https://github.com/celo-org/d
 
 > `optional` **maxFeePerGas**: `` `0x${string}` ``
 
-Defined in: [packages/sdk/connect/src/types.ts:31](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L31)
+Defined in: [packages/sdk/connect/src/types.ts:32](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L32)
 
 ***
 
@@ -86,7 +86,7 @@ Defined in: [packages/sdk/connect/src/types.ts:31](https://github.com/celo-org/d
 
 > `optional` **maxPriorityFeePerGas**: `` `0x${string}` ``
 
-Defined in: [packages/sdk/connect/src/types.ts:32](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L32)
+Defined in: [packages/sdk/connect/src/types.ts:33](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L33)
 
 ***
 
@@ -94,7 +94,7 @@ Defined in: [packages/sdk/connect/src/types.ts:32](https://github.com/celo-org/d
 
 > **nonce**: `number` \| [`HexOrMissing`](../type-aliases/HexOrMissing.md)
 
-Defined in: [packages/sdk/connect/src/types.ts:34](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L34)
+Defined in: [packages/sdk/connect/src/types.ts:35](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L35)
 
 ***
 
@@ -102,7 +102,7 @@ Defined in: [packages/sdk/connect/src/types.ts:34](https://github.com/celo-org/d
 
 > **to**: [`HexOrMissing`](../type-aliases/HexOrMissing.md)
 
-Defined in: [packages/sdk/connect/src/types.ts:25](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L25)
+Defined in: [packages/sdk/connect/src/types.ts:26](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L26)
 
 ***
 
@@ -110,7 +110,7 @@ Defined in: [packages/sdk/connect/src/types.ts:25](https://github.com/celo-org/d
 
 > **type**: [`TransactionTypes`](../type-aliases/TransactionTypes.md)
 
-Defined in: [packages/sdk/connect/src/types.ts:36](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L36)
+Defined in: [packages/sdk/connect/src/types.ts:37](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L37)
 
 ***
 
@@ -118,4 +118,4 @@ Defined in: [packages/sdk/connect/src/types.ts:36](https://github.com/celo-org/d
 
 > **value**: [`HexOrMissing`](../type-aliases/HexOrMissing.md)
 
-Defined in: [packages/sdk/connect/src/types.ts:27](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L27)
+Defined in: [packages/sdk/connect/src/types.ts:28](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L28)

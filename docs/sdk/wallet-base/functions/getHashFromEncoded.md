@@ -1,4 +1,4 @@
-[**@celo/wallet-base v8.0.3**](../README.md)
+[**@celo/wallet-base v8.0.4**](../README.md)
 
 ***
 
@@ -8,7 +8,7 @@
 
 > **getHashFromEncoded**(`rlpEncode`): `` `0x${string}` ``
 
-Defined in: [wallets/wallet-base/src/signing-utils.ts:68](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-base/src/signing-utils.ts#L68)
+Defined in: [wallets/wallet-base/src/signing-utils.ts:66](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-base/src/signing-utils.ts#L66)
 
 ## Parameters
 

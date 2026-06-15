@@ -8,7 +8,7 @@
 
 > **generateKeysFromSeed**(`seed`, `changeIndex`, `addressIndex`, `derivationPath`): `object`
 
-Defined in: [cryptographic-utils/src/account.ts:444](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/cryptographic-utils/src/account.ts#L444)
+Defined in: [cryptographic-utils/src/account.ts:437](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/cryptographic-utils/src/account.ts#L437)
 
 ## Parameters
 

@@ -1,4 +1,4 @@
-[**@celo/connect v7.0.0**](../README.md)
+[**@celo/connect v8.0.0**](../README.md)
 
 ***
 
@@ -6,31 +6,17 @@
 
 # Interface: PastEventOptions
 
-Defined in: node\_modules/web3-eth-contract/types/index.d.ts:151
+Defined in: [packages/sdk/connect/src/types.ts:110](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L110)
 
-## Extends
-
-- `PastLogsOptions`
+PastEventOptions - retained for backward compatibility
 
 ## Properties
 
-### address?
-
-> `optional` **address**: `string` \| `string`[]
-
-Defined in: node\_modules/web3-core/types/index.d.ts:438
-
-#### Inherited from
-
-`PastLogsOptions.address`
-
-***
-
 ### filter?
 
-> `optional` **filter**: `Filter`
+> `optional` **filter**: `Record`\<`string`, `unknown`\>
 
-Defined in: node\_modules/web3-eth-contract/types/index.d.ts:152
+Defined in: [packages/sdk/connect/src/types.ts:111](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L111)
 
 ***
 
@@ -38,11 +24,7 @@ Defined in: node\_modules/web3-eth-contract/types/index.d.ts:152
 
 > `optional` **fromBlock**: [`BlockNumber`](../type-aliases/BlockNumber.md)
 
-Defined in: node\_modules/web3-core/types/index.d.ts:437
-
-#### Inherited from
-
-`PastLogsOptions.fromBlock`
+Defined in: [packages/sdk/connect/src/types.ts:112](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L112)
 
 ***
 
@@ -50,20 +32,12 @@ Defined in: node\_modules/web3-core/types/index.d.ts:437
 
 > `optional` **toBlock**: [`BlockNumber`](../type-aliases/BlockNumber.md)
 
-Defined in: node\_modules/web3-core/types/index.d.ts:433
-
-#### Inherited from
-
-`PastLogsOptions.toBlock`
+Defined in: [packages/sdk/connect/src/types.ts:113](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L113)
 
 ***
 
 ### topics?
 
-> `optional` **topics**: (`null` \| `string` \| `string`[])[]
+> `optional` **topics**: `string`[]
 
-Defined in: node\_modules/web3-core/types/index.d.ts:439
-
-#### Inherited from
-
-`PastLogsOptions.topics`
+Defined in: [packages/sdk/connect/src/types.ts:114](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L114)

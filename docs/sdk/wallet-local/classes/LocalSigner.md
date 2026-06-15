@@ -1,4 +1,4 @@
-[**@celo/wallet-local v8.0.3**](../README.md)
+[**@celo/wallet-local v8.0.4**](../README.md)
 
 ***
 
@@ -6,7 +6,7 @@
 
 # Class: LocalSigner
 
-Defined in: [wallet-local/src/local-signer.ts:12](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-local/src/local-signer.ts#L12)
+Defined in: [wallet-local/src/local-signer.ts:13](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-local/src/local-signer.ts#L13)
 
 Signs the EVM transaction using the provided private key
 
@@ -20,7 +20,7 @@ Signs the EVM transaction using the provided private key
 
 > **new LocalSigner**(`privateKey`): `LocalSigner`
 
-Defined in: [wallet-local/src/local-signer.ts:15](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-local/src/local-signer.ts#L15)
+Defined in: [wallet-local/src/local-signer.ts:16](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-local/src/local-signer.ts#L16)
 
 #### Parameters
 
@@ -38,7 +38,7 @@ Defined in: [wallet-local/src/local-signer.ts:15](https://github.com/celo-org/de
 
 > **computeSharedSecret**(`publicKey`): `Promise`\<`Buffer`\>
 
-Defined in: [wallet-local/src/local-signer.ts:66](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-local/src/local-signer.ts#L66)
+Defined in: [wallet-local/src/local-signer.ts:70](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-local/src/local-signer.ts#L70)
 
 #### Parameters
 
@@ -60,7 +60,7 @@ Defined in: [wallet-local/src/local-signer.ts:66](https://github.com/celo-org/de
 
 > **decrypt**(`ciphertext`): `Promise`\<`Buffer`\>
 
-Defined in: [wallet-local/src/local-signer.ts:59](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-local/src/local-signer.ts#L59)
+Defined in: [wallet-local/src/local-signer.ts:63](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-local/src/local-signer.ts#L63)
 
 #### Parameters
 
@@ -82,7 +82,7 @@ Defined in: [wallet-local/src/local-signer.ts:59](https://github.com/celo-org/de
 
 > **getNativeKey**(): `string`
 
-Defined in: [wallet-local/src/local-signer.ts:19](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-local/src/local-signer.ts#L19)
+Defined in: [wallet-local/src/local-signer.ts:20](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-local/src/local-signer.ts#L20)
 
 #### Returns
 
@@ -98,7 +98,7 @@ Defined in: [wallet-local/src/local-signer.ts:19](https://github.com/celo-org/de
 
 > **signPersonalMessage**(`data`): `Promise`\<\{ `r`: `Buffer`; `s`: `Buffer`; `v`: `number`; \}\>
 
-Defined in: [wallet-local/src/local-signer.ts:30](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-local/src/local-signer.ts#L30)
+Defined in: [wallet-local/src/local-signer.ts:31](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-local/src/local-signer.ts#L31)
 
 #### Parameters
 
@@ -120,7 +120,7 @@ Defined in: [wallet-local/src/local-signer.ts:30](https://github.com/celo-org/de
 
 > **signTransaction**(`addToV`, `encodedTx`): `Promise`\<\{ `r`: `Buffer`; `s`: `Buffer`; `v`: `number`; \}\>
 
-Defined in: [wallet-local/src/local-signer.ts:23](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-local/src/local-signer.ts#L23)
+Defined in: [wallet-local/src/local-signer.ts:24](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-local/src/local-signer.ts#L24)
 
 Signs the message and returns an EVM transaction
 
@@ -152,7 +152,7 @@ is the RLPEncoded transaction object
 
 > **signTypedData**(`typedData`): `Promise`\<\{ `r`: `Buffer`; `s`: `Buffer`; `v`: `number`; \}\>
 
-Defined in: [wallet-local/src/local-signer.ts:46](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-local/src/local-signer.ts#L46)
+Defined in: [wallet-local/src/local-signer.ts:50](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-local/src/local-signer.ts#L50)
 
 #### Parameters
 

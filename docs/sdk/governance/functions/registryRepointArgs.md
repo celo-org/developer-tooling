@@ -1,4 +1,4 @@
-[**@celo/governance v5.1.9**](../README.md)
+[**@celo/governance v5.1.10**](../README.md)
 
 ***
 
@@ -8,7 +8,7 @@
 
 > **registryRepointArgs**(`tx`): `object`
 
-Defined in: [proposals.ts:73](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/governance/src/proposals.ts#L73)
+Defined in: [proposals.ts:81](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/governance/src/proposals.ts#L81)
 
 ## Parameters
 

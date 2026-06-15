@@ -8,7 +8,7 @@
 
 > `const` **AccountUtils**: `object`
 
-Defined in: [cryptographic-utils/src/account.ts:468](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/cryptographic-utils/src/account.ts#L468)
+Defined in: [cryptographic-utils/src/account.ts:461](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/cryptographic-utils/src/account.ts#L461)
 
 ## Type declaration
 

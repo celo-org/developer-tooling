@@ -1,4 +1,4 @@
-[**@celo/contractkit v10.0.3**](../README.md)
+[**@celo/contractkit v11.0.0**](../README.md)
 
 ***
 
@@ -6,6 +6,22 @@
 
 # Type Alias: HttpProviderOptions
 
-> **HttpProviderOptions** = `Web3HttpProviderOptions`
+> **HttpProviderOptions** = `object`
 
-Defined in: [contractkit/src/setupForKits.ts:3](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/setupForKits.ts#L3)
+Defined in: [contractkit/src/setupForKits.ts:8](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/setupForKits.ts#L8)
+
+## Properties
+
+### headers?
+
+> `optional` **headers**: `object`[]
+
+Defined in: [contractkit/src/setupForKits.ts:9](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/setupForKits.ts#L9)
+
+#### name
+
+> **name**: `string`
+
+#### value
+
+> **value**: `string`

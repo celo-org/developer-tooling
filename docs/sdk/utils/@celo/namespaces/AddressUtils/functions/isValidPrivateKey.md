@@ -8,7 +8,7 @@
 
 > **isValidPrivateKey**(`privateKey`): `boolean`
 
-Defined in: [packages/sdk/utils/src/address.ts:43](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/address.ts#L43)
+Defined in: [packages/sdk/utils/src/address.ts:55](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/address.ts#L55)
 
 ## Parameters
 

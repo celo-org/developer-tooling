@@ -1,4 +1,4 @@
-[**@celo/connect v7.0.0**](../README.md)
+[**@celo/connect v8.0.0**](../README.md)
 
 ***
 
@@ -8,4 +8,4 @@
 
 > **Hex** = `` `0x${string}` ``
 
-Defined in: [packages/sdk/connect/src/types.ts:13](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L13)
+Defined in: [packages/sdk/connect/src/types.ts:5](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L5)

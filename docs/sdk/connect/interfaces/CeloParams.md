@@ -1,4 +1,4 @@
-[**@celo/connect v7.0.0**](../README.md)
+[**@celo/connect v8.0.0**](../README.md)
 
 ***
 
@@ -6,7 +6,7 @@
 
 # Interface: CeloParams
 
-Defined in: [packages/sdk/connect/src/types.ts:14](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L14)
+Defined in: [packages/sdk/connect/src/types.ts:6](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L6)
 
 ## Properties
 
@@ -14,12 +14,12 @@ Defined in: [packages/sdk/connect/src/types.ts:14](https://github.com/celo-org/d
 
 > **feeCurrency**: `` `0x${string}` ``
 
-Defined in: [packages/sdk/connect/src/types.ts:15](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L15)
+Defined in: [packages/sdk/connect/src/types.ts:7](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L7)
 
 ***
 
 ### maxFeeInFeeCurrency?
 
-> `optional` **maxFeeInFeeCurrency**: `string` \| `bigint` \| `BN`
+> `optional` **maxFeeInFeeCurrency**: `string` \| `bigint`
 
-Defined in: [packages/sdk/connect/src/types.ts:16](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L16)
+Defined in: [packages/sdk/connect/src/types.ts:8](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L8)

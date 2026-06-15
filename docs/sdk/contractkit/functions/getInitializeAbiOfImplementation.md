@@ -1,4 +1,4 @@
-[**@celo/contractkit v10.0.3**](../README.md)
+[**@celo/contractkit v11.0.0**](../README.md)
 
 ***
 
@@ -14,7 +14,7 @@ Defined in: [contractkit/src/proxy.ts:149](https://github.com/celo-org/developer
 
 ### proxyContractName
 
-`"AccountsProxy"` | `"AttestationsProxy"` | `"CeloUnreleasedTreasuryProxy"` | `"ElectionProxy"` | `"EpochRewardsProxy"` | `"EscrowProxy"` | `"EpochManagerProxy"` | `"EpochManagerEnablerProxy"` | `"FederatedAttestationsProxy"` | `"FeeCurrencyDirectoryProxy"` | `"FeeHandlerProxy"` | `"FreezerProxy"` | `"GoldTokenProxy"` | `"GovernanceProxy"` | `"LockedGoldProxy"` | `"MentoFeeHandlerSellerProxy"` | `"UniswapFeeHandlerSellerProxy"` | `"MultiSigProxy"` | `"OdisPaymentsProxy"` | `"RegistryProxy"` | `"ReserveProxy"` | `"ScoreManagerProxy"` | `"SortedOraclesProxy"` | `"StableTokenProxy"` | `"StableTokenEURProxy"` | `"StableTokenBRLProxy"` | `"ValidatorsProxy"` | `"DoubleSigningSlasherProxy"` | `"DowntimeSlasherProxy"` | `"FeeCurrencyWhitelistProxy"` | `"ProxyProxy"`
+`"AccountsProxy"` | `"AttestationsProxy"` | `"CeloUnreleasedTreasuryProxy"` | `"ElectionProxy"` | `"EpochRewardsProxy"` | `"EscrowProxy"` | `"EpochManagerProxy"` | `"EpochManagerEnablerProxy"` | `"FederatedAttestationsProxy"` | `"FeeCurrencyDirectoryProxy"` | `"FeeHandlerProxy"` | `"FreezerProxy"` | `"GoldTokenProxy"` | `"GovernanceProxy"` | `"LockedGoldProxy"` | `"MentoFeeHandlerSellerProxy"` | `"UniswapFeeHandlerSellerProxy"` | `"MultiSigProxy"` | `"OdisPaymentsProxy"` | `"RegistryProxy"` | `"ScoreManagerProxy"` | `"SortedOraclesProxy"` | `"StableTokenProxy"` | `"StableTokenEURProxy"` | `"StableTokenBRLProxy"` | `"ValidatorsProxy"` | `"DoubleSigningSlasherProxy"` | `"DowntimeSlasherProxy"` | `"FeeCurrencyWhitelistProxy"` | `"ProxyProxy"`
 
 ## Returns
 

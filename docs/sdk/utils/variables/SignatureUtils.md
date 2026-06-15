@@ -8,7 +8,7 @@
 
 > `const` **SignatureUtils**: `object`
 
-Defined in: [packages/sdk/utils/src/signatureUtils.ts:235](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/signatureUtils.ts#L235)
+Defined in: [packages/sdk/utils/src/signatureUtils.ts:258](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/signatureUtils.ts#L258)
 
 ## Type declaration
 
@@ -202,11 +202,11 @@ string signer, or throws error if parsing fails
 
 ##### r
 
-> **r**: `string`
+> **r**: `` `0x${string}` ``
 
 ##### s
 
-> **s**: `string`
+> **s**: `` `0x${string}` ``
 
 ##### v
 
@@ -236,11 +236,11 @@ string signer, or throws error if parsing fails
 
 ##### r
 
-> **r**: `string`
+> **r**: `` `0x${string}` ``
 
 ##### s
 
-> **s**: `string`
+> **s**: `` `0x${string}` ``
 
 ##### v
 

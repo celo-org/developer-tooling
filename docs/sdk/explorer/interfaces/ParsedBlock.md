@@ -1,4 +1,4 @@
-[**@celo/explorer v5.0.18**](../README.md)
+[**@celo/explorer v5.1.0**](../README.md)
 
 ***
 
@@ -6,7 +6,7 @@
 
 # Interface: ParsedBlock
 
-Defined in: [block-explorer.ts:44](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/explorer/src/block-explorer.ts#L44)
+Defined in: [block-explorer.ts:39](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/explorer/src/block-explorer.ts#L39)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [block-explorer.ts:44](https://github.com/celo-org/developer-tooling
 
 > **block**: `Block`
 
-Defined in: [block-explorer.ts:45](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/explorer/src/block-explorer.ts#L45)
+Defined in: [block-explorer.ts:40](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/explorer/src/block-explorer.ts#L40)
 
 ***
 
@@ -22,4 +22,4 @@ Defined in: [block-explorer.ts:45](https://github.com/celo-org/developer-tooling
 
 > **parsedTx**: [`ParsedTx`](ParsedTx.md)[]
 
-Defined in: [block-explorer.ts:46](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/explorer/src/block-explorer.ts#L46)
+Defined in: [block-explorer.ts:41](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/explorer/src/block-explorer.ts#L41)

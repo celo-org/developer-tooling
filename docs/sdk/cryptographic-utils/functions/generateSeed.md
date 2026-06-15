@@ -8,7 +8,7 @@
 
 > **generateSeed**(`mnemonic`, `password?`, `bip39ToUse?`, `keyByteLength?`): `Promise`\<`Buffer`\>
 
-Defined in: [cryptographic-utils/src/account.ts:423](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/cryptographic-utils/src/account.ts#L423)
+Defined in: [cryptographic-utils/src/account.ts:416](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/cryptographic-utils/src/account.ts#L416)
 
 ## Parameters
 

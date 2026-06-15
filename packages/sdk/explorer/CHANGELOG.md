@@ -1,5 +1,24 @@
 # @celo/explorer
 
+## 5.1.0
+
+### Minor Changes
+
+- [#780](https://github.com/celo-org/developer-tooling/pull/780) [`95a84a4`](https://github.com/celo-org/developer-tooling/commit/95a84a4ac6c18278e94ef98549c1606dcd5a496f) Thanks [@pahor167](https://github.com/pahor167)! - **Migrate internal contract interaction from the web3-style RPC Contract to viem-native `getContract()`**
+
+  - `@celo/connect` exposes `CeloContract<TAbi>` (viem's `GetContractReturnType`) and `Connection.getCeloContract()` for type-safe `.read`/`.write`/`.estimateGas` access.
+  - All 36 ContractKit wrappers now call the viem contract namespaces directly.
+  - `@celo/explorer`: `BlockExplorer.tryParseTx` now accepts viem's `Transaction`, and `getBlockByHash`/`getBlockByNumber` return viem block shapes. This is a breaking change for direct callers of these methods (hence the minor bump).
+  - CLI commands and dev-utils updated to the new API.
+
+### Patch Changes
+
+- [#780](https://github.com/celo-org/developer-tooling/pull/780) [`95a84a4`](https://github.com/celo-org/developer-tooling/commit/95a84a4ac6c18278e94ef98549c1606dcd5a496f) Thanks [@pahor167](https://github.com/pahor167)! - Remove the deprecated `kit.web3` shim and migrate contractkit to viem-native contract interaction. Use `kit.connection.viemClient` for reads and the wrapper methods for writes. Adds `newKitFromProvider()` as the recommended factory for building a kit from an EIP-1193 provider.
+
+- Updated dependencies [[`a695c5c`](https://github.com/celo-org/developer-tooling/commit/a695c5c510dad78028744e1537ca3954f1aef86b), [`a695c5c`](https://github.com/celo-org/developer-tooling/commit/a695c5c510dad78028744e1537ca3954f1aef86b), [`f5482b5`](https://github.com/celo-org/developer-tooling/commit/f5482b5a5beeae5827d84a7fd9848841b461c044), [`95a84a4`](https://github.com/celo-org/developer-tooling/commit/95a84a4ac6c18278e94ef98549c1606dcd5a496f), [`95a84a4`](https://github.com/celo-org/developer-tooling/commit/95a84a4ac6c18278e94ef98549c1606dcd5a496f), [`95a84a4`](https://github.com/celo-org/developer-tooling/commit/95a84a4ac6c18278e94ef98549c1606dcd5a496f), [`95a84a4`](https://github.com/celo-org/developer-tooling/commit/95a84a4ac6c18278e94ef98549c1606dcd5a496f)]:
+  - @celo/contractkit@11.0.0
+  - @celo/connect@8.0.0
+
 ## 5.0.18
 
 ### Patch Changes

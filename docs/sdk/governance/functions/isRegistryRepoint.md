@@ -1,4 +1,4 @@
-[**@celo/governance v5.1.9**](../README.md)
+[**@celo/governance v5.1.10**](../README.md)
 
 ***
 
@@ -8,7 +8,7 @@
 
 > **isRegistryRepoint**(`tx`): `boolean`
 
-Defined in: [proposals.ts:65](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/governance/src/proposals.ts#L65)
+Defined in: [proposals.ts:73](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/governance/src/proposals.ts#L73)
 
 ## Parameters
 

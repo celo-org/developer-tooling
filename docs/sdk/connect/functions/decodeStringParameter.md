@@ -1,4 +1,4 @@
-[**@celo/connect v7.0.0**](../README.md)
+[**@celo/connect v8.0.0**](../README.md)
 
 ***
 
@@ -6,17 +6,13 @@
 
 # Function: decodeStringParameter()
 
-> **decodeStringParameter**(`ethAbi`, `str`): `any`
+> **decodeStringParameter**(`str`): `string`
 
-Defined in: [packages/sdk/connect/src/utils/abi-utils.ts:98](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/utils/abi-utils.ts#L98)
+Defined in: [packages/sdk/connect/src/utils/abi-utils.ts:100](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/utils/abi-utils.ts#L100)
 
 **`Internal`**
 
 ## Parameters
-
-### ethAbi
-
-[`AbiCoder`](../interfaces/AbiCoder.md)
 
 ### str
 
@@ -24,4 +20,4 @@ Defined in: [packages/sdk/connect/src/utils/abi-utils.ts:98](https://github.com/
 
 ## Returns
 
-`any`
+`string`

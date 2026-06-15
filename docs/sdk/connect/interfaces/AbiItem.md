@@ -1,4 +1,4 @@
-[**@celo/connect v7.0.0**](../README.md)
+[**@celo/connect v8.0.0**](../README.md)
 
 ***
 
@@ -6,7 +6,7 @@
 
 # Interface: AbiItem
 
-Defined in: [packages/sdk/connect/src/abi-types.ts:38](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/abi-types.ts#L38)
+Defined in: [packages/sdk/connect/src/abi-types.ts:12](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/abi-types.ts#L12)
 
 **`Internal`**
 
@@ -20,7 +20,7 @@ Defined in: [packages/sdk/connect/src/abi-types.ts:38](https://github.com/celo-o
 
 > `optional` **anonymous**: `boolean`
 
-Defined in: [packages/sdk/connect/src/abi-types.ts:39](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/abi-types.ts#L39)
+Defined in: [packages/sdk/connect/src/abi-types.ts:13](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/abi-types.ts#L13)
 
 ***
 
@@ -28,7 +28,7 @@ Defined in: [packages/sdk/connect/src/abi-types.ts:39](https://github.com/celo-o
 
 > `optional` **constant**: `boolean`
 
-Defined in: [packages/sdk/connect/src/abi-types.ts:40](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/abi-types.ts#L40)
+Defined in: [packages/sdk/connect/src/abi-types.ts:14](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/abi-types.ts#L14)
 
 ***
 
@@ -36,15 +36,15 @@ Defined in: [packages/sdk/connect/src/abi-types.ts:40](https://github.com/celo-o
 
 > `optional` **gas**: `number`
 
-Defined in: [packages/sdk/connect/src/abi-types.ts:47](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/abi-types.ts#L47)
+Defined in: [packages/sdk/connect/src/abi-types.ts:21](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/abi-types.ts#L21)
 
 ***
 
 ### inputs?
 
-> `optional` **inputs**: [`AbiInput`](AbiInput.md)[]
+> `optional` **inputs**: readonly [`AbiInput`](../type-aliases/AbiInput.md)[]
 
-Defined in: [packages/sdk/connect/src/abi-types.ts:41](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/abi-types.ts#L41)
+Defined in: [packages/sdk/connect/src/abi-types.ts:15](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/abi-types.ts#L15)
 
 ***
 
@@ -52,15 +52,15 @@ Defined in: [packages/sdk/connect/src/abi-types.ts:41](https://github.com/celo-o
 
 > `optional` **name**: `string`
 
-Defined in: [packages/sdk/connect/src/abi-types.ts:42](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/abi-types.ts#L42)
+Defined in: [packages/sdk/connect/src/abi-types.ts:16](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/abi-types.ts#L16)
 
 ***
 
 ### outputs?
 
-> `optional` **outputs**: [`AbiOutput`](AbiOutput.md)[]
+> `optional` **outputs**: readonly `AbiParameter`[]
 
-Defined in: [packages/sdk/connect/src/abi-types.ts:43](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/abi-types.ts#L43)
+Defined in: [packages/sdk/connect/src/abi-types.ts:17](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/abi-types.ts#L17)
 
 ***
 
@@ -68,7 +68,7 @@ Defined in: [packages/sdk/connect/src/abi-types.ts:43](https://github.com/celo-o
 
 > `optional` **payable**: `boolean`
 
-Defined in: [packages/sdk/connect/src/abi-types.ts:44](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/abi-types.ts#L44)
+Defined in: [packages/sdk/connect/src/abi-types.ts:18](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/abi-types.ts#L18)
 
 ***
 
@@ -76,7 +76,7 @@ Defined in: [packages/sdk/connect/src/abi-types.ts:44](https://github.com/celo-o
 
 > `optional` **stateMutability**: `StateMutabilityType`
 
-Defined in: [packages/sdk/connect/src/abi-types.ts:45](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/abi-types.ts#L45)
+Defined in: [packages/sdk/connect/src/abi-types.ts:19](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/abi-types.ts#L19)
 
 ***
 
@@ -84,4 +84,4 @@ Defined in: [packages/sdk/connect/src/abi-types.ts:45](https://github.com/celo-o
 
 > **type**: `AbiType`
 
-Defined in: [packages/sdk/connect/src/abi-types.ts:46](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/abi-types.ts#L46)
+Defined in: [packages/sdk/connect/src/abi-types.ts:20](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/abi-types.ts#L20)

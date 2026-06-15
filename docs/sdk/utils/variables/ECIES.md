@@ -8,7 +8,7 @@
 
 > `const` **ECIES**: `object`
 
-Defined in: [packages/sdk/utils/src/ecies.ts:199](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/ecies.ts#L199)
+Defined in: [packages/sdk/utils/src/ecies.ts:205](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/ecies.ts#L205)
 
 ## Type declaration
 

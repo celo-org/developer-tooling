@@ -1,4 +1,4 @@
-[**@celo/connect v7.0.0**](../README.md)
+[**@celo/connect v8.0.0**](../README.md)
 
 ***
 
@@ -8,7 +8,7 @@
 
 > **getAbiByName**(`abi`, `methodName`): [`AbiItem`](../interfaces/AbiItem.md)
 
-Defined in: [packages/sdk/connect/src/utils/abi-utils.ts:5](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/utils/abi-utils.ts#L5)
+Defined in: [packages/sdk/connect/src/utils/abi-utils.ts:7](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/utils/abi-utils.ts#L7)
 
 **`Internal`**
 
