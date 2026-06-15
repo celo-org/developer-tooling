@@ -76,6 +76,8 @@ export function isEmpty(value: string | undefined | number | bigint): value is u
     value === null ||
     value === '0' ||
     value === BigInt(0) ||
-    (typeof value === 'string' && (value.toLowerCase() === '0x' || value.toLowerCase() === '0x0'))
+    // any all-zero hex quantity ('0x', '0x0', '0x00', …); web3's toBN(value).eq(0)
+    // treated every zero representation as empty, so match that here.
+    (typeof value === 'string' && /^0x0*$/i.test(value))
   )
 }
