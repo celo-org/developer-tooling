@@ -123,6 +123,9 @@
       "account": {
         "description": "Manage your account, keys, and metadata"
       },
+      "bridge": {
+        "description": "Bridge CELO between Ethereum (L1) and Celo (L2)"
+      },
       "config": {
         "description": "Configure CLI options which persist across commands"
       },
