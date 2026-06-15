@@ -8,10 +8,10 @@ import {
 import { verifySignature } from '@celo/utils/lib/signatureUtils'
 import { recoverTransaction, verifyEIP712TypedDataSigner } from '@celo/wallet-base'
 import { asn1FromPublicKey } from '@celo/wallet-hsm'
-import * as ethUtil from '@ethereumjs/util'
+// ethUtil removed — using @noble/curves/secp256k1 instead
 import { secp256k1 } from '@noble/curves/secp256k1'
 import { BigNumber } from 'bignumber.js'
-import Web3 from 'web3'
+import { parseEther } from 'viem'
 import { AwsHsmWallet } from './aws-hsm-wallet'
 require('dotenv').config()
 
@@ -120,7 +120,9 @@ describe('AwsHsmWallet class', () => {
                 throw new Error(`Key 'arn:aws:kms:123:key/${KeyId}' does not exist`)
               }
               const privateKey = keys.get(KeyId)
-              const pubKey = ethUtil.privateToPublic(ethUtil.toBuffer(privateKey))
+              const pubKey = Buffer.from(
+                secp256k1.getPublicKey(trimLeading0x(privateKey!), false).subarray(1)
+              )
               const temp = new BigNumber(ensureLeading0x(pubKey.toString('hex')))
               const asn1Key = asn1FromPublicKey(temp)
               return { PublicKey: new Uint8Array(asn1Key) }
@@ -174,7 +176,7 @@ describe('AwsHsmWallet class', () => {
           from: unknownAddress,
           to: otherAddress,
           chainId: CHAIN_ID,
-          value: Web3.utils.toWei('1', 'ether'),
+          value: parseEther('1').toString(),
           nonce: 0,
           gas: '10',
           gasPrice: '99',
@@ -231,7 +233,7 @@ describe('AwsHsmWallet class', () => {
           from: knownAddress,
           to: otherAddress,
           chainId: CHAIN_ID,
-          value: Web3.utils.toWei('1', 'ether'),
+          value: parseEther('1').toString(),
           nonce: 0,
           gas: '10',
           gasPrice: '99',
@@ -257,7 +259,7 @@ describe('AwsHsmWallet class', () => {
             from: await wallet.getAddressFromKeyId(knownKey),
             to: ACCOUNT_ADDRESS2,
             chainId: CHAIN_ID,
-            value: Web3.utils.toWei('1', 'ether'),
+            value: parseEther('1').toString(),
             nonce: 65,
             gas: '10',
             gasPrice: '99',

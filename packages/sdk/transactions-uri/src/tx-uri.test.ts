@@ -1,9 +1,9 @@
 import { CeloTx } from '@celo/connect'
-import { CeloContract, newKitFromWeb3 } from '@celo/contractkit'
+import { CeloContract, newKitFromProvider } from '@celo/contractkit'
 import { testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
 import { buildUri, parseUri } from './tx-uri'
 
-testWithAnvilL2('URI utils', (web3) => {
+testWithAnvilL2('URI utils', (provider) => {
   const recipient = '0xdeadbeefdeadbeefdeadbeefdeadbeefdeadbeef'
   const value = '100'
 
@@ -19,13 +19,13 @@ testWithAnvilL2('URI utils', (web3) => {
   let lockGoldUri: string
   let lockGoldTx: CeloTx
 
-  const kit = newKitFromWeb3(web3)
+  const kit = newKitFromProvider(provider)
 
   beforeAll(async () => {
     const stableTokenAddr = await kit.registry.addressFor(CeloContract.StableToken)
     stableTokenTransferUri = `celo:${stableTokenAddr}/transfer(address,uint256)?args=[${recipient},${value}]`
     const stableToken = await kit.contracts.getStableToken()
-    const transferData = stableToken.transfer(recipient, value).txo.encodeABI()
+    const transferData = stableToken.encodeFunctionData('transfer', [recipient, value])
     stableTokenTransferTx = {
       to: stableTokenAddr,
       data: transferData,
@@ -34,7 +34,7 @@ testWithAnvilL2('URI utils', (web3) => {
     const lockedGoldAddr = await kit.registry.addressFor(CeloContract.LockedCelo)
     lockGoldUri = `celo:${lockedGoldAddr}/lock()?value=${value}`
     const lockedGold = await kit.contracts.getLockedGold()
-    const lockData = lockedGold.lock().txo.encodeABI()
+    const lockData = lockedGold.encodeFunctionData('lock', [])
     lockGoldTx = {
       to: lockedGoldAddr,
       data: lockData,

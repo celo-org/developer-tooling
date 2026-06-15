@@ -3,7 +3,7 @@ import { Flags, ux } from '@oclif/core'
 
 import { BaseCommand } from '../../base'
 import { newCheckBuilder } from '../../utils/checks'
-import { displaySendTx } from '../../utils/cli'
+import { displayViemTx } from '../../utils/cli'
 import { CustomFlags } from '../../utils/command'
 import { displayMetadata } from '../../utils/identity'
 
@@ -32,6 +32,7 @@ export default class RegisterMetadata extends BaseCommand {
 
   async run() {
     const kit = await this.getKit()
+    const publicClient = await this.getPublicClient()
     const res = await this.parse(RegisterMetadata)
 
     await newCheckBuilder(this).isAccount(res.flags.from).runChecks()
@@ -57,6 +58,10 @@ export default class RegisterMetadata extends BaseCommand {
       }
     }
 
-    await displaySendTx('registerMetadata', accounts.setMetadataURL(metadataURL.toString()))
+    await displayViemTx(
+      'registerMetadata',
+      accounts.setMetadataURL(metadataURL.toString()),
+      publicClient
+    )
   }
 }

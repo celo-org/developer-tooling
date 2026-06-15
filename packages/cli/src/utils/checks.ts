@@ -586,9 +586,12 @@ class CheckBuilder {
           await this.getClient(),
           account
         )
-        const { duration } = await getValidatorLockedGoldRequirements(await this.getClient())
+        const client = await this.getClient()
+        const { duration } = await getValidatorLockedGoldRequirements(client)
         const waitPeriodEnd = lastRemovedFromGroupTimestamp + duration.toNumber()
-        const isDeregisterable = waitPeriodEnd < Date.now() / 1000
+        // the contract compares against block.timestamp, not wall-clock time
+        const currentTimestamp = Number((await client.getBlock({ blockTag: 'latest' })).timestamp)
+        const isDeregisterable = waitPeriodEnd < currentTimestamp
         if (!isDeregisterable) {
           console.warn(
             `Validator will be able to be deregistered: ${new Date(
@@ -608,13 +611,16 @@ class CheckBuilder {
         return validators.read.isValidatorGroup([account])
       }),
       this.withValidators(async (validators, _signer, account) => {
-        const group = await getValidatorGroup(await this.getClient(), account)
+        const client = await this.getClient()
+        const group = await getValidatorGroup(client, account)
         const [_, duration] = await validators.read.getGroupLockedGoldRequirements()
-        const waitPeriodEnd = group.membersUpdated.plus(bigintToBigNumber(duration))
-        const isDeregisterable = waitPeriodEnd.isLessThan(Date.now() / 1000)
+        const waitPeriodEnd = group.membersUpdated.plus(bigintToBigNumber(duration)).toNumber()
+        const latestBlock = await client.getBlock({ blockTag: 'latest' })
+        const currentTimestamp = Number(latestBlock.timestamp)
+        const isDeregisterable = waitPeriodEnd < currentTimestamp
         if (!isDeregisterable) {
           console.warn(
-            `Group will be able to be deregistered: ${new Date(waitPeriodEnd.multipliedBy(1000).toNumber()).toUTCString()}`
+            `Group will be able to be deregistered: ${new Date(waitPeriodEnd * 1000).toUTCString()}`
           )
         }
         return isDeregisterable
@@ -626,10 +632,12 @@ class CheckBuilder {
     return this.addCheck(
       `Enough time has passed since the last halving of the slashing multiplier`,
       this.withValidators(async (validators, _signer, account) => {
-        const { lastSlashed } = await getValidatorGroup(await this.getClient(), account)
+        const client = await this.getClient()
+        const { lastSlashed } = await getValidatorGroup(client, account)
         const duration = bigintToBigNumber(await validators.read.slashingMultiplierResetPeriod())
-
-        return duration.toNumber() + lastSlashed.toNumber() < Date.now() / 1000
+        // the contract compares against block.timestamp, not wall-clock time
+        const currentTimestamp = Number((await client.getBlock({ blockTag: 'latest' })).timestamp)
+        return duration.toNumber() + lastSlashed.toNumber() < currentTimestamp
       })
     )
   }

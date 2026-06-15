@@ -3,7 +3,7 @@ import { RLPEncodedTx, Signer } from '@celo/connect'
 import Ledger from '@celo/hw-app-eth'
 import { EIP712TypedData, structHash } from '@celo/utils/lib/sign-typed-data-utils'
 import { LegacyEncodedTx } from '@celo/wallet-base'
-import * as ethUtil from '@ethereumjs/util'
+// ethUtil removed — Buffer.from used for hex→buffer conversion
 import { TransportStatusError } from '@ledgerhq/errors'
 import debugFactory from 'debug'
 import { SemVer } from 'semver'
@@ -12,6 +12,17 @@ import { AddressValidation, LedgerWallet } from './ledger-wallet'
 import { legacyTokenInfoByAddressAndChainId, tokenInfoByAddressAndChainId } from './tokens'
 
 const debug = debugFactory('kit:wallet:ledger')
+
+// Ledger returns r/s as 32-byte hex strings; Buffer.from(hex, 'hex') silently
+// drops a trailing nibble on odd-length input, so reject a malformed value
+// instead of signing with a truncated r/s.
+function hexToSignatureBuffer(value: string): Buffer {
+  const hex = trimLeading0x(ensureLeading0x(value))
+  if (hex.length % 2 !== 0) {
+    throw new Error(`ledger-signer: malformed odd-length hex value "${value}"`)
+  }
+  return Buffer.from(hex, 'hex')
+}
 
 /**
  * Signs the EVM transaction with a Ledger device
@@ -75,8 +86,8 @@ export class LedgerSigner implements Signer {
 
       return {
         v,
-        r: ethUtil.toBuffer(ensureLeading0x(r)),
-        s: ethUtil.toBuffer(ensureLeading0x(s)),
+        r: hexToSignatureBuffer(r),
+        s: hexToSignatureBuffer(s),
       }
     } catch (error: unknown) {
       if (error instanceof TransportStatusError) {
@@ -103,8 +114,8 @@ export class LedgerSigner implements Signer {
       )
       return {
         v: signature.v,
-        r: ethUtil.toBuffer(ensureLeading0x(signature.r)),
-        s: ethUtil.toBuffer(ensureLeading0x(signature.s)),
+        r: hexToSignatureBuffer(signature.r),
+        s: hexToSignatureBuffer(signature.s),
       }
     } catch (error) {
       if (error instanceof TransportStatusError) {
@@ -134,8 +145,8 @@ export class LedgerSigner implements Signer {
       )
       return {
         v: sig.v,
-        r: ethUtil.toBuffer(ensureLeading0x(sig.r)),
-        s: ethUtil.toBuffer(ensureLeading0x(sig.s)),
+        r: hexToSignatureBuffer(sig.r),
+        s: hexToSignatureBuffer(sig.s),
       }
     } catch (error) {
       if (error instanceof TransportStatusError) {

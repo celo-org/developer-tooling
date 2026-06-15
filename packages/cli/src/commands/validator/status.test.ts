@@ -1,8 +1,7 @@
-import { newKitFromWeb3 } from '@celo/contractkit'
+import { newKitFromProvider } from '@celo/contractkit'
 import { testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
 import { ux } from '@oclif/core'
-import Web3 from 'web3'
-import { stripAnsiCodesFromNestedArray, testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
+import { stripAnsiCodesFromNestedArray, testLocallyWithNode } from '../../test-utils/cliUtils'
 import Switch from '../epochs/switch'
 import Status from './status'
 
@@ -10,7 +9,7 @@ process.env.NO_SYNCCHECK = 'true'
 
 const KNOWN_DEVCHAIN_VALIDATOR = '0x23618e81E3f5cdF7f54C3d65f7FBc0aBf5B21E8f'
 
-testWithAnvilL2('validator:status', (web3: Web3) => {
+testWithAnvilL2('validator:status', (provider) => {
   const writeMock = jest.spyOn(ux.write, 'stdout')
   const logMock = jest.spyOn(console, 'log')
 
@@ -19,10 +18,10 @@ testWithAnvilL2('validator:status', (web3: Web3) => {
   })
 
   it('displays status of the validator', async () => {
-    await testLocallyWithWeb3Node(
+    await testLocallyWithNode(
       Status,
       ['--validator', KNOWN_DEVCHAIN_VALIDATOR, '--csv', '--start', '349'],
-      web3
+      provider
     )
 
     expect(stripAnsiCodesFromNestedArray(logMock.mock.calls)).toMatchInlineSnapshot(`
@@ -56,7 +55,7 @@ testWithAnvilL2('validator:status', (web3: Web3) => {
   })
 
   it('displays status for all validators', async () => {
-    await testLocallyWithWeb3Node(Status, ['--all', '--csv', '--start', '349'], web3)
+    await testLocallyWithNode(Status, ['--all', '--csv', '--start', '349'], provider)
 
     expect(stripAnsiCodesFromNestedArray(logMock.mock.calls)).toMatchInlineSnapshot(`[]`)
     expect(stripAnsiCodesFromNestedArray(writeMock.mock.calls)).toMatchInlineSnapshot(`
@@ -94,16 +93,16 @@ testWithAnvilL2('validator:status', (web3: Web3) => {
   })
 
   it('fails if start and end are in different epochs', async () => {
-    const [account] = await web3.eth.getAccounts()
-    const kit = newKitFromWeb3(web3)
-    const blockNumber = await kit.web3.eth.getBlockNumber()
+    const kit = newKitFromProvider(provider)
+    const [account] = await kit.connection.getAccounts()
+    const blockNumber = Number(await kit.connection.viemClient.getBlockNumber())
     const epoch = await kit.getEpochNumberOfBlock(blockNumber)
     const firstBlockOfCurrentEpoch = await kit.getFirstBlockNumberForEpoch(epoch)
 
-    await testLocallyWithWeb3Node(Switch, ['--from', account], web3)
+    await testLocallyWithNode(Switch, ['--from', account], provider)
 
     await expect(
-      testLocallyWithWeb3Node(
+      testLocallyWithNode(
         Status,
         [
           '--validator',
@@ -111,7 +110,7 @@ testWithAnvilL2('validator:status', (web3: Web3) => {
           '--start',
           (firstBlockOfCurrentEpoch - 2).toString(),
         ],
-        web3
+        provider
       )
     ).rejects.toThrowErrorMatchingInlineSnapshot(
       `"Start and end blocks must be in the current epoch"`

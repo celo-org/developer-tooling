@@ -1,8 +1,9 @@
+import { encodeFunctionData } from 'viem'
 import { ensureLeading0x } from '@celo/utils/lib/address'
 import { Flags } from '@oclif/core'
 import fs from 'fs'
 import { BaseCommand } from '../../base'
-import { displayWeb3Tx } from '../../utils/cli'
+import { displayTx } from '../../utils/cli'
 import { CustomFlags } from '../../utils/command'
 import { deprecationOptions } from '../../utils/notice'
 const DKG = require('./DKG.json')
@@ -23,13 +24,23 @@ export default class DKGPublish extends BaseCommand {
   async run() {
     const kit = await this.getKit()
     const res = await this.parse(DKGPublish)
-    const web3 = kit.connection.web3
-
-    const dkg = new web3.eth.Contract(DKG.abi, res.flags.address)
+    const dkg = kit.connection.getCeloContract(DKG.abi, res.flags.address)
 
     const data = fs.readFileSync(res.flags.data).toString('hex')
-    await displayWeb3Tx('publishData', dkg.methods.publish(ensureLeading0x(data)), {
-      from: res.flags.from,
+    const publishData = encodeFunctionData({
+      abi: dkg.abi,
+      functionName: 'publish',
+      args: [ensureLeading0x(data)],
     })
+    await displayTx(
+      'publishData',
+      {
+        send: (tx: any) =>
+          kit.connection
+            .sendTransaction({ ...tx, to: dkg.address, data: publishData })
+            .then((r) => r),
+      },
+      { from: res.flags.from }
+    )
   }
 }

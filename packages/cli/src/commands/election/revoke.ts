@@ -2,7 +2,7 @@ import { Flags } from '@oclif/core'
 import BigNumber from 'bignumber.js'
 import { BaseCommand } from '../../base'
 import { newCheckBuilder } from '../../utils/checks'
-import { displaySendTx } from '../../utils/cli'
+import { displayViemTx } from '../../utils/cli'
 import { CustomFlags } from '../../utils/command'
 
 export default class ElectionRevoke extends BaseCommand {
@@ -23,6 +23,7 @@ export default class ElectionRevoke extends BaseCommand {
   ]
   async run() {
     const kit = await this.getKit()
+    const publicClient = await this.getPublicClient()
     const res = await this.parse(ElectionRevoke)
 
     await newCheckBuilder(this, res.flags.from).isSignerOrAccount().runChecks()
@@ -30,9 +31,11 @@ export default class ElectionRevoke extends BaseCommand {
     const election = await kit.contracts.getElection()
     const accounts = await kit.contracts.getAccounts()
     const account = await accounts.voteSignerToAccount(res.flags.from)
-    const txos = await election.revoke(account, res.flags.for, new BigNumber(res.flags.value))
-    for (const txo of txos) {
-      await displaySendTx('revoke', txo, { from: res.flags.from })
+    const hashes = await election.revoke(account, res.flags.for, new BigNumber(res.flags.value), {
+      from: res.flags.from,
+    })
+    for (const hash of hashes) {
+      await displayViemTx('revoke', Promise.resolve(hash), publicClient)
     }
   }
 }

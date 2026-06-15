@@ -1,7 +1,7 @@
 import { StrongAddress } from '@celo/base'
+import { Provider } from '@celo/connect'
 import { Anvil, CreateAnvilOptions, createAnvil } from '@viem/anvil'
 import BigNumber from 'bignumber.js'
-import Web3 from 'web3'
 import {
   TEST_BALANCE,
   TEST_BASE_FEE,
@@ -9,7 +9,7 @@ import {
   TEST_GAS_PRICE,
   TEST_MNEMONIC,
   jsonRpcCall,
-  testWithWeb3,
+  testWithProvider,
 } from './test-utils'
 
 let instance: null | Anvil = null
@@ -44,6 +44,7 @@ function createInstance(stateFilePath: string, chainId?: number): Anvil {
     gasLimit: TEST_GAS_LIMIT,
     blockBaseFeePerGas: TEST_BASE_FEE,
     codeSizeLimit: 50000000,
+    startTimeout: 60_000,
     stopTimeout: 1000,
     chainId,
   }
@@ -59,7 +60,7 @@ type TestWithAnvilOptions = {
 
 export function testWithAnvilL2(
   name: string,
-  fn: (web3: Web3) => void,
+  fn: (provider: Provider) => void,
   options?: TestWithAnvilOptions
 ) {
   return testWithAnvil(require.resolve('@celo/devchain-anvil/l2-devchain.json'), name, fn, options)
@@ -68,13 +69,13 @@ export function testWithAnvilL2(
 function testWithAnvil(
   stateFilePath: string,
   name: string,
-  fn: (web3: Web3) => void,
+  fn: (provider: Provider) => void,
   options?: TestWithAnvilOptions
 ) {
   const anvil = createInstance(stateFilePath, options?.chainId)
 
   // for each test suite, we start and stop a new anvil instance
-  return testWithWeb3(name, `http://127.0.0.1:${anvil.port}`, fn, {
+  return testWithProvider(name, `http://127.0.0.1:${anvil.port}`, fn, {
     runIf:
       process.env.RUN_ANVIL_TESTS === 'true' || typeof process.env.RUN_ANVIL_TESTS === 'undefined',
     hooks: {
@@ -89,40 +90,40 @@ function testWithAnvil(
 }
 
 export function impersonateAccount(
-  web3: Web3,
+  provider: Provider,
   address: string,
   withBalance?: number | bigint | BigNumber
 ) {
   return Promise.all([
-    jsonRpcCall(web3, 'anvil_impersonateAccount', [address]),
+    jsonRpcCall(provider, 'anvil_impersonateAccount', [address]),
     withBalance
-      ? jsonRpcCall(web3, 'anvil_setBalance', [address, `0x${withBalance.toString(16)}`])
+      ? jsonRpcCall(provider, 'anvil_setBalance', [address, `0x${withBalance.toString(16)}`])
       : undefined,
   ])
 }
 
-export function stopImpersonatingAccount(web3: Web3, address: string) {
-  return jsonRpcCall(web3, 'anvil_stopImpersonatingAccount', [address])
+export function stopImpersonatingAccount(provider: Provider, address: string) {
+  return jsonRpcCall(provider, 'anvil_stopImpersonatingAccount', [address])
 }
 
 export const withImpersonatedAccount = async (
-  web3: Web3,
+  provider: Provider,
   account: string,
   fn: () => Promise<void>,
   withBalance?: number | bigint | BigNumber
 ) => {
-  await impersonateAccount(web3, account, withBalance)
+  await impersonateAccount(provider, account, withBalance)
   await fn()
-  await stopImpersonatingAccount(web3, account)
+  await stopImpersonatingAccount(provider, account)
 }
 
 export const asCoreContractsOwner = async (
-  web3: Web3,
+  provider: Provider,
   fn: (ownerAddress: StrongAddress) => Promise<void>,
   withBalance?: number | bigint | BigNumber
 ) => {
   await withImpersonatedAccount(
-    web3,
+    provider,
     DEFAULT_OWNER_ADDRESS,
     async () => {
       await fn(DEFAULT_OWNER_ADDRESS)
@@ -131,18 +132,18 @@ export const asCoreContractsOwner = async (
   )
 }
 
-export function setCode(web3: Web3, address: string, code: string) {
-  return jsonRpcCall(web3, 'anvil_setCode', [address, code])
+export function setCode(provider: Provider, address: string, code: string) {
+  return jsonRpcCall(provider, 'anvil_setCode', [address, code])
 }
 
-export function setNextBlockTimestamp(web3: Web3, timestamp: number) {
-  return jsonRpcCall(web3, 'evm_setNextBlockTimestamp', [timestamp.toString()])
+export function setNextBlockTimestamp(provider: Provider, timestamp: number) {
+  return jsonRpcCall(provider, 'evm_setNextBlockTimestamp', [timestamp.toString()])
 }
 
 export function setBalance(
-  web3: Web3,
+  provider: Provider,
   address: StrongAddress,
   balance: number | bigint | BigNumber
 ) {
-  return jsonRpcCall(web3, 'anvil_setBalance', [address, `0x${balance.toString(16)}`])
+  return jsonRpcCall(provider, 'anvil_setBalance', [address, `0x${balance.toString(16)}`])
 }

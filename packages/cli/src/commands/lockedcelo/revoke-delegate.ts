@@ -3,7 +3,7 @@ import { Flags } from '@oclif/core'
 import BigNumber from 'bignumber.js'
 import { BaseCommand } from '../../base'
 import { newCheckBuilder } from '../../utils/checks'
-import { displaySendTx } from '../../utils/cli'
+import { displayViemTx } from '../../utils/cli'
 import { CustomFlags } from '../../utils/command'
 import { LockedGoldArgs } from '../../utils/lockedgold'
 
@@ -31,6 +31,7 @@ export default class RevokeDelegate extends BaseCommand {
 
   async run() {
     const kit = await this.getKit()
+    const publicClient = await this.getPublicClient()
     const res = await this.parse(RevokeDelegate)
     const address = res.flags.from
     const to = res.flags.to
@@ -51,6 +52,6 @@ export default class RevokeDelegate extends BaseCommand {
     const lockedGold = await kit.contracts.getLockedGold()
 
     const tx = lockedGold.revokeDelegated(to, percentFixed.toFixed())
-    await displaySendTx('revokeDelegated', tx)
+    await displayViemTx('revokeDelegated', tx, publicClient)
   }
 }

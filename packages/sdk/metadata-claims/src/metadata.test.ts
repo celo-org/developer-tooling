@@ -1,4 +1,4 @@
-import { newKitFromWeb3 } from '@celo/contractkit'
+import { newKitFromProvider } from '@celo/contractkit'
 import { testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
 import { ACCOUNT_ADDRESSES } from '@celo/dev-utils/test-accounts'
 import { Address } from '@celo/utils/lib/address'
@@ -7,8 +7,8 @@ import { Claim, createNameClaim, createRpcUrlClaim } from './claim'
 import { ClaimTypes, IdentityMetadataWrapper } from './metadata'
 import { now } from './types'
 
-testWithAnvilL2('Metadata', (web3) => {
-  const kit = newKitFromWeb3(web3)
+testWithAnvilL2('Metadata', (provider) => {
+  const kit = newKitFromProvider(provider)
   const address = ACCOUNT_ADDRESSES[0]
   const otherAddress = ACCOUNT_ADDRESSES[1]
 
@@ -38,7 +38,8 @@ testWithAnvilL2('Metadata', (web3) => {
     const validatorSigner = ACCOUNT_ADDRESSES[3]
     const attestationSigner = ACCOUNT_ADDRESSES[4]
     console.warn('Creating account', address)
-    await accounts.createAccount().send({ from: address })
+    const hash = await accounts.createAccount({ from: address })
+    await kit.connection.viemClient.waitForTransactionReceipt({ hash })
     const testSigner = async (
       signer: Address,
       action: string,
@@ -50,26 +51,27 @@ testWithAnvilL2('Metadata', (web3) => {
       if (action === 'vote') {
         const fees = await kit.connection.setFeeMarketGas({})
         console.warn('testSigner vote', address, fees)
-        await (await accounts.authorizeVoteSigner(signer, pop)).sendAndWaitForReceipt({
+        const h = await accounts.authorizeVoteSigner(signer, pop, {
           from: address,
           gas: 13000000,
           maxFeePerGas: fees.maxFeePerGas,
         })
+        await kit.connection.viemClient.waitForTransactionReceipt({ hash: h })
       } else if (action === 'validator') {
         console.warn('testSigner validator', address)
 
-        await (
-          await accounts.authorizeValidatorSigner(signer, pop, validator)
-        ).sendAndWaitForReceipt({
+        const h = await accounts.authorizeValidatorSigner(signer, pop, validator, {
           from: address,
           gas: 13000000,
         })
+        await kit.connection.viemClient.waitForTransactionReceipt({ hash: h })
       } else if (action === 'attestation') {
         console.warn('testSigner attestation', address)
-        await (await accounts.authorizeAttestationSigner(signer, pop)).sendAndWaitForReceipt({
+        const h = await accounts.authorizeAttestationSigner(signer, pop, {
           from: address,
           gas: 13000000,
         })
+        await kit.connection.viemClient.waitForTransactionReceipt({ hash: h })
       }
       console.warn('testSigner addClaim', address)
 

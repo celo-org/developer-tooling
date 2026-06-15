@@ -35,7 +35,7 @@ jobs:
           dynamic-secrets: '{"/dynamic-secrets/keys/github/docs/contents=write,pull_requests=write":"DOCS_TOKEN"}'
 
       - name: Checkout Repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           repository: 'celo-org/docs'
           submodules: 'recursive'

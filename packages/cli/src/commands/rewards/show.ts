@@ -89,7 +89,7 @@ export default class Show extends BaseCommand {
         const electedValidators = (await Promise.all(
           (
             await epochManager!.getElectedSigners()
-          ).map(async (x) => ({
+          ).map(async (x: string) => ({
             address: x,
             score: await scoreManager.getValidatorScore(x),
           }))

@@ -11,10 +11,10 @@ jobs:
     runs-on: ['self-hosted', 'org', '8-cpu']
     if: github.actor == 'renovate[bot]'
     steps:
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v6
         with:
           node-version: '24'
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: "Run changesets-renovate"
         # when on a renovate branch which modified the package.json for a workspace this will  create a changeset for those changes
         run: npx @scaleway/changesets-renovate

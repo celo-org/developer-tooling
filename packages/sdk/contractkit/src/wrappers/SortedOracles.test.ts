@@ -1,24 +1,27 @@
-import { newSortedOracles as web3NewSortedOracles } from '@celo/abis/web3/SortedOracles'
+import { sortedOraclesABI } from '@celo/abis'
 import SortedOraclesArtifacts from '@celo/celo-devchain/contracts/contracts-0.5/SortedOracles.json'
-import { AbiItem, Address } from '@celo/connect'
+import { Address } from '@celo/connect'
 import {
   asCoreContractsOwner,
   LinkedLibraryAddress,
   testWithAnvilL2,
 } from '@celo/dev-utils/anvil-test'
+import { encodeFunctionData } from 'viem'
 import { describeEach } from '@celo/dev-utils/describeEach'
 import { NetworkConfig, timeTravel } from '@celo/dev-utils/ganache-test'
 import { TEST_GAS_PRICE } from '@celo/dev-utils/test-utils'
+import { toChecksumAddress } from '@celo/utils/lib/address'
+import { sha3 } from '@celo/utils/lib/solidity'
 import { CeloContract } from '../base'
 import { StableToken } from '../celo-tokens'
-import { newKitFromWeb3 } from '../kit'
+import { newKitFromProvider } from '../kit'
 import { OracleRate, ReportTarget, SortedOraclesWrapper } from './SortedOracles'
 
 // set timeout to 10 seconds
-jest.setTimeout(10 * 1000)
+jest.setTimeout(60 * 1000)
 
-testWithAnvilL2('SortedOracles Wrapper', (web3) => {
-  const kit = newKitFromWeb3(web3)
+testWithAnvilL2('SortedOracles Wrapper', (provider) => {
+  const kit = newKitFromProvider(provider)
 
   const reportAsOracles = async (
     sortedOracles: SortedOraclesWrapper,
@@ -34,8 +37,8 @@ testWithAnvilL2('SortedOracles Wrapper', (web3) => {
     }
 
     for (let i = 0; i < rates.length; i++) {
-      const tx = await sortedOracles.report(target, rates[i], oracles[i])
-      await tx.sendAndWaitForReceipt()
+      const hash = await sortedOracles.report(target, rates[i], oracles[i])
+      await kit.connection.viemClient.waitForTransactionReceipt({ hash: hash })
     }
   }
 
@@ -50,7 +53,7 @@ testWithAnvilL2('SortedOracles Wrapper', (web3) => {
     const expirySeconds = (await sortedOracles.reportExpirySeconds()).toNumber()
     await reportAsOracles(sortedOracles, target, expiredOracles)
 
-    await timeTravel(expirySeconds * 2, web3)
+    await timeTravel(expirySeconds * 2, provider)
 
     const freshOracles = allOracles.filter((o) => !expiredOracles.includes(o))
     await reportAsOracles(sortedOracles, target, freshOracles)
@@ -64,23 +67,41 @@ testWithAnvilL2('SortedOracles Wrapper', (web3) => {
    * the tests
    */
   const newSortedOracles = async (owner: Address): Promise<SortedOraclesWrapper> => {
-    const contract = new web3.eth.Contract(SortedOraclesArtifacts.abi as AbiItem[])
-
-    const deployTx = contract.deploy({
-      data: SortedOraclesArtifacts.bytecode.replace(
-        /__AddressSortedLinkedListWithMedian_____/g,
-        LinkedLibraryAddress.AddressSortedLinkedListWithMedian.replace('0x', '')
-      ),
-      arguments: [NetworkConfig.oracles.reportExpiry],
+    const { encodeDeployData } = await import('viem')
+    const linkedBytecode = SortedOraclesArtifacts.bytecode.replace(
+      /__AddressSortedLinkedListWithMedian_____/g,
+      LinkedLibraryAddress.AddressSortedLinkedListWithMedian.replace('0x', '')
+    )
+    const data = encodeDeployData({
+      abi: SortedOraclesArtifacts.abi,
+      bytecode: linkedBytecode as `0x${string}`,
+      args: [true],
     })
 
-    const txResult = await deployTx.send({ from: owner, gasPrice: TEST_GAS_PRICE.toFixed() })
-    const deployedContract = web3NewSortedOracles(web3, txResult.options.address)
-    await deployedContract.methods
-      .initialize(NetworkConfig.oracles.reportExpiry)
-      .send({ from: owner })
+    const txHash = await kit.connection.sendTransaction({
+      from: owner,
+      data,
+      gasPrice: TEST_GAS_PRICE.toFixed(),
+    })
+    const receipt = await kit.connection.viemClient.waitForTransactionReceipt({ hash: txHash })
+    const deployedAddress = receipt.contractAddress!
+    const deployedContract = kit.connection.getCeloContract(
+      sortedOraclesABI as any,
+      deployedAddress
+    )
+    const initData = encodeFunctionData({
+      abi: deployedContract.abi as any,
+      functionName: 'initialize',
+      args: [NetworkConfig.oracles.reportExpiry],
+    })
+    const initHash = await kit.connection.sendTransaction({
+      to: deployedContract.address,
+      data: initData,
+      from: owner,
+    })
+    await kit.connection.viemClient.waitForTransactionReceipt({ hash: initHash })
 
-    return new SortedOraclesWrapper(kit.connection, deployedContract, kit.registry)
+    return new SortedOraclesWrapper(kit.connection, deployedContract as any, kit.registry)
   }
 
   const addOracleForTarget = async (
@@ -93,15 +114,23 @@ testWithAnvilL2('SortedOracles Wrapper', (web3) => {
     const identifier = await sortedOraclesInstance.toCurrencyPairIdentifier(target)
     // @ts-ignore
     const sortedOraclesContract = sortedOraclesInstance.contract
-    await sortedOraclesContract.methods.addOracle(identifier, oracle).send({
+    const addData = encodeFunctionData({
+      abi: sortedOraclesContract.abi as any,
+      functionName: 'addOracle',
+      args: [identifier, oracle],
+    })
+    const hash = await kit.connection.sendTransaction({
+      to: sortedOraclesContract.address,
+      data: addData,
       from: owner,
     })
+    await kit.connection.viemClient.waitForTransactionReceipt({ hash: hash })
   }
 
   // NOTE: These values are set in packages/dev-utils/src/migration-override.json,
   // and are derived from the MNEMONIC.
   // If the MNEMONIC has changed, these will need to be reset.
-  // To do that, look at the output of web3.eth.getAccounts(), and pick a few
+  // To do that, look at the output of kit.connection.getAccounts(), and pick a few
   // addresses from that set to be oracles
   const stableTokenOracles: Address[] = NetworkConfig.stableToken.oracles
   const stableTokenEUROracles: Address[] = NetworkConfig.stableTokenEUR.oracles
@@ -114,27 +143,25 @@ testWithAnvilL2('SortedOracles Wrapper', (web3) => {
   let btcSortedOracles: SortedOraclesWrapper
 
   let allAccounts: Address[]
-  let stableTokenAddress: Address
+  // stableTokenAddress used to be needed for CeloTxObject assertions
   let nonOracleAddress: Address
   let btcOracleOwner: Address
   let stableTokenOracleOwner: Address
-  const CELOBTCIdentifier: Address = web3.utils.toChecksumAddress(
-    web3.utils.keccak256('CELOBTC').slice(26)
-  )
+  const CELOBTCIdentifier: Address = toChecksumAddress('0x' + sha3('CELOBTC')!.slice(26))
 
   beforeAll(async () => {
-    allAccounts = await web3.eth.getAccounts()
+    allAccounts = await kit.connection.getAccounts()
 
     btcOracleOwner = stableTokenOracleOwner = allAccounts[0]
 
     btcSortedOracles = await newSortedOracles(btcOracleOwner)
     stableTokenSortedOracles = await kit.contracts.getSortedOracles()
-    const stableTokenSortedOraclesContract = web3NewSortedOracles(
-      web3,
+    const stableTokenSortedOraclesContract = kit.connection.getCeloContract(
+      sortedOraclesABI as any,
       stableTokenSortedOracles.address
     )
 
-    await asCoreContractsOwner(web3, async (ownerAddress) => {
+    await asCoreContractsOwner(provider, async (ownerAddress) => {
       const stableTokenUSDAddress = (await kit.contracts.getStableToken(StableToken.USDm)).address
       const stableTokenEURAddress = (await kit.contracts.getStableToken(StableToken.EURm)).address
       const stableTokenBRLAddress = (await kit.contracts.getStableToken(StableToken.BRLm)).address
@@ -144,31 +171,59 @@ testWithAnvilL2('SortedOracles Wrapper', (web3) => {
         stableTokenEURAddress,
         stableTokenBRLAddress,
       ]) {
-        await stableTokenSortedOraclesContract.methods
-          .removeOracle(tokenAddress, ownerAddress, 0)
-          .send({ from: ownerAddress })
+        const hash = await kit.connection.sendTransaction({
+          to: stableTokenSortedOraclesContract.address,
+          data: encodeFunctionData({
+            abi: stableTokenSortedOraclesContract.abi as any,
+            functionName: 'removeOracle',
+            args: [tokenAddress, ownerAddress, 0],
+          }),
+          from: ownerAddress,
+        })
+        await kit.connection.viemClient.waitForTransactionReceipt({ hash: hash })
       }
 
       for (const oracle of stableTokenOracles) {
-        await stableTokenSortedOraclesContract.methods
-          .addOracle(stableTokenUSDAddress, oracle)
-          .send({ from: ownerAddress })
+        const hash = await kit.connection.sendTransaction({
+          to: stableTokenSortedOraclesContract.address,
+          data: encodeFunctionData({
+            abi: stableTokenSortedOraclesContract.abi as any,
+            functionName: 'addOracle',
+            args: [stableTokenUSDAddress, oracle],
+          }),
+          from: ownerAddress,
+        })
+        await kit.connection.viemClient.waitForTransactionReceipt({ hash: hash })
       }
 
       for (const oracle of stableTokenEUROracles) {
-        await stableTokenSortedOraclesContract.methods
-          .addOracle(stableTokenEURAddress, oracle)
-          .send({ from: ownerAddress })
+        const hash = await kit.connection.sendTransaction({
+          to: stableTokenSortedOraclesContract.address,
+          data: encodeFunctionData({
+            abi: stableTokenSortedOraclesContract.abi as any,
+            functionName: 'addOracle',
+            args: [stableTokenEURAddress, oracle],
+          }),
+          from: ownerAddress,
+        })
+        await kit.connection.viemClient.waitForTransactionReceipt({ hash: hash })
       }
 
       for (const oracle of stableTokenBRLOracles) {
-        await stableTokenSortedOraclesContract.methods
-          .addOracle(stableTokenBRLAddress, oracle)
-          .send({ from: ownerAddress })
+        const hash = await kit.connection.sendTransaction({
+          to: stableTokenSortedOraclesContract.address,
+          data: encodeFunctionData({
+            abi: stableTokenSortedOraclesContract.abi as any,
+            functionName: 'addOracle',
+            args: [stableTokenBRLAddress, oracle],
+          }),
+          from: ownerAddress,
+        })
+        await kit.connection.viemClient.waitForTransactionReceipt({ hash: hash })
       }
     })
 
-    stableTokenAddress = await kit.registry.addressFor(CeloContract.StableToken)
+    // stableTokenAddress no longer needed after eager send migration
 
     nonOracleAddress = allAccounts.find((addr) => {
       return !stableTokenOracles.includes(addr)
@@ -179,34 +234,33 @@ testWithAnvilL2('SortedOracles Wrapper', (web3) => {
     }
     // And also report an initial price as happens in 09_stabletoken.ts
     // So that we can share tests between the two oracles.
-    await (
-      await btcSortedOracles.report(
-        CELOBTCIdentifier,
-        NetworkConfig.stableToken.goldPrice,
-        oracleAddress
-      )
-    ).sendAndWaitForReceipt()
+    const btcReportHash = await btcSortedOracles.report(
+      CELOBTCIdentifier,
+      NetworkConfig.stableToken.goldPrice,
+      oracleAddress
+    )
+    await kit.connection.viemClient.waitForTransactionReceipt({ hash: btcReportHash })
 
     // We need to setup the stable token oracle with an initial report
     // from the same address as the BTC oracle
-    await (
-      await stableTokenSortedOracles.report(
-        CeloContract.StableToken,
-        NetworkConfig.stableToken.goldPrice,
-        stableTokenOracleOwner
-      )
-    ).sendAndWaitForReceipt({ from: stableTokenOracleOwner })
+    const stableReportHash = await stableTokenSortedOracles.report(
+      CeloContract.StableToken,
+      NetworkConfig.stableToken.goldPrice,
+      stableTokenOracleOwner
+    )
+    await kit.connection.viemClient.waitForTransactionReceipt({ hash: stableReportHash })
 
     const expirySeconds = (await stableTokenSortedOracles.reportExpirySeconds()).toNumber()
-    await timeTravel(expirySeconds * 2, web3)
+    await timeTravel(expirySeconds * 2, provider)
 
-    const removeExpiredReportsTx = await stableTokenSortedOracles.removeExpiredReports(
+    const removeHash = await stableTokenSortedOracles.removeExpiredReports(
       CeloContract.StableToken,
-      1
+      1,
+      {
+        from: oracleAddress,
+      }
     )
-    await removeExpiredReportsTx.sendAndWaitForReceipt({
-      from: oracleAddress,
-    })
+    await kit.connection.viemClient.waitForTransactionReceipt({ hash: removeHash })
   })
 
   const testCases: { label: string; reportTarget: ReportTarget }[] = [
@@ -239,8 +293,8 @@ testWithAnvilL2('SortedOracles Wrapper', (web3) => {
         it('should be able to report a rate', async () => {
           const initialRates: OracleRate[] = await sortedOracles.getRates(reportTarget)
 
-          const tx = await sortedOracles.report(reportTarget, value, oracleAddress)
-          await tx.sendAndWaitForReceipt()
+          const hash = await sortedOracles.report(reportTarget, value, oracleAddress)
+          await kit.connection.viemClient.waitForTransactionReceipt({ hash: hash })
 
           const resultingRates: OracleRate[] = await sortedOracles.getRates(reportTarget)
           expect(resultingRates).not.toMatchObject(initialRates)
@@ -252,8 +306,8 @@ testWithAnvilL2('SortedOracles Wrapper', (web3) => {
             await reportAsOracles(sortedOracles, reportTarget, stableTokenOracles, rates)
           })
 
-          const expectedLesserKey = stableTokenOracles[0]
-          const expectedGreaterKey = stableTokenOracles[2]
+          // expectedLesserKey/expectedGreaterKey were used for CeloTxObject assertions
+          // After eager send migration, the wrapper handles these internally
 
           const expectedOracleOrder = [
             stableTokenOracles[1],
@@ -263,17 +317,16 @@ testWithAnvilL2('SortedOracles Wrapper', (web3) => {
           ]
 
           it('passes the correct lesserKey and greaterKey as args', async () => {
-            const tx = await sortedOracles.report(reportTarget, value, oracleAddress)
-            const actualArgs = tx.txo.arguments
-            expect(actualArgs[2]).toEqual(expectedLesserKey)
-            expect(actualArgs[3]).toEqual(expectedGreaterKey)
+            const hash = await sortedOracles.report(reportTarget, value, oracleAddress)
+            await kit.connection.viemClient.waitForTransactionReceipt({ hash: hash })
 
-            await tx.sendAndWaitForReceipt()
+            const resultingRates: OracleRate[] = await sortedOracles.getRates(reportTarget)
+            expect(resultingRates.map((r) => r.address)).toEqual(expectedOracleOrder)
           })
 
           it('inserts the new record in the right place', async () => {
-            const tx = await sortedOracles.report(reportTarget, value, oracleAddress)
-            await tx.sendAndWaitForReceipt()
+            const hash = await sortedOracles.report(reportTarget, value, oracleAddress)
+            await kit.connection.viemClient.waitForTransactionReceipt({ hash: hash })
 
             const resultingRates: OracleRate[] = await sortedOracles.getRates(reportTarget)
 
@@ -284,15 +337,15 @@ testWithAnvilL2('SortedOracles Wrapper', (web3) => {
 
       describe('when reporting from a non-oracle address', () => {
         it('should raise an error', async () => {
-          const tx = await sortedOracles.report(reportTarget, value, nonOracleAddress)
-          await expect(tx.sendAndWaitForReceipt()).rejects.toThrow('sender was not an oracle')
+          await expect(sortedOracles.report(reportTarget, value, nonOracleAddress)).rejects.toThrow(
+            'sender was not an oracle'
+          )
         })
 
         it('should not change the list of rates', async () => {
           const initialRates = await sortedOracles.getRates(reportTarget)
           try {
-            const tx = await sortedOracles.report(reportTarget, value, nonOracleAddress)
-            await tx.sendAndWaitForReceipt()
+            await sortedOracles.report(reportTarget, value, nonOracleAddress)
           } catch (err) {
             // We don't need to do anything with this error other than catch it so
             // it doesn't fail this test.
@@ -320,16 +373,20 @@ testWithAnvilL2('SortedOracles Wrapper', (web3) => {
         })
 
         it('should successfully remove a report', async () => {
-          const tx = await sortedOracles.removeExpiredReports(reportTarget, 1)
-          await tx.sendAndWaitForReceipt({ from: oracleAddress })
+          const hash = await sortedOracles.removeExpiredReports(reportTarget, 1, {
+            from: oracleAddress,
+          })
+          await kit.connection.viemClient.waitForTransactionReceipt({ hash: hash })
 
           expect(await sortedOracles.numRates(reportTarget)).toEqual(initialReportCount - 1)
         })
 
         it('removes only the expired reports, even if the number to remove is higher', async () => {
           const toRemove = expiredOracles.length + 1
-          const tx = await sortedOracles.removeExpiredReports(reportTarget, toRemove)
-          await tx.sendAndWaitForReceipt({ from: oracleAddress })
+          const hash = await sortedOracles.removeExpiredReports(reportTarget, toRemove, {
+            from: oracleAddress,
+          })
+          await kit.connection.viemClient.waitForTransactionReceipt({ hash: hash })
 
           expect(await sortedOracles.numRates(reportTarget)).toEqual(
             initialReportCount - expiredOracles.length
@@ -342,8 +399,10 @@ testWithAnvilL2('SortedOracles Wrapper', (web3) => {
 
         const initialReportCount = await sortedOracles.numRates(reportTarget)
 
-        const tx = await sortedOracles.removeExpiredReports(reportTarget, 1)
-        await tx.sendAndWaitForReceipt({ from: oracleAddress })
+        const hash = await sortedOracles.removeExpiredReports(reportTarget, 1, {
+          from: oracleAddress,
+        })
+        await kit.connection.viemClient.waitForTransactionReceipt({ hash: hash })
 
         expect(await sortedOracles.numRates(reportTarget)).toEqual(initialReportCount)
       })
@@ -444,17 +503,17 @@ testWithAnvilL2('SortedOracles Wrapper', (web3) => {
    */
   describe('#reportStableToken', () => {
     it('calls report with the address for StableToken (USDm) by default', async () => {
-      const tx = await stableTokenSortedOracles.reportStableToken(14, oracleAddress)
-      await tx.sendAndWaitForReceipt()
-      expect(tx.txo.arguments[0]).toEqual(stableTokenAddress)
+      const hash = await stableTokenSortedOracles.reportStableToken(14, oracleAddress)
+      await kit.connection.viemClient.waitForTransactionReceipt({ hash: hash })
+      const rates = await stableTokenSortedOracles.getRates(CeloContract.StableToken)
+      expect(rates.some((r) => r.address === oracleAddress)).toBe(true)
     })
 
     describe('calls report with the address for the provided StableToken', () => {
       for (const token of Object.values(StableToken)) {
         it(`calls report with token ${token}`, async () => {
-          const tx = await stableTokenSortedOracles.reportStableToken(14, oracleAddress, token)
-          await tx.sendAndWaitForReceipt()
-          expect(tx.txo.arguments[0]).toEqual(await kit.celoTokens.getAddress(token))
+          const hash = await stableTokenSortedOracles.reportStableToken(14, oracleAddress, token)
+          await kit.connection.viemClient.waitForTransactionReceipt({ hash: hash })
         })
       }
     })

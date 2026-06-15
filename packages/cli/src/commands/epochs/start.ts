@@ -1,5 +1,5 @@
 import { BaseCommand } from '../../base'
-import { displaySendTx } from '../../utils/cli'
+import { displayViemTx } from '../../utils/cli'
 import { CustomFlags } from '../../utils/command'
 
 export default class Start extends BaseCommand {
@@ -16,6 +16,7 @@ export default class Start extends BaseCommand {
 
   async run() {
     const kit = await this.getKit()
+    const publicClient = await this.getPublicClient()
     const res = await this.parse(Start)
     const address = res.flags.from
 
@@ -34,6 +35,6 @@ export default class Start extends BaseCommand {
     if (startProcessTx === undefined) {
       return
     }
-    await displaySendTx('startNextEpoch', startProcessTx)
+    await displayViemTx('startNextEpoch', Promise.resolve(startProcessTx), publicClient)
   }
 }

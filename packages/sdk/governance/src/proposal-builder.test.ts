@@ -1,14 +1,15 @@
+import { governanceABI } from '@celo/abis'
 import { AbiItem } from '@celo/connect'
-import { CeloContract, ContractKit, newKitFromWeb3 } from '@celo/contractkit'
+import { CeloContract, ContractKit, newKitFromProvider } from '@celo/contractkit'
 import { testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
-import BigNumber from 'bignumber.js'
+import { encodeFunctionData } from 'viem'
 import { ProposalBuilder } from './proposal-builder'
-testWithAnvilL2('ProposalBuilder', (web3) => {
+testWithAnvilL2('ProposalBuilder', (provider) => {
   let kit: ContractKit
   let proposalBuilder: ProposalBuilder
 
   beforeEach(() => {
-    kit = newKitFromWeb3(web3)
+    kit = newKitFromProvider(provider)
     proposalBuilder = new ProposalBuilder(kit)
   })
 
@@ -19,15 +20,14 @@ testWithAnvilL2('ProposalBuilder', (web3) => {
     })
   })
 
-  describe('addWeb3Tx', () => {
-    it('adds and builds a Web3 transaction', async () => {
-      const wrapper = await kit.contracts.getGovernance()
-      // if we want to keep input in the expectation the same the dequeue index needs to be same length as it was on alfajores
-      const dequeue = new Array(56).fill(0)
-      dequeue.push(125)
-      jest.spyOn(wrapper, 'getDequeue').mockResolvedValue(dequeue.map((x) => new BigNumber(x)))
-      const tx = await wrapper.approve(new BigNumber('125'))
-      proposalBuilder.addWeb3Tx(tx.txo, { to: '0x5678', value: '1000' })
+  describe('addEncodedTx', () => {
+    it('adds and builds an encoded transaction', async () => {
+      const data = encodeFunctionData({
+        abi: governanceABI,
+        functionName: 'approve',
+        args: [BigInt(125), BigInt(56)],
+      })
+      proposalBuilder.addEncodedTx(data, { to: '0x5678', value: '1000' })
       const proposal = await proposalBuilder.build()
       expect(proposal).toEqual([
         {

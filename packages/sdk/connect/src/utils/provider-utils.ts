@@ -10,7 +10,7 @@ export function stopProvider(defaultProvider: Provider) {
   if (hasProperty<{ stop: () => void }>(defaultProvider, 'stop')) {
     defaultProvider.stop()
   } else {
-    // Close the web3 connection or the CLI hangs forever.
+    // Close the provider connection or the CLI hangs forever.
     if (hasProperty<{ connection: any }>(defaultProvider, 'connection')) {
       const connection = defaultProvider.connection
       // WS
