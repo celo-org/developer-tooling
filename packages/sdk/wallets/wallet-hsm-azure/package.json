@@ -1,6 +1,6 @@
 {
   "name": "@celo/wallet-hsm-azure",
-  "version": "8.0.3",
+  "version": "8.0.4",
   "description": "Azure HSM wallet implementation",
   "author": "Celo",
   "license": "Apache-2.0",
@@ -29,11 +29,11 @@
     "@azure/keyvault-keys": "^4.7.2",
     "@azure/keyvault-secrets": "^4.7.0",
     "@celo/base": "^7.0.3",
-    "@celo/connect": "^7.0.0",
+    "@celo/connect": "^8.0.0",
     "@celo/utils": "^8.0.3",
-    "@celo/wallet-base": "^8.0.3",
-    "@celo/wallet-hsm": "^8.0.3",
-    "@celo/wallet-remote": "^8.0.3",
+    "@celo/wallet-base": "^8.0.4",
+    "@celo/wallet-hsm": "^8.0.4",
+    "@celo/wallet-remote": "^8.0.4",
     "@types/secp256k1": "^4.0.0",
     "bignumber.js": "^9.0.0",
     "debug": "^4.1.1"

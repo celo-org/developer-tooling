@@ -1,5 +1,12 @@
 # @celo/transactions-uri
 
+## 5.0.16
+
+### Patch Changes
+
+- Updated dependencies [[`95a84a4`](https://github.com/celo-org/developer-tooling/commit/95a84a4ac6c18278e94ef98549c1606dcd5a496f), [`95a84a4`](https://github.com/celo-org/developer-tooling/commit/95a84a4ac6c18278e94ef98549c1606dcd5a496f), [`95a84a4`](https://github.com/celo-org/developer-tooling/commit/95a84a4ac6c18278e94ef98549c1606dcd5a496f)]:
+  - @celo/connect@8.0.0
+
 ## 5.0.15
 
 ### Patch Changes

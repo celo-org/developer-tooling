@@ -1,5 +1,15 @@
 # @celo/wallet-hsm-azure
 
+## 8.0.4
+
+### Patch Changes
+
+- Updated dependencies [[`95a84a4`](https://github.com/celo-org/developer-tooling/commit/95a84a4ac6c18278e94ef98549c1606dcd5a496f), [`95a84a4`](https://github.com/celo-org/developer-tooling/commit/95a84a4ac6c18278e94ef98549c1606dcd5a496f), [`95a84a4`](https://github.com/celo-org/developer-tooling/commit/95a84a4ac6c18278e94ef98549c1606dcd5a496f)]:
+  - @celo/connect@8.0.0
+  - @celo/wallet-base@8.0.4
+  - @celo/wallet-remote@8.0.4
+  - @celo/wallet-hsm@8.0.4
+
 ## 8.0.3
 
 ### Patch Changes
