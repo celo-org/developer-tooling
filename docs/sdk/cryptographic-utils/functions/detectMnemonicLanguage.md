@@ -8,7 +8,7 @@
 
 > **detectMnemonicLanguage**(`words`, `candidates?`): `undefined` \| [`MnemonicLanguages`](../enumerations/MnemonicLanguages.md)
 
-Defined in: [cryptographic-utils/src/account.ts:220](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/cryptographic-utils/src/account.ts#L220)
+Defined in: [cryptographic-utils/src/account.ts:213](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/cryptographic-utils/src/account.ts#L213)
 
 Detects the language of tokenized mnemonic phrase by applying a heuristic.
 

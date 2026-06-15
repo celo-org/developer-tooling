@@ -1,4 +1,4 @@
-[**@celo/connect v7.0.0**](../README.md)
+[**@celo/connect v8.0.0**](../README.md)
 
 ***
 
@@ -6,7 +6,7 @@
 
 # Interface: EncodedTransaction
 
-Defined in: [packages/sdk/connect/src/types.ts:97](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L97)
+Defined in: [packages/sdk/connect/src/types.ts:158](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L158)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [packages/sdk/connect/src/types.ts:97](https://github.com/celo-org/d
 
 > **raw**: `` `0x${string}` ``
 
-Defined in: [packages/sdk/connect/src/types.ts:98](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L98)
+Defined in: [packages/sdk/connect/src/types.ts:159](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L159)
 
 ***
 
@@ -22,4 +22,4 @@ Defined in: [packages/sdk/connect/src/types.ts:98](https://github.com/celo-org/d
 
 > **tx**: [`EIP1559TXProperties`](EIP1559TXProperties.md) \| [`CIP66TXProperties`](CIP66TXProperties.md) \| [`CIP64TXProperties`](CIP64TXProperties.md) \| [`EthereumLegacyTXProperties`](EthereumLegacyTXProperties.md)
 
-Defined in: [packages/sdk/connect/src/types.ts:99](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L99)
+Defined in: [packages/sdk/connect/src/types.ts:160](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L160)

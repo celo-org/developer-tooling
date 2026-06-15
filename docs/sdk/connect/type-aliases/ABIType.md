@@ -1,4 +1,4 @@
-[**@celo/connect v7.0.0**](../README.md)
+[**@celo/connect v8.0.0**](../README.md)
 
 ***
 
@@ -6,8 +6,8 @@
 
 # Type Alias: ABIType
 
-> **ABIType** = `"uint256"` \| `"boolean"` \| `"string"` \| `"bytes"` \| `string`
+> **ABIType** = `string`
 
-Defined in: [packages/sdk/connect/src/abi-types.ts:4](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/abi-types.ts#L4)
+Defined in: [packages/sdk/connect/src/abi-types.ts:30](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/abi-types.ts#L30)
 
 **`Internal`**

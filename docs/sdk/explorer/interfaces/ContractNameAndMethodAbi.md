@@ -1,4 +1,4 @@
-[**@celo/explorer v5.0.18**](../README.md)
+[**@celo/explorer v5.1.0**](../README.md)
 
 ***
 
@@ -6,7 +6,7 @@
 
 # Interface: ContractNameAndMethodAbi
 
-Defined in: [block-explorer.ts:24](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/explorer/src/block-explorer.ts#L24)
+Defined in: [block-explorer.ts:19](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/explorer/src/block-explorer.ts#L19)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [block-explorer.ts:24](https://github.com/celo-org/developer-tooling
 
 > **abi**: `ABIDefinition`
 
-Defined in: [block-explorer.ts:25](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/explorer/src/block-explorer.ts#L25)
+Defined in: [block-explorer.ts:20](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/explorer/src/block-explorer.ts#L20)
 
 ***
 
@@ -22,7 +22,7 @@ Defined in: [block-explorer.ts:25](https://github.com/celo-org/developer-tooling
 
 > **contract**: `string`
 
-Defined in: [block-explorer.ts:26](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/explorer/src/block-explorer.ts#L26)
+Defined in: [block-explorer.ts:21](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/explorer/src/block-explorer.ts#L21)
 
 ***
 
@@ -30,4 +30,4 @@ Defined in: [block-explorer.ts:26](https://github.com/celo-org/developer-tooling
 
 > `optional` **contractName**: `string`
 
-Defined in: [block-explorer.ts:27](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/explorer/src/block-explorer.ts#L27)
+Defined in: [block-explorer.ts:22](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/explorer/src/block-explorer.ts#L22)

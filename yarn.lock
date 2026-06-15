@@ -1761,18 +1761,18 @@ __metadata:
     "@celo/actions": "npm:0.2.1"
     "@celo/base": "npm:^7.0.4"
     "@celo/compliance": "npm:1.0.28"
-    "@celo/connect": "npm:^7.0.0"
-    "@celo/contractkit": "npm:^10.0.3"
+    "@celo/connect": "npm:^8.0.0"
+    "@celo/contractkit": "npm:^11.0.0"
     "@celo/cryptographic-utils": "npm:^6.0.0"
     "@celo/dev-utils": "workspace:^"
-    "@celo/explorer": "npm:^5.0.18"
-    "@celo/governance": "npm:^5.1.9"
+    "@celo/explorer": "npm:^5.1.0"
+    "@celo/governance": "npm:^5.1.10"
     "@celo/metadata-claims": "npm:^1.0.4"
     "@celo/utils": "npm:^8.0.3"
     "@celo/viem-account-ledger": "npm:^1.2.3"
-    "@celo/wallet-hsm-azure": "npm:^8.0.3"
-    "@celo/wallet-ledger": "npm:^8.0.3"
-    "@celo/wallet-local": "npm:^8.0.3"
+    "@celo/wallet-hsm-azure": "npm:^8.0.4"
+    "@celo/wallet-ledger": "npm:^8.0.4"
+    "@celo/wallet-local": "npm:^8.0.4"
     "@ledgerhq/hw-transport-node-hid": "npm:^6.28.5"
     "@oclif/core": "npm:^3.27.0"
     "@oclif/plugin-autocomplete": "npm:^3.2.0"
@@ -1818,7 +1818,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@celo/connect@npm:^7.0.0, @celo/connect@workspace:packages/sdk/connect":
+"@celo/connect@npm:^8.0.0, @celo/connect@workspace:packages/sdk/connect":
   version: 0.0.0-use.local
   resolution: "@celo/connect@workspace:packages/sdk/connect"
   dependencies:
@@ -1833,19 +1833,19 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@celo/contractkit@npm:^10.0.2, @celo/contractkit@npm:^10.0.2-alpha.0, @celo/contractkit@npm:^10.0.3, @celo/contractkit@workspace:^, @celo/contractkit@workspace:packages/sdk/contractkit":
+"@celo/contractkit@npm:^11.0.0, @celo/contractkit@workspace:^, @celo/contractkit@workspace:packages/sdk/contractkit":
   version: 0.0.0-use.local
   resolution: "@celo/contractkit@workspace:packages/sdk/contractkit"
   dependencies:
     "@celo/abis": "npm:13.0.0-post-audit.0"
     "@celo/base": "npm:^7.0.4"
     "@celo/celo-devchain": "npm:^7.0.0"
-    "@celo/connect": "npm:^7.0.0"
+    "@celo/connect": "npm:^8.0.0"
     "@celo/dev-utils": "workspace:^"
     "@celo/odis-identifiers": "npm:^1.0.1"
     "@celo/typescript": "workspace:^"
     "@celo/utils": "npm:^8.0.3"
-    "@celo/wallet-local": "npm:^8.0.1"
+    "@celo/wallet-local": "npm:^8.0.4"
     "@jest/test-sequencer": "npm:^30.0.2"
     "@types/debug": "npm:^4.1.5"
     "@types/node": "npm:18.7.16"
@@ -1899,7 +1899,7 @@ __metadata:
     "@celo/abis": "npm:13.0.0-post-audit.0"
     "@celo/base": "workspace:^"
     "@celo/celo-devchain": "npm:^8.0.0"
-    "@celo/connect": "npm:^7.0.0"
+    "@celo/connect": "npm:^8.0.0"
     "@celo/devchain-anvil": "npm:13.0.0-canary.11"
     "@celo/typescript": "workspace:^"
     "@tsconfig/recommended": "npm:^1.0.3"
@@ -1930,13 +1930,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@celo/explorer@npm:^5.0.18, @celo/explorer@workspace:packages/sdk/explorer":
+"@celo/explorer@npm:^5.1.0, @celo/explorer@workspace:packages/sdk/explorer":
   version: 0.0.0-use.local
   resolution: "@celo/explorer@workspace:packages/sdk/explorer"
   dependencies:
     "@celo/base": "npm:^7.0.3"
-    "@celo/connect": "npm:^7.0.0"
-    "@celo/contractkit": "npm:^10.0.2"
+    "@celo/connect": "npm:^8.0.0"
+    "@celo/contractkit": "npm:^11.0.0"
     "@celo/dev-utils": "workspace:^"
     "@celo/typescript": "workspace:^"
     "@celo/utils": "npm:^8.0.3"
@@ -1949,16 +1949,16 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@celo/governance@npm:^5.1.9, @celo/governance@workspace:packages/sdk/governance":
+"@celo/governance@npm:^5.1.10, @celo/governance@workspace:packages/sdk/governance":
   version: 0.0.0-use.local
   resolution: "@celo/governance@workspace:packages/sdk/governance"
   dependencies:
     "@celo/abis": "npm:13.0.0-post-audit.0"
     "@celo/base": "npm:^7.0.3"
-    "@celo/connect": "npm:^7.0.0"
-    "@celo/contractkit": "npm:^10.0.2"
+    "@celo/connect": "npm:^8.0.0"
+    "@celo/contractkit": "npm:^11.0.0"
     "@celo/dev-utils": "workspace:^"
-    "@celo/explorer": "npm:^5.0.18"
+    "@celo/explorer": "npm:^5.1.0"
     "@celo/typescript": "workspace:^"
     "@celo/utils": "npm:^8.0.3"
     "@noble/hashes": "npm:1.3.3"
@@ -2061,8 +2061,8 @@ __metadata:
   resolution: "@celo/transactions-uri@workspace:packages/sdk/transactions-uri"
   dependencies:
     "@celo/base": "npm:^7.0.3"
-    "@celo/connect": "npm:^7.0.0"
-    "@celo/contractkit": "npm:^10.0.2-alpha.0"
+    "@celo/connect": "npm:^8.0.0"
+    "@celo/contractkit": "npm:^11.0.0"
     "@celo/dev-utils": "workspace:^"
     "@celo/typescript": "workspace:^"
     "@types/debug": "npm:^4.1.5"
@@ -2124,12 +2124,12 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@celo/wallet-base@npm:^8.0.3, @celo/wallet-base@workspace:^, @celo/wallet-base@workspace:packages/sdk/wallets/wallet-base":
+"@celo/wallet-base@npm:^8.0.4, @celo/wallet-base@workspace:^, @celo/wallet-base@workspace:packages/sdk/wallets/wallet-base":
   version: 0.0.0-use.local
   resolution: "@celo/wallet-base@workspace:packages/sdk/wallets/wallet-base"
   dependencies:
     "@celo/base": "npm:^7.0.3"
-    "@celo/connect": "npm:^7.0.0"
+    "@celo/connect": "npm:^8.0.0"
     "@celo/typescript": "workspace:^"
     "@celo/utils": "npm:^8.0.3"
     "@noble/curves": "npm:^1.3.0"
@@ -2145,12 +2145,12 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@celo/wallet-hsm-aws@workspace:packages/sdk/wallets/wallet-hsm-aws"
   dependencies:
-    "@celo/connect": "npm:^7.0.0"
+    "@celo/connect": "npm:^8.0.0"
     "@celo/typescript": "workspace:^"
     "@celo/utils": "npm:^8.0.3"
-    "@celo/wallet-base": "npm:^8.0.3"
-    "@celo/wallet-hsm": "npm:^8.0.3"
-    "@celo/wallet-remote": "npm:^8.0.3"
+    "@celo/wallet-base": "npm:^8.0.4"
+    "@celo/wallet-hsm": "npm:^8.0.4"
+    "@celo/wallet-remote": "npm:^8.0.4"
     "@noble/ciphers": "npm:1.1.3"
     "@noble/curves": "npm:1.3.0"
     "@noble/hashes": "npm:1.3.3"
@@ -2164,7 +2164,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@celo/wallet-hsm-azure@npm:^8.0.3, @celo/wallet-hsm-azure@workspace:packages/sdk/wallets/wallet-hsm-azure":
+"@celo/wallet-hsm-azure@npm:^8.0.4, @celo/wallet-hsm-azure@workspace:packages/sdk/wallets/wallet-hsm-azure":
   version: 0.0.0-use.local
   resolution: "@celo/wallet-hsm-azure@workspace:packages/sdk/wallets/wallet-hsm-azure"
   dependencies:
@@ -2172,12 +2172,12 @@ __metadata:
     "@azure/keyvault-keys": "npm:^4.7.2"
     "@azure/keyvault-secrets": "npm:^4.7.0"
     "@celo/base": "npm:^7.0.3"
-    "@celo/connect": "npm:^7.0.0"
+    "@celo/connect": "npm:^8.0.0"
     "@celo/typescript": "workspace:^"
     "@celo/utils": "npm:^8.0.3"
-    "@celo/wallet-base": "npm:^8.0.3"
-    "@celo/wallet-hsm": "npm:^8.0.3"
-    "@celo/wallet-remote": "npm:^8.0.3"
+    "@celo/wallet-base": "npm:^8.0.4"
+    "@celo/wallet-hsm": "npm:^8.0.4"
+    "@celo/wallet-remote": "npm:^8.0.4"
     "@noble/ciphers": "npm:1.1.3"
     "@noble/curves": "npm:1.3.0"
     "@noble/hashes": "npm:1.3.3"
@@ -2193,12 +2193,12 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@celo/wallet-hsm-gcp@workspace:packages/sdk/wallets/wallet-hsm-gcp"
   dependencies:
-    "@celo/connect": "npm:^7.0.0"
+    "@celo/connect": "npm:^8.0.0"
     "@celo/typescript": "workspace:^"
     "@celo/utils": "npm:^8.0.3"
-    "@celo/wallet-base": "npm:^8.0.3"
-    "@celo/wallet-hsm": "npm:^8.0.3"
-    "@celo/wallet-remote": "npm:^8.0.3"
+    "@celo/wallet-base": "npm:^8.0.4"
+    "@celo/wallet-hsm": "npm:^8.0.4"
+    "@celo/wallet-remote": "npm:^8.0.4"
     "@google-cloud/kms": "npm:~2.9.0"
     "@noble/ciphers": "npm:1.1.3"
     "@noble/curves": "npm:1.3.0"
@@ -2211,7 +2211,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@celo/wallet-hsm@npm:^8.0.3, @celo/wallet-hsm@workspace:packages/sdk/wallets/wallet-hsm":
+"@celo/wallet-hsm@npm:^8.0.4, @celo/wallet-hsm@workspace:packages/sdk/wallets/wallet-hsm":
   version: 0.0.0-use.local
   resolution: "@celo/wallet-hsm@workspace:packages/sdk/wallets/wallet-hsm"
   dependencies:
@@ -2229,19 +2229,19 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@celo/wallet-ledger@npm:^8.0.3, @celo/wallet-ledger@workspace:packages/sdk/wallets/wallet-ledger":
+"@celo/wallet-ledger@npm:^8.0.4, @celo/wallet-ledger@workspace:packages/sdk/wallets/wallet-ledger":
   version: 0.0.0-use.local
   resolution: "@celo/wallet-ledger@workspace:packages/sdk/wallets/wallet-ledger"
   dependencies:
     "@celo/base": "npm:^7.0.3"
-    "@celo/connect": "npm:^7.0.0"
-    "@celo/contractkit": "npm:^10.0.2-alpha.0"
+    "@celo/connect": "npm:^8.0.0"
+    "@celo/contractkit": "npm:^11.0.0"
     "@celo/hw-app-eth": "npm:^1.0.1"
     "@celo/ledger-token-signer": "npm:0.15.0"
     "@celo/typescript": "workspace:^"
     "@celo/utils": "npm:^8.0.3"
-    "@celo/wallet-base": "npm:^8.0.3"
-    "@celo/wallet-remote": "npm:^8.0.3"
+    "@celo/wallet-base": "npm:^8.0.4"
+    "@celo/wallet-remote": "npm:^8.0.4"
     "@ledgerhq/errors": "npm:^6.16.4"
     "@ledgerhq/hw-transport": "npm:^6.30.6"
     "@ledgerhq/hw-transport-node-hid": "npm:^6.28.5"
@@ -2254,15 +2254,15 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@celo/wallet-local@npm:^8.0.1, @celo/wallet-local@npm:^8.0.3, @celo/wallet-local@workspace:packages/sdk/wallets/wallet-local":
+"@celo/wallet-local@npm:^8.0.1, @celo/wallet-local@npm:^8.0.4, @celo/wallet-local@workspace:packages/sdk/wallets/wallet-local":
   version: 0.0.0-use.local
   resolution: "@celo/wallet-local@workspace:packages/sdk/wallets/wallet-local"
   dependencies:
     "@celo/base": "npm:^7.0.3"
-    "@celo/connect": "npm:^7.0.0"
+    "@celo/connect": "npm:^8.0.0"
     "@celo/typescript": "workspace:^"
     "@celo/utils": "npm:^8.0.3"
-    "@celo/wallet-base": "npm:^8.0.3"
+    "@celo/wallet-base": "npm:^8.0.4"
     "@noble/curves": "npm:^1.3.0"
     "@noble/hashes": "npm:^1.3.3"
     "@types/debug": "npm:^4.1.12"
@@ -2271,14 +2271,14 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@celo/wallet-remote@npm:^8.0.3, @celo/wallet-remote@workspace:^, @celo/wallet-remote@workspace:packages/sdk/wallets/wallet-remote":
+"@celo/wallet-remote@npm:^8.0.4, @celo/wallet-remote@workspace:^, @celo/wallet-remote@workspace:packages/sdk/wallets/wallet-remote":
   version: 0.0.0-use.local
   resolution: "@celo/wallet-remote@workspace:packages/sdk/wallets/wallet-remote"
   dependencies:
-    "@celo/connect": "npm:^7.0.0"
+    "@celo/connect": "npm:^8.0.0"
     "@celo/typescript": "workspace:^"
     "@celo/utils": "npm:^8.0.3"
-    "@celo/wallet-base": "npm:^8.0.3"
+    "@celo/wallet-base": "npm:^8.0.4"
     "@types/debug": "npm:^4.1.5"
   languageName: unknown
   linkType: soft

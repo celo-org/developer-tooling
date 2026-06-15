@@ -1,4 +1,4 @@
-[**@celo/connect v7.0.0**](../README.md)
+[**@celo/connect v8.0.0**](../README.md)
 
 ***
 
@@ -6,7 +6,7 @@
 
 # Interface: ConnectionOptions
 
-Defined in: [packages/sdk/connect/src/connection.ts:45](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/connection.ts#L45)
+Defined in: [packages/sdk/connect/src/connection.ts:35](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/connection.ts#L35)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [packages/sdk/connect/src/connection.ts:45](https://github.com/celo-
 
 > `optional` **feeCurrency**: `` `0x${string}` ``
 
-Defined in: [packages/sdk/connect/src/connection.ts:47](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/connection.ts#L47)
+Defined in: [packages/sdk/connect/src/connection.ts:37](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/connection.ts#L37)
 
 ***
 
@@ -22,7 +22,7 @@ Defined in: [packages/sdk/connect/src/connection.ts:47](https://github.com/celo-
 
 > `optional` **from**: `` `0x${string}` ``
 
-Defined in: [packages/sdk/connect/src/connection.ts:48](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/connection.ts#L48)
+Defined in: [packages/sdk/connect/src/connection.ts:38](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/connection.ts#L38)
 
 ***
 
@@ -30,4 +30,4 @@ Defined in: [packages/sdk/connect/src/connection.ts:48](https://github.com/celo-
 
 > **gasInflationFactor**: `number`
 
-Defined in: [packages/sdk/connect/src/connection.ts:46](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/connection.ts#L46)
+Defined in: [packages/sdk/connect/src/connection.ts:36](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/connection.ts#L36)

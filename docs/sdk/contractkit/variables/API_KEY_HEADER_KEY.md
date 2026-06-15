@@ -1,4 +1,4 @@
-[**@celo/contractkit v10.0.3**](../README.md)
+[**@celo/contractkit v11.0.0**](../README.md)
 
 ***
 
@@ -8,4 +8,4 @@
 
 > `const` **API\_KEY\_HEADER\_KEY**: `"apiKey"` = `'apiKey'`
 
-Defined in: [contractkit/src/setupForKits.ts:5](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/setupForKits.ts#L5)
+Defined in: [contractkit/src/setupForKits.ts:12](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/setupForKits.ts#L12)

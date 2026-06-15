@@ -1,4 +1,4 @@
-[**@celo/connect v7.0.0**](../README.md)
+[**@celo/connect v8.0.0**](../README.md)
 
 ***
 
@@ -134,7 +134,7 @@ Defined in: [packages/sdk/connect/src/wallet.ts:8](https://github.com/celo-org/d
 
 ##### txParams
 
-[`CeloTx`](../type-aliases/CeloTx.md)
+[`CeloTx`](CeloTx.md)
 
 #### Returns
 

@@ -1,4 +1,4 @@
-[**@celo/explorer v5.0.18**](../README.md)
+[**@celo/explorer v5.1.0**](../README.md)
 
 ***
 
@@ -8,7 +8,7 @@
 
 > **newLogExplorer**(`kit`): `Promise`\<[`LogExplorer`](../classes/LogExplorer.md)\>
 
-Defined in: [log-explorer.ts:10](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/explorer/src/log-explorer.ts#L10)
+Defined in: [log-explorer.ts:11](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/explorer/src/log-explorer.ts#L11)
 
 ## Parameters
 

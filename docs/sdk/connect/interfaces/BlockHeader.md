@@ -1,4 +1,4 @@
-[**@celo/connect v7.0.0**](../README.md)
+[**@celo/connect v8.0.0**](../README.md)
 
 ***
 
@@ -6,15 +6,17 @@
 
 # Interface: BlockHeader
 
-Defined in: node\_modules/web3-eth/types/index.d.ts:420
+Defined in: [packages/sdk/connect/src/types.ts:90](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L90)
+
+Block header
 
 ## Properties
 
 ### baseFeePerGas?
 
-> `optional` **baseFeePerGas**: `number`
+> `optional` **baseFeePerGas**: `string` \| `number`
 
-Defined in: node\_modules/web3-eth/types/index.d.ts:435
+Defined in: [packages/sdk/connect/src/types.ts:105](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L105)
 
 ***
 
@@ -22,7 +24,7 @@ Defined in: node\_modules/web3-eth/types/index.d.ts:435
 
 > **extraData**: `string`
 
-Defined in: node\_modules/web3-eth/types/index.d.ts:431
+Defined in: [packages/sdk/connect/src/types.ts:101](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L101)
 
 ***
 
@@ -30,7 +32,7 @@ Defined in: node\_modules/web3-eth/types/index.d.ts:431
 
 > **gasLimit**: `number`
 
-Defined in: node\_modules/web3-eth/types/index.d.ts:432
+Defined in: [packages/sdk/connect/src/types.ts:102](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L102)
 
 ***
 
@@ -38,7 +40,7 @@ Defined in: node\_modules/web3-eth/types/index.d.ts:432
 
 > **gasUsed**: `number`
 
-Defined in: node\_modules/web3-eth/types/index.d.ts:433
+Defined in: [packages/sdk/connect/src/types.ts:103](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L103)
 
 ***
 
@@ -46,7 +48,7 @@ Defined in: node\_modules/web3-eth/types/index.d.ts:433
 
 > **hash**: `string`
 
-Defined in: node\_modules/web3-eth/types/index.d.ts:422
+Defined in: [packages/sdk/connect/src/types.ts:92](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L92)
 
 ***
 
@@ -54,7 +56,7 @@ Defined in: node\_modules/web3-eth/types/index.d.ts:422
 
 > **logsBloom**: `string`
 
-Defined in: node\_modules/web3-eth/types/index.d.ts:426
+Defined in: [packages/sdk/connect/src/types.ts:96](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L96)
 
 ***
 
@@ -62,7 +64,7 @@ Defined in: node\_modules/web3-eth/types/index.d.ts:426
 
 > **miner**: `string`
 
-Defined in: node\_modules/web3-eth/types/index.d.ts:430
+Defined in: [packages/sdk/connect/src/types.ts:100](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L100)
 
 ***
 
@@ -70,7 +72,7 @@ Defined in: node\_modules/web3-eth/types/index.d.ts:430
 
 > **nonce**: `string`
 
-Defined in: node\_modules/web3-eth/types/index.d.ts:424
+Defined in: [packages/sdk/connect/src/types.ts:94](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L94)
 
 ***
 
@@ -78,7 +80,7 @@ Defined in: node\_modules/web3-eth/types/index.d.ts:424
 
 > **number**: `number`
 
-Defined in: node\_modules/web3-eth/types/index.d.ts:421
+Defined in: [packages/sdk/connect/src/types.ts:91](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L91)
 
 ***
 
@@ -86,7 +88,7 @@ Defined in: node\_modules/web3-eth/types/index.d.ts:421
 
 > **parentHash**: `string`
 
-Defined in: node\_modules/web3-eth/types/index.d.ts:423
+Defined in: [packages/sdk/connect/src/types.ts:93](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L93)
 
 ***
 
@@ -94,7 +96,7 @@ Defined in: node\_modules/web3-eth/types/index.d.ts:423
 
 > **receiptsRoot**: `string`
 
-Defined in: node\_modules/web3-eth/types/index.d.ts:429
+Defined in: [packages/sdk/connect/src/types.ts:99](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L99)
 
 ***
 
@@ -102,7 +104,15 @@ Defined in: node\_modules/web3-eth/types/index.d.ts:429
 
 > **sha3Uncles**: `string`
 
-Defined in: node\_modules/web3-eth/types/index.d.ts:425
+Defined in: [packages/sdk/connect/src/types.ts:95](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L95)
+
+***
+
+### size?
+
+> `optional` **size**: `number`
+
+Defined in: [packages/sdk/connect/src/types.ts:106](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L106)
 
 ***
 
@@ -110,7 +120,7 @@ Defined in: node\_modules/web3-eth/types/index.d.ts:425
 
 > **stateRoot**: `string`
 
-Defined in: node\_modules/web3-eth/types/index.d.ts:428
+Defined in: [packages/sdk/connect/src/types.ts:98](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L98)
 
 ***
 
@@ -118,7 +128,7 @@ Defined in: node\_modules/web3-eth/types/index.d.ts:428
 
 > **timestamp**: `string` \| `number`
 
-Defined in: node\_modules/web3-eth/types/index.d.ts:434
+Defined in: [packages/sdk/connect/src/types.ts:104](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L104)
 
 ***
 
@@ -126,4 +136,4 @@ Defined in: node\_modules/web3-eth/types/index.d.ts:434
 
 > **transactionsRoot**: `string`
 
-Defined in: node\_modules/web3-eth/types/index.d.ts:427
+Defined in: [packages/sdk/connect/src/types.ts:97](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L97)

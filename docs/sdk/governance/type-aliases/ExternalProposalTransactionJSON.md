@@ -1,4 +1,4 @@
-[**@celo/governance v5.1.9**](../README.md)
+[**@celo/governance v5.1.10**](../README.md)
 
 ***
 
@@ -8,7 +8,7 @@
 
 > **ExternalProposalTransactionJSON** = `Omit`\<[`ProposalTransactionJSON`](../interfaces/ProposalTransactionJSON.md), `"contract"`\> & `object`
 
-Defined in: [proposals.ts:61](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/governance/src/proposals.ts#L61)
+Defined in: [proposals.ts:69](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/governance/src/proposals.ts#L69)
 
 ## Type declaration
 

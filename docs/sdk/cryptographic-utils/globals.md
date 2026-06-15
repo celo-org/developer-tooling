@@ -38,7 +38,6 @@
 - [detectMnemonicLanguage](functions/detectMnemonicLanguage.md)
 - [encryptComment](functions/encryptComment.md)
 - [encryptData](functions/encryptData.md)
-- [~~formatNonAccentedCharacters~~](functions/formatNonAccentedCharacters.md)
 - [generateDeterministicInviteCode](functions/generateDeterministicInviteCode.md)
 - [generateKeys](functions/generateKeys.md)
 - [generateKeysFromSeed](functions/generateKeysFromSeed.md)

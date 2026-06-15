@@ -8,7 +8,7 @@
 
 > **generateDeterministicInviteCode**(`recipientPhoneHash`, `recipientPepper`, `addressIndex`, `changeIndex`, `derivationPath`): `object`
 
-Defined in: [cryptographic-utils/src/account.ts:410](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/cryptographic-utils/src/account.ts#L410)
+Defined in: [cryptographic-utils/src/account.ts:403](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/cryptographic-utils/src/account.ts#L403)
 
 ## Parameters
 
