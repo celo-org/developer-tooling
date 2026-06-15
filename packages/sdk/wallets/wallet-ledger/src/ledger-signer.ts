@@ -13,6 +13,17 @@ import { legacyTokenInfoByAddressAndChainId, tokenInfoByAddressAndChainId } from
 
 const debug = debugFactory('kit:wallet:ledger')
 
+// Ledger returns r/s as 32-byte hex strings; Buffer.from(hex, 'hex') silently
+// drops a trailing nibble on odd-length input, so reject a malformed value
+// instead of signing with a truncated r/s.
+function hexToSignatureBuffer(value: string): Buffer {
+  const hex = trimLeading0x(ensureLeading0x(value))
+  if (hex.length % 2 !== 0) {
+    throw new Error(`ledger-signer: malformed odd-length hex value "${value}"`)
+  }
+  return Buffer.from(hex, 'hex')
+}
+
 /**
  * Signs the EVM transaction with a Ledger device
  */
@@ -75,8 +86,8 @@ export class LedgerSigner implements Signer {
 
       return {
         v,
-        r: Buffer.from(trimLeading0x(ensureLeading0x(r)), 'hex'),
-        s: Buffer.from(trimLeading0x(ensureLeading0x(s)), 'hex'),
+        r: hexToSignatureBuffer(r),
+        s: hexToSignatureBuffer(s),
       }
     } catch (error: unknown) {
       if (error instanceof TransportStatusError) {
@@ -103,8 +114,8 @@ export class LedgerSigner implements Signer {
       )
       return {
         v: signature.v,
-        r: Buffer.from(trimLeading0x(ensureLeading0x(signature.r)), 'hex'),
-        s: Buffer.from(trimLeading0x(ensureLeading0x(signature.s)), 'hex'),
+        r: hexToSignatureBuffer(signature.r),
+        s: hexToSignatureBuffer(signature.s),
       }
     } catch (error) {
       if (error instanceof TransportStatusError) {
@@ -134,8 +145,8 @@ export class LedgerSigner implements Signer {
       )
       return {
         v: sig.v,
-        r: Buffer.from(trimLeading0x(ensureLeading0x(sig.r)), 'hex'),
-        s: Buffer.from(trimLeading0x(ensureLeading0x(sig.s)), 'hex'),
+        r: hexToSignatureBuffer(sig.r),
+        s: hexToSignatureBuffer(sig.s),
       }
     } catch (error) {
       if (error instanceof TransportStatusError) {
