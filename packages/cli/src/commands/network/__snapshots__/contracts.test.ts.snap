@@ -125,12 +125,6 @@ exports[`network:contracts when version can be obtained runs 2`] = `
     "version": "NONE"
   },
   {
-    "contract": "Reserve",
-    "proxy": "0x153193d9b852Dd791565a2929110282976040e54",
-    "implementation": "0x6DDBd2A88C55e28ac8283c43D1F7100C295283fb",
-    "version": "1.1.2.2"
-  },
-  {
     "contract": "ScoreManager",
     "proxy": "0x26B262FbaB2E243a4CEFD2Dbde9e1C203BaCd732",
     "implementation": "0x345E7101aa60eDe5864822FC3fb2E5d5f679C187",
@@ -301,12 +295,6 @@ exports[`network:contracts when version cant be obtained still prints rest of co
     "proxy": "0x000000000000000000000000000000000000ce10",
     "implementation": "0x67bd72d0101905B1928E56f3204058c8C2D53251",
     "version": "NONE"
-  },
-  {
-    "contract": "Reserve",
-    "proxy": "0x153193d9b852Dd791565a2929110282976040e54",
-    "implementation": "0x6DDBd2A88C55e28ac8283c43D1F7100C295283fb",
-    "version": "1.2.3.4"
   },
   {
     "contract": "ScoreManager",

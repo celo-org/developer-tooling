@@ -25,7 +25,6 @@ export enum CeloContract {
   MultiSig = 'MultiSig',
   OdisPayments = 'OdisPayments',
   Registry = 'Registry',
-  Reserve = 'Reserve',
   ScoreManager = 'ScoreManager',
   SortedOracles = 'SortedOracles',
   StableToken = 'StableToken',

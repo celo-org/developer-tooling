@@ -10,13 +10,12 @@ import { AddressRegistry } from './address-registry'
 import { CeloContract } from './base'
 import { CeloTokens, EachCeloToken } from './celo-tokens'
 import { ValidWrappers, WrapperCache } from './contract-cache'
-import { getProviderForKit, HttpProviderOptions, setupAPIKey } from './setupForKits'
 import { ContractCache } from './contract-factory-cache'
+import { getProviderForKit, HttpProviderOptions, setupAPIKey } from './setupForKits'
 import { AttestationsConfig } from './wrappers/Attestations'
 import { ElectionConfig } from './wrappers/Election'
 import { GovernanceConfig } from './wrappers/Governance'
 import { LockedGoldConfig } from './wrappers/LockedGold'
-import { ReserveConfig } from './wrappers/Reserve'
 import { SortedOraclesConfig } from './wrappers/SortedOracles'
 import { StableTokenConfig } from './wrappers/StableTokenWrapper'
 import { ValidatorsConfig } from './wrappers/Validators'
@@ -61,7 +60,6 @@ export interface NetworkConfig {
   governance: GovernanceConfig
   lockedGold: LockedGoldConfig
   sortedOracles: SortedOraclesConfig
-  reserve: ReserveConfig
   validators: ValidatorsConfig
 }
 
@@ -128,7 +126,6 @@ export class ContractKit {
       CeloContract.Governance,
       CeloContract.LockedCelo,
       CeloContract.SortedOracles,
-      CeloContract.Reserve,
       CeloContract.Validators,
       CeloContract.FeeCurrencyDirectory,
       CeloContract.EpochManager,

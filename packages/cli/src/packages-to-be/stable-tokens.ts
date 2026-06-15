@@ -1,18 +1,18 @@
-import { stableTokenABI, stableTokenBrlABI, stableTokenEurABI } from '@celo/abis'
 import { resolveAddress } from '@celo/actions'
-import { Client, getContract, GetContractReturnType, PublicClient } from 'viem'
+import { stableTokenViemAbi } from '@celo/contractkit/lib/stable-token-abi'
+import { Client, GetContractReturnType, getContract, PublicClient } from 'viem'
 
 export async function getStableTokenUSDContract<T extends Client = PublicClient>(
   client: T
 ): Promise<StableTokenUSD<T>> {
   return getContract({
     address: await resolveAddress(client, 'StableToken'),
-    abi: stableTokenABI,
+    abi: stableTokenViemAbi,
     client,
   })
 }
 export type StableTokenUSD<T extends Client = PublicClient> = GetContractReturnType<
-  typeof stableTokenABI,
+  typeof stableTokenViemAbi,
   T
 >
 
@@ -21,12 +21,12 @@ export async function getStableTokenEurContract<T extends Client = PublicClient>
 ): Promise<StableTokenEUR<T>> {
   return getContract({
     address: await resolveAddress(client, 'StableTokenEUR'),
-    abi: stableTokenEurABI,
+    abi: stableTokenViemAbi,
     client,
   })
 }
 export type StableTokenEUR<T extends Client = PublicClient> = GetContractReturnType<
-  typeof stableTokenEurABI,
+  typeof stableTokenViemAbi,
   T
 >
 
@@ -35,12 +35,12 @@ export async function getStableTokenBrlContract<T extends Client = PublicClient>
 ): Promise<StableTokenBRL<T>> {
   return getContract({
     address: await resolveAddress(client, 'StableTokenBRL'),
-    abi: stableTokenBrlABI,
+    abi: stableTokenViemAbi,
     client,
   })
 }
 export type StableTokenBRL<T extends Client = PublicClient> = GetContractReturnType<
-  typeof stableTokenBrlABI,
+  typeof stableTokenViemAbi,
   T
 >
 
