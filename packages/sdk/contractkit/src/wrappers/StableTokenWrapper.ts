@@ -42,13 +42,16 @@ export class StableTokenWrapper extends CeloTokenWrapper<typeof stableTokenABI> 
    */
   decreaseAllowance = (spender: string, value: string, txParams?: Omit<CeloTx, 'data'>) =>
     this.contract.write.decreaseAllowance(
-      [toViemAddress(spender), BigInt(value)] as const,
+      [toViemAddress(spender), BigInt(valueToString(value))] as const,
       txParams as any
     )
   mint = (to: string, value: string, txParams?: Omit<CeloTx, 'data'>) =>
-    this.contract.write.mint([toViemAddress(to), BigInt(value)] as const, txParams as any)
+    this.contract.write.mint(
+      [toViemAddress(to), BigInt(valueToString(value))] as const,
+      txParams as any
+    )
   burn = (value: string, txParams?: Omit<CeloTx, 'data'>) =>
-    this.contract.write.burn([BigInt(value)] as const, txParams as any)
+    this.contract.write.burn([BigInt(valueToString(value))] as const, txParams as any)
 
   /**
    * Returns current configuration parameters.
