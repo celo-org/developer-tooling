@@ -22,15 +22,14 @@ import {
   odisPaymentsABI,
   proxyABI as proxyContractABI,
   registryABI,
-  reserveABI,
   scoreManagerABI,
   sortedOraclesABI,
-  stableTokenABI,
   uniswapFeeHandlerSellerABI,
   validatorsABI,
 } from '@celo/abis'
 import { ABIDefinition, AbiItem } from '@celo/connect'
 import { encodeFunctionData } from 'viem'
+import { stableTokenViemAbi } from './stable-token-abi'
 
 export const GET_IMPLEMENTATION_ABI: ABIDefinition = {
   constant: true,
@@ -139,12 +138,11 @@ const initializeAbiMap = {
   OdisPaymentsProxy: findInitializeAbi(odisPaymentsABI),
   ProxyProxy: findInitializeAbi(proxyContractABI),
   RegistryProxy: findInitializeAbi(registryABI),
-  ReserveProxy: findInitializeAbi(reserveABI),
   ScoreManagerProxy: findInitializeAbi(scoreManagerABI),
   SortedOraclesProxy: findInitializeAbi(sortedOraclesABI),
-  StableTokenProxy: findInitializeAbi(stableTokenABI),
-  StableTokenEURProxy: findInitializeAbi(stableTokenABI),
-  StableTokenBRLProxy: findInitializeAbi(stableTokenABI),
+  StableTokenProxy: findInitializeAbi(stableTokenViemAbi),
+  StableTokenEURProxy: findInitializeAbi(stableTokenViemAbi),
+  StableTokenBRLProxy: findInitializeAbi(stableTokenViemAbi),
   ValidatorsProxy: findInitializeAbi(validatorsABI),
 }
 

@@ -1,5 +1,5 @@
-import { stableTokenABI } from '@celo/abis'
 import { CeloTx } from '@celo/connect'
+import { stableTokenViemAbi } from '../stable-token-abi'
 import { toViemAddress, valueToString } from './BaseWrapper'
 import { CeloTokenWrapper } from './CeloTokenWrapper'
 
@@ -12,7 +12,7 @@ export interface StableTokenConfig {
 /**
  * Stable token with variable supply
  */
-export class StableTokenWrapper extends CeloTokenWrapper<typeof stableTokenABI> {
+export class StableTokenWrapper extends CeloTokenWrapper<typeof stableTokenViemAbi> {
   /**
    * Returns the address of the owner of the contract.
    * @return the address of the owner of the contract.
