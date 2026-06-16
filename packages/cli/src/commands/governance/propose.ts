@@ -5,6 +5,7 @@ import { Flags } from '@oclif/core'
 import { BigNumber } from 'bignumber.js'
 import { readFileSync } from 'fs'
 import { BaseCommand } from '../../base'
+import { withAnvilFork } from '../../utils/anvil-fork'
 import { newCheckBuilder } from '../../utils/checks'
 import { displayViemTx, printValueMapRecursive } from '../../utils/cli'
 import { CustomFlags } from '../../utils/command'
@@ -40,8 +41,14 @@ export default class Propose extends BaseCommand {
     simulate: Flags.string({
       required: false,
       description:
-        'RPC URL of a forked node (e.g. anvil) to simulate the proposal against. Each proposal transaction is actually sent (not eth_call) from the Governance contract address, which the node must have unlocked (e.g. anvil --auto-impersonate). Replaces the default eth_call simulation. Useful for proposals where the success of one tx depends on a previous one succeeding.',
-      exclusive: ['force'],
+        'RPC URL of a forked node (e.g. anvil) to simulate the proposal against. Each proposal transaction is actually sent (not eth_call) from the Governance contract address, which the node must have unlocked (e.g. anvil --auto-impersonate). Overrides the default bundled-anvil fork simulation. Useful for proposals where the success of one tx depends on a previous one succeeding.',
+      exclusive: ['force', 'noSimulate'],
+    }),
+    noSimulate: Flags.boolean({
+      description:
+        'Disable the default local fork simulation and fall back to independent per-transaction eth_call checks (which cannot see the effect of earlier transactions in the proposal).',
+      default: false,
+      exclusive: ['force', 'simulate'],
     }),
     noInfo: Flags.boolean({ description: 'Skip printing the proposal info', default: false }),
     descriptionURL: CustomFlags.proposalDescriptionURL({
@@ -128,9 +135,27 @@ export default class Propose extends BaseCommand {
     }
 
     if (!res.flags.force) {
-      const ok = res.flags.simulate
-        ? await simulateProposalOnRpc(proposal, res.flags.simulate, governance.address)
-        : await checkProposal(proposal, kit, governance.address)
+      let ok: boolean
+      if (res.flags.simulate) {
+        // Explicit external fork RPC.
+        ok = await simulateProposalOnRpc(proposal, res.flags.simulate, governance.address)
+      } else if (res.flags.noSimulate) {
+        // Opt-out: independent per-tx eth_call checks (legacy behaviour).
+        ok = await checkProposal(proposal, kit, governance.address)
+      } else {
+        // Default: spin up a bundled-anvil fork of the connected node and apply
+        // the proposal transactions sequentially, so transactions that depend on
+        // the effect of earlier ones (e.g. a method added by a prior upgrade tx)
+        // simulate correctly. Falls back to eth_call checks for non-http nodes.
+        const forkUrl = await this.getNodeUrl()
+        if (forkUrl?.startsWith('http')) {
+          ok = await withAnvilFork(forkUrl, (rpcUrl) =>
+            simulateProposalOnRpc(proposal, rpcUrl, governance.address)
+          )
+        } else {
+          ok = await checkProposal(proposal, kit, governance.address)
+        }
+      }
       if (!ok) {
         return
       }

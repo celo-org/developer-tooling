@@ -1773,6 +1773,7 @@ __metadata:
     "@celo/wallet-hsm-azure": "npm:^8.0.4"
     "@celo/wallet-ledger": "npm:^8.0.4"
     "@celo/wallet-local": "npm:^8.0.4"
+    "@foundry-rs/anvil": "npm:1.7.1"
     "@ledgerhq/hw-transport-node-hid": "npm:^6.28.5"
     "@oclif/core": "npm:^3.27.0"
     "@oclif/plugin-autocomplete": "npm:^3.2.0"
@@ -1791,6 +1792,7 @@ __metadata:
     "@types/ledgerhq__hw-transport-node-hid": "npm:^4.22.5"
     "@types/node": "npm:^18.7.16"
     "@types/prompts": "npm:^1.1.1"
+    "@viem/anvil": "npm:^0.0.9"
     bignumber.js: "npm:9.0.0"
     chalk: "npm:^2.4.2"
     command-exists: "npm:^1.2.9"
@@ -3121,6 +3123,77 @@ __metadata:
     "@ethersproject/properties": "npm:^5.7.0"
     "@ethersproject/strings": "npm:^5.7.0"
   checksum: 737fca67ad743a32020f50f5b9e147e5683cfba2692367c1124a5a5538be78515865257b426ec9141daac91a70295e5e21bef7a193b79fe745f1be378562ccaa
+  languageName: node
+  linkType: hard
+
+"@foundry-rs/anvil-darwin-amd64@npm:1.7.1":
+  version: 1.7.1
+  resolution: "@foundry-rs/anvil-darwin-amd64@npm:1.7.1"
+  bin:
+    anvil: bin/anvil
+  conditions: os=darwin & cpu=x64
+  languageName: node
+  linkType: hard
+
+"@foundry-rs/anvil-darwin-arm64@npm:1.7.1":
+  version: 1.7.1
+  resolution: "@foundry-rs/anvil-darwin-arm64@npm:1.7.1"
+  bin:
+    anvil: bin/anvil
+  conditions: os=darwin & cpu=arm64
+  languageName: node
+  linkType: hard
+
+"@foundry-rs/anvil-linux-amd64@npm:1.7.1":
+  version: 1.7.1
+  resolution: "@foundry-rs/anvil-linux-amd64@npm:1.7.1"
+  bin:
+    anvil: bin/anvil
+  conditions: os=linux & cpu=x64
+  languageName: node
+  linkType: hard
+
+"@foundry-rs/anvil-linux-arm64@npm:1.7.1":
+  version: 1.7.1
+  resolution: "@foundry-rs/anvil-linux-arm64@npm:1.7.1"
+  bin:
+    anvil: bin/anvil
+  conditions: os=linux & cpu=arm64
+  languageName: node
+  linkType: hard
+
+"@foundry-rs/anvil-win32-amd64@npm:1.7.1":
+  version: 1.7.1
+  resolution: "@foundry-rs/anvil-win32-amd64@npm:1.7.1"
+  bin:
+    anvil: bin/anvil.exe
+  conditions: os=win32 & cpu=x64
+  languageName: node
+  linkType: hard
+
+"@foundry-rs/anvil@npm:1.7.1":
+  version: 1.7.1
+  resolution: "@foundry-rs/anvil@npm:1.7.1"
+  dependencies:
+    "@foundry-rs/anvil-darwin-amd64": "npm:1.7.1"
+    "@foundry-rs/anvil-darwin-arm64": "npm:1.7.1"
+    "@foundry-rs/anvil-linux-amd64": "npm:1.7.1"
+    "@foundry-rs/anvil-linux-arm64": "npm:1.7.1"
+    "@foundry-rs/anvil-win32-amd64": "npm:1.7.1"
+  dependenciesMeta:
+    "@foundry-rs/anvil-darwin-amd64":
+      optional: true
+    "@foundry-rs/anvil-darwin-arm64":
+      optional: true
+    "@foundry-rs/anvil-linux-amd64":
+      optional: true
+    "@foundry-rs/anvil-linux-arm64":
+      optional: true
+    "@foundry-rs/anvil-win32-amd64":
+      optional: true
+  bin:
+    anvil: bin.mjs
+  checksum: 4c0c237a117a1a3694259f1f43f3e796034624f07bbb24debbe45f1103f586a647f3bc761cb7a3d2de1be615908c0189a28ebb9f36607c4b2ebc6720c7ea1da9
   languageName: node
   linkType: hard
 

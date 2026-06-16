@@ -16,6 +16,7 @@ import {
   walletActions,
 } from 'viem'
 import { celo, celoSepolia } from 'viem/chains'
+import { resolveSystemAnvilBinary } from '../anvil-binary'
 import { ANVIL_PORT, DEFAULT_OWNER_ADDRESS } from '../anvil-test'
 import {
   TEST_BALANCE,
@@ -48,6 +49,7 @@ function createInstance(opts?: { chainId?: number; forkUrl?: string; forkBlockNu
   const port = ANVIL_PORT + (process.pid - process.ppid) + instanceCounter++
   const options: CreateAnvilOptions = {
     port,
+    anvilBinary: resolveSystemAnvilBinary(),
     mnemonic: TEST_MNEMONIC,
     balance: TEST_BALANCE,
     gasPrice: TEST_GAS_PRICE,

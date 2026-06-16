@@ -2,6 +2,7 @@ import { StrongAddress } from '@celo/base'
 import { Provider } from '@celo/connect'
 import { Anvil, CreateAnvilOptions, createAnvil } from '@viem/anvil'
 import BigNumber from 'bignumber.js'
+import { resolveSystemAnvilBinary } from './anvil-binary'
 import {
   TEST_BALANCE,
   TEST_BASE_FEE,
@@ -38,6 +39,7 @@ function createInstance(stateFilePath: string, chainId?: number): Anvil {
   const options: CreateAnvilOptions = {
     port,
     loadState: stateFilePath,
+    anvilBinary: resolveSystemAnvilBinary(),
     mnemonic: TEST_MNEMONIC,
     balance: TEST_BALANCE,
     gasPrice: TEST_GAS_PRICE,
