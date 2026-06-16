@@ -67,9 +67,7 @@ export async function fetchAbiFromExplorer(
     return null
   }
   try {
-    const resp = await fetch(
-      `${base}?module=contract&action=getsourcecode&address=${address}`
-    )
+    const resp = await fetch(`${base}?module=contract&action=getsourcecode&address=${address}`)
     if (!resp.ok) {
       return null
     }
