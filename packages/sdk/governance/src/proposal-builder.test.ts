@@ -4,6 +4,7 @@ import { CeloContract, ContractKit, newKitFromProvider } from '@celo/contractkit
 import { testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
 import { encodeFunctionData } from 'viem'
 import { ProposalBuilder } from './proposal-builder'
+
 testWithAnvilL2('ProposalBuilder', (provider) => {
   let kit: ContractKit
   let proposalBuilder: ProposalBuilder
@@ -51,6 +52,32 @@ testWithAnvilL2('ProposalBuilder', (provider) => {
       expect(proposal.length).toBe(1)
       expect(proposal[0].to).toBeDefined()
       expect(proposal[0].value).toBe('0')
+    })
+  })
+
+  describe('fromJsonTx proxy repoint logging', () => {
+    it('logs the proxy identifier (contract) instead of undefined for core-contract repoints', async () => {
+      const logSpy = jest.spyOn(console, 'log').mockImplementation(() => {})
+      const newImplementationAddress = '0x471ece3750da237f93b8e339c536989b8978a438'
+      // A core-contract repoint is keyed by `contract` (no `address`); the log
+      // used to print `undefined is a proxy, repointing to ...`.
+      try {
+        await proposalBuilder.fromJsonTx({
+          contract: CeloContract.GoldToken,
+          function: '_setImplementation',
+          args: [newImplementationAddress],
+          value: '0',
+        } as any)
+      } catch {
+        // building the call may fail (the proxy method isn't on the impl ABI);
+        // the repoint log fires before that and is what we're asserting.
+      }
+      const logged = logSpy.mock.calls.map((c) => String(c[0]))
+      logSpy.mockRestore()
+      expect(logged.some((l) => l.includes('undefined is a proxy'))).toBe(false)
+      expect(
+        logged.some((l) => l === `GoldToken is a proxy, repointing to ${newImplementationAddress}`)
+      ).toBe(true)
     })
   })
 
