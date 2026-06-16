@@ -1,6 +1,6 @@
 {
   "name": "@celo/explorer",
-  "version": "5.1.0",
+  "version": "5.1.1",
   "description": "Celo's block explorer consumer",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
