@@ -1,4 +1,4 @@
-[**@celo/explorer v5.1.0**](../README.md)
+[**@celo/explorer v5.1.1**](../README.md)
 
 ***
 
@@ -6,7 +6,7 @@
 
 # Interface: CallDetails
 
-Defined in: [block-explorer.ts:25](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/explorer/src/block-explorer.ts#L25)
+Defined in: [block-explorer.ts:26](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/explorer/src/block-explorer.ts#L26)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [block-explorer.ts:25](https://github.com/celo-org/developer-tooling
 
 > **argList**: `any`[]
 
-Defined in: [block-explorer.ts:31](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/explorer/src/block-explorer.ts#L31)
+Defined in: [block-explorer.ts:32](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/explorer/src/block-explorer.ts#L32)
 
 ***
 
@@ -22,7 +22,7 @@ Defined in: [block-explorer.ts:31](https://github.com/celo-org/developer-tooling
 
 > **contract**: `string`
 
-Defined in: [block-explorer.ts:26](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/explorer/src/block-explorer.ts#L26)
+Defined in: [block-explorer.ts:27](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/explorer/src/block-explorer.ts#L27)
 
 ***
 
@@ -30,7 +30,7 @@ Defined in: [block-explorer.ts:26](https://github.com/celo-org/developer-tooling
 
 > **contractAddress**: `string`
 
-Defined in: [block-explorer.ts:27](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/explorer/src/block-explorer.ts#L27)
+Defined in: [block-explorer.ts:28](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/explorer/src/block-explorer.ts#L28)
 
 ***
 
@@ -38,7 +38,7 @@ Defined in: [block-explorer.ts:27](https://github.com/celo-org/developer-tooling
 
 > **function**: `string`
 
-Defined in: [block-explorer.ts:29](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/explorer/src/block-explorer.ts#L29)
+Defined in: [block-explorer.ts:30](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/explorer/src/block-explorer.ts#L30)
 
 ***
 
@@ -46,7 +46,7 @@ Defined in: [block-explorer.ts:29](https://github.com/celo-org/developer-tooling
 
 > **isCoreContract**: `boolean`
 
-Defined in: [block-explorer.ts:28](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/explorer/src/block-explorer.ts#L28)
+Defined in: [block-explorer.ts:29](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/explorer/src/block-explorer.ts#L29)
 
 ***
 
@@ -54,4 +54,4 @@ Defined in: [block-explorer.ts:28](https://github.com/celo-org/developer-tooling
 
 > **paramMap**: `Record`\<`string`, `any`\>
 
-Defined in: [block-explorer.ts:30](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/explorer/src/block-explorer.ts#L30)
+Defined in: [block-explorer.ts:31](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/explorer/src/block-explorer.ts#L31)

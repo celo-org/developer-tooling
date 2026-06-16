@@ -1,4 +1,4 @@
-[**@celo/explorer v5.1.0**](../README.md)
+[**@celo/explorer v5.1.1**](../README.md)
 
 ***
 
@@ -6,7 +6,7 @@
 
 # Interface: ParsedTx
 
-Defined in: [block-explorer.ts:34](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/explorer/src/block-explorer.ts#L34)
+Defined in: [block-explorer.ts:35](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/explorer/src/block-explorer.ts#L35)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [block-explorer.ts:34](https://github.com/celo-org/developer-tooling
 
 > **callDetails**: [`CallDetails`](CallDetails.md)
 
-Defined in: [block-explorer.ts:35](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/explorer/src/block-explorer.ts#L35)
+Defined in: [block-explorer.ts:36](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/explorer/src/block-explorer.ts#L36)
 
 ***
 
@@ -22,4 +22,4 @@ Defined in: [block-explorer.ts:35](https://github.com/celo-org/developer-tooling
 
 > **tx**: `Transaction`
 
-Defined in: [block-explorer.ts:36](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/explorer/src/block-explorer.ts#L36)
+Defined in: [block-explorer.ts:37](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/explorer/src/block-explorer.ts#L37)
