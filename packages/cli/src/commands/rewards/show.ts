@@ -32,6 +32,10 @@ export default class Show extends BaseCommand {
     group: CustomFlags.address({
       description: 'Validator Group to show rewards for',
     }),
+    slashing: Flags.boolean({
+      default: false,
+      description: 'Show slashing penalties and rewards',
+    }),
 
     epochs: Flags.integer({
       default: 1,
