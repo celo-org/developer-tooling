@@ -1,4 +1,4 @@
-**@Celo/Actions v0.2.1**
+**@Celo/Actions v0.2.2**
 
 ***
 

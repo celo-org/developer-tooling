@@ -1,4 +1,4 @@
-[**@celo/governance v5.1.10**](../README.md)
+[**@celo/governance v5.1.11**](../README.md)
 
 ***
 
@@ -6,7 +6,7 @@
 
 # Class: ProposalBuilder
 
-Defined in: [proposal-builder.ts:34](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/governance/src/proposal-builder.ts#L34)
+Defined in: [proposal-builder.ts:33](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/governance/src/proposal-builder.ts#L33)
 
 Builder class to construct proposals from JSON or transaction objects.
 
@@ -16,7 +16,7 @@ Builder class to construct proposals from JSON or transaction objects.
 
 > **new ProposalBuilder**(`kit`, `builders`, `registryAdditions`): `ProposalBuilder`
 
-Defined in: [proposal-builder.ts:37](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/governance/src/proposal-builder.ts#L37)
+Defined in: [proposal-builder.ts:36](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/governance/src/proposal-builder.ts#L36)
 
 #### Parameters
 
@@ -42,7 +42,7 @@ Defined in: [proposal-builder.ts:37](https://github.com/celo-org/developer-tooli
 
 > **externalCallProxyRepoint**: `Map`\<`string`, `string`\>
 
-Defined in: [proposal-builder.ts:35](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/governance/src/proposal-builder.ts#L35)
+Defined in: [proposal-builder.ts:34](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/governance/src/proposal-builder.ts#L34)
 
 ***
 
@@ -50,7 +50,7 @@ Defined in: [proposal-builder.ts:35](https://github.com/celo-org/developer-tooli
 
 > `readonly` **registryAdditions**: [`RegistryAdditions`](../interfaces/RegistryAdditions.md) = `{}`
 
-Defined in: [proposal-builder.ts:40](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/governance/src/proposal-builder.ts#L40)
+Defined in: [proposal-builder.ts:39](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/governance/src/proposal-builder.ts#L39)
 
 ## Methods
 
@@ -58,7 +58,7 @@ Defined in: [proposal-builder.ts:40](https://github.com/celo-org/developer-tooli
 
 > **addEncodedTx**(`data`, `params`): `number`
 
-Defined in: [proposal-builder.ts:86](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/governance/src/proposal-builder.ts#L86)
+Defined in: [proposal-builder.ts:85](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/governance/src/proposal-builder.ts#L85)
 
 Adds an encoded transaction to the list for proposal construction.
 
@@ -86,7 +86,7 @@ Parameters for how the transaction should be executed.
 
 > **addJsonTx**(`tx`): `number`
 
-Defined in: [proposal-builder.ts:245](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/governance/src/proposal-builder.ts#L245)
+Defined in: [proposal-builder.ts:287](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/governance/src/proposal-builder.ts#L287)
 
 #### Parameters
 
@@ -104,7 +104,7 @@ Defined in: [proposal-builder.ts:245](https://github.com/celo-org/developer-tool
 
 > **addProxyRepointingTx**(`contract`, `newImplementationAddress`): `void`
 
-Defined in: [proposal-builder.ts:71](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/governance/src/proposal-builder.ts#L71)
+Defined in: [proposal-builder.ts:70](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/governance/src/proposal-builder.ts#L70)
 
 Adds a transaction to set the implementation on a proxy to the given address.
 
@@ -132,7 +132,7 @@ Address of the new contract implementation.
 
 > **build**(): `Promise`\<`ProposalTransaction`[]\>
 
-Defined in: [proposal-builder.ts:47](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/governance/src/proposal-builder.ts#L47)
+Defined in: [proposal-builder.ts:46](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/governance/src/proposal-builder.ts#L46)
 
 Build calls all of the added build steps and returns the final proposal.
 
@@ -148,7 +148,7 @@ A constructed Proposal object (i.e. a list of ProposalTransaction)
 
 > **buildCallToCoreContract**(`tx`): `Promise`\<`ProposalTransaction`\>
 
-Defined in: [proposal-builder.ts:169](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/governance/src/proposal-builder.ts#L169)
+Defined in: [proposal-builder.ts:203](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/governance/src/proposal-builder.ts#L203)
 
 #### Parameters
 
@@ -166,7 +166,7 @@ Defined in: [proposal-builder.ts:169](https://github.com/celo-org/developer-tool
 
 > **buildCallToExternalContract**(`tx`): `Promise`\<`ProposalTransaction`\>
 
-Defined in: [proposal-builder.ts:117](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/governance/src/proposal-builder.ts#L117)
+Defined in: [proposal-builder.ts:116](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/governance/src/proposal-builder.ts#L116)
 
 #### Parameters
 
@@ -184,7 +184,7 @@ Defined in: [proposal-builder.ts:117](https://github.com/celo-org/developer-tool
 
 > **fromEncodedTx**(`data`, `params`): `ProposalTransaction`
 
-Defined in: [proposal-builder.ts:60](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/governance/src/proposal-builder.ts#L60)
+Defined in: [proposal-builder.ts:59](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/governance/src/proposal-builder.ts#L59)
 
 Converts encoded function data into a proposal transaction object.
 
@@ -212,7 +212,7 @@ Parameters for how the transaction should be executed.
 
 > **fromJsonTx**(`tx`): `Promise`\<`ProposalTransaction`\>
 
-Defined in: [proposal-builder.ts:203](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/governance/src/proposal-builder.ts#L203)
+Defined in: [proposal-builder.ts:244](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/governance/src/proposal-builder.ts#L244)
 
 #### Parameters
 
@@ -230,7 +230,7 @@ Defined in: [proposal-builder.ts:203](https://github.com/celo-org/developer-tool
 
 > **getRegistryAddition**(`contract`): `undefined` \| `string`
 
-Defined in: [proposal-builder.ts:92](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/governance/src/proposal-builder.ts#L92)
+Defined in: [proposal-builder.ts:91](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/governance/src/proposal-builder.ts#L91)
 
 #### Parameters
 
@@ -248,7 +248,7 @@ Defined in: [proposal-builder.ts:92](https://github.com/celo-org/developer-tooli
 
 > **isRegistryContract**(`contract`): `boolean`
 
-Defined in: [proposal-builder.ts:95](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/governance/src/proposal-builder.ts#L95)
+Defined in: [proposal-builder.ts:94](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/governance/src/proposal-builder.ts#L94)
 
 #### Parameters
 
@@ -266,7 +266,7 @@ Defined in: [proposal-builder.ts:95](https://github.com/celo-org/developer-tooli
 
 > **lookupExternalMethodABI**(`address`, `tx`): `Promise`\<`null` \| `AbiItem`\>
 
-Defined in: [proposal-builder.ts:99](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/governance/src/proposal-builder.ts#L99)
+Defined in: [proposal-builder.ts:98](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/governance/src/proposal-builder.ts#L98)
 
 #### Parameters
 
@@ -284,11 +284,33 @@ Defined in: [proposal-builder.ts:99](https://github.com/celo-org/developer-tooli
 
 ***
 
+### resolveCoreMethodABIFromRepoint()
+
+> **resolveCoreMethodABIFromRepoint**(`tx`, `proxyAddress`): `Promise`\<`null` \| `AbiItem`\>
+
+Defined in: [proposal-builder.ts:173](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/governance/src/proposal-builder.ts#L173)
+
+#### Parameters
+
+##### tx
+
+[`ProposalTransactionJSON`](../interfaces/ProposalTransactionJSON.md)
+
+##### proxyAddress
+
+`string`
+
+#### Returns
+
+`Promise`\<`null` \| `AbiItem`\>
+
+***
+
 ### setRegistryAddition()
 
 > **setRegistryAddition**(`contract`, `address`): `string`
 
-Defined in: [proposal-builder.ts:89](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/governance/src/proposal-builder.ts#L89)
+Defined in: [proposal-builder.ts:88](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/governance/src/proposal-builder.ts#L88)
 
 #### Parameters
 
@@ -310,7 +332,7 @@ Defined in: [proposal-builder.ts:89](https://github.com/celo-org/developer-tooli
 
 > **transformArgs**(`abi`, `args`): `any`[]
 
-Defined in: [proposal-builder.ts:150](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/governance/src/proposal-builder.ts#L150)
+Defined in: [proposal-builder.ts:149](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/governance/src/proposal-builder.ts#L149)
 
 #### Parameters
 

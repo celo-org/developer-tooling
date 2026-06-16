@@ -87,7 +87,7 @@ FLAG DESCRIPTIONS
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [src/commands/bridge/deposit.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%409.0.0/packages/cli/src/commands/bridge/deposit.ts)_
+_See code: [src/commands/bridge/deposit.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%409.0.1/packages/cli/src/commands/bridge/deposit.ts)_
 
 ## `celocli bridge:withdraw-finalize`
 
@@ -161,7 +161,7 @@ FLAG DESCRIPTIONS
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [src/commands/bridge/withdraw-finalize.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%409.0.0/packages/cli/src/commands/bridge/withdraw-finalize.ts)_
+_See code: [src/commands/bridge/withdraw-finalize.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%409.0.1/packages/cli/src/commands/bridge/withdraw-finalize.ts)_
 
 ## `celocli bridge:withdraw-init`
 
@@ -240,7 +240,7 @@ FLAG DESCRIPTIONS
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [src/commands/bridge/withdraw-init.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%409.0.0/packages/cli/src/commands/bridge/withdraw-init.ts)_
+_See code: [src/commands/bridge/withdraw-init.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%409.0.1/packages/cli/src/commands/bridge/withdraw-init.ts)_
 
 ## `celocli bridge:withdraw-prove`
 
@@ -314,7 +314,7 @@ FLAG DESCRIPTIONS
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [src/commands/bridge/withdraw-prove.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%409.0.0/packages/cli/src/commands/bridge/withdraw-prove.ts)_
+_See code: [src/commands/bridge/withdraw-prove.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%409.0.1/packages/cli/src/commands/bridge/withdraw-prove.ts)_
 
 ## `celocli bridge:withdraw-status`
 
@@ -385,4 +385,4 @@ FLAG DESCRIPTIONS
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [src/commands/bridge/withdraw-status.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%409.0.0/packages/cli/src/commands/bridge/withdraw-status.ts)_
+_See code: [src/commands/bridge/withdraw-status.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%409.0.1/packages/cli/src/commands/bridge/withdraw-status.ts)_
