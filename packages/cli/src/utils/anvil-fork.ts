@@ -1,4 +1,22 @@
 import { type Anvil, createAnvil } from '@viem/anvil'
+import { type AddressInfo, createServer } from 'net'
+
+/**
+ * Ask the OS for a free TCP port on loopback. Avoids colliding with @viem/anvil's
+ * default 8545 (which createAnvil uses unless a port is given, and does not retry
+ * on bind failure) when another anvil/devchain is already running locally.
+ */
+async function getFreePort(): Promise<number> {
+  return new Promise<number>((resolve, reject) => {
+    const server = createServer()
+    server.unref()
+    server.on('error', reject)
+    server.listen(0, '127.0.0.1', () => {
+      const port = (server.address() as AddressInfo).port
+      server.close(() => resolve(port))
+    })
+  })
+}
 
 // Maps the running platform to the @foundry-rs/anvil prebuilt-binary package.
 const PLATFORM_PACKAGES: Record<string, string> = {
@@ -44,6 +62,9 @@ export async function withAnvilFork<T>(
     autoImpersonate: true,
     anvilBinary: resolveAnvilBinary(),
     host: '127.0.0.1',
+    // Without this @viem/anvil defaults to 8545 and does not fall back on bind
+    // failure, so a locally-running node/anvil would break the simulation.
+    port: await getFreePort(),
   })
 
   await anvil.start()
