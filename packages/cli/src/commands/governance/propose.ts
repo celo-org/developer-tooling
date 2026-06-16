@@ -1,5 +1,6 @@
-import { ProposalBuilder, proposalToJSON, ProposalTransactionJSON } from '@celo/governance'
+import { governanceABI } from '@celo/abis'
 import { proposalToParams } from '@celo/contractkit/lib/wrappers/Governance'
+import { ProposalBuilder, ProposalTransactionJSON, proposalToJSON } from '@celo/governance'
 import { Flags } from '@oclif/core'
 import { BigNumber } from 'bignumber.js'
 import { readFileSync } from 'fs'
@@ -163,7 +164,9 @@ export default class Propose extends BaseCommand {
       await displayViemTx(
         'proposeTx',
         governance.propose(proposal, res.flags.descriptionURL, { value: deposit.toFixed() }),
-        publicClient
+        publicClient,
+        // surfaces the new proposal id (ProposalQueued.proposalId)
+        { abi: governanceABI, displayEventName: 'ProposalQueued' }
       )
     }
   }

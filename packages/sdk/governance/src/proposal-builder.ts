@@ -1,31 +1,30 @@
 import { AbiItem, signatureToAbiDefinition } from '@celo/connect'
 import { coerceArgsForAbi } from '@celo/connect/lib/viem-abi-coder'
-import { toChecksumAddress } from '@celo/utils/lib/address'
 import {
   CeloContract,
   ContractKit,
+  getInitializeAbiOfImplementation,
   RegisteredContracts,
   SET_AND_INITIALIZE_IMPLEMENTATION_ABI,
-  getInitializeAbiOfImplementation,
   setImplementationOnProxy,
 } from '@celo/contractkit'
 import { stripProxy } from '@celo/contractkit/lib/base'
 import { ProposalTransaction } from '@celo/contractkit/lib/wrappers/Governance'
 import { fetchMetadata, tryGetProxyImplementation } from '@celo/explorer/lib/sourcify'
-import { isValidAddress } from '@celo/utils/lib/address'
+import { isValidAddress, toChecksumAddress } from '@celo/utils/lib/address'
 import { isNativeError } from 'util/types'
 import { encodeFunctionData } from 'viem'
+import { bigintReplacer } from './json-utils'
 import {
   ExternalProposalTransactionJSON,
-  ProposalTransactionJSON,
-  ProposalTxParams,
-  RegistryAdditions,
   isProxySetAndInitFunction,
   isProxySetFunction,
   isRegistryRepoint,
+  ProposalTransactionJSON,
+  ProposalTxParams,
+  RegistryAdditions,
   registryRepointArgs,
 } from './proposals'
-import { bigintReplacer } from './json-utils'
 
 /**
  * Builder class to construct proposals from JSON or transaction objects.
@@ -214,8 +213,9 @@ export class ProposalBuilder {
     }
 
     if (isProxySetAndInitFunction(tx) || isProxySetFunction(tx)) {
-      console.log(tx.address + ' is a proxy, repointing to ' + tx.args[0])
-      this.externalCallProxyRepoint.set(tx.address || (tx.contract as string), tx.args[0] as string)
+      const proxyId = tx.address || (tx.contract as string)
+      console.log(proxyId + ' is a proxy, repointing to ' + tx.args[0])
+      this.externalCallProxyRepoint.set(proxyId, tx.args[0] as string)
     }
 
     const strategies = [this.buildCallToCoreContract, this.buildCallToExternalContract]
