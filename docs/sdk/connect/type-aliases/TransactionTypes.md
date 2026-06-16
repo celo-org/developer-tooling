@@ -1,4 +1,4 @@
-[**@celo/connect v7.0.0**](../README.md)
+[**@celo/connect v8.0.0**](../README.md)
 
 ***
 
@@ -8,4 +8,4 @@
 
 > **TransactionTypes** = `"ethereum-legacy"` \| `"eip1559"` \| `"cip42"` \| `"cip64"` \| `"cip66"`
 
-Defined in: [packages/sdk/connect/src/types.ts:56](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L56)
+Defined in: [packages/sdk/connect/src/types.ts:117](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L117)

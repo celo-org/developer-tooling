@@ -1,4 +1,4 @@
-[**@celo/contractkit v10.0.3**](../README.md)
+[**@celo/contractkit v11.0.0**](../README.md)
 
 ***
 
@@ -6,7 +6,7 @@
 
 # Function: setImplementationOnProxy()
 
-> **setImplementationOnProxy**(`address`, `web3`): `any`
+> **setImplementationOnProxy**(`address`): `string`
 
 Defined in: [contractkit/src/proxy.ts:159](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/proxy.ts#L159)
 
@@ -16,10 +16,6 @@ Defined in: [contractkit/src/proxy.ts:159](https://github.com/celo-org/developer
 
 `string`
 
-### web3
-
-`Web3`
-
 ## Returns
 
-`any`
+`string`

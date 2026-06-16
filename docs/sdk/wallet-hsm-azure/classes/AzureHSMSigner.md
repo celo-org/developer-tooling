@@ -1,4 +1,4 @@
-[**@celo/wallet-hsm-azure v8.0.3**](../README.md)
+[**@celo/wallet-hsm-azure v8.0.4**](../README.md)
 
 ***
 
@@ -42,7 +42,7 @@ Defined in: [wallet-hsm-azure/src/azure-hsm-signer.ts:15](https://github.com/cel
 
 > **computeSharedSecret**(`_publicKey`): `Promise`\<`Buffer`\>
 
-Defined in: [wallet-hsm-azure/src/azure-hsm-signer.ts:81](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-hsm-azure/src/azure-hsm-signer.ts#L81)
+Defined in: [wallet-hsm-azure/src/azure-hsm-signer.ts:82](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-hsm-azure/src/azure-hsm-signer.ts#L82)
 
 #### Parameters
 
@@ -64,7 +64,7 @@ Defined in: [wallet-hsm-azure/src/azure-hsm-signer.ts:81](https://github.com/cel
 
 > **decrypt**(`_ciphertext`): `Promise`\<`Buffer`\>
 
-Defined in: [wallet-hsm-azure/src/azure-hsm-signer.ts:75](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-hsm-azure/src/azure-hsm-signer.ts#L75)
+Defined in: [wallet-hsm-azure/src/azure-hsm-signer.ts:76](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-hsm-azure/src/azure-hsm-signer.ts#L76)
 
 #### Parameters
 
@@ -86,7 +86,7 @@ Defined in: [wallet-hsm-azure/src/azure-hsm-signer.ts:75](https://github.com/cel
 
 > **getNativeKey**(): `string`
 
-Defined in: [wallet-hsm-azure/src/azure-hsm-signer.ts:71](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-hsm-azure/src/azure-hsm-signer.ts#L71)
+Defined in: [wallet-hsm-azure/src/azure-hsm-signer.ts:72](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-hsm-azure/src/azure-hsm-signer.ts#L72)
 
 #### Returns
 
@@ -156,7 +156,7 @@ is the RLPEncoded transaction object
 
 > **signTypedData**(`typedData`): `Promise`\<\{ `r`: `Buffer`; `s`: `Buffer`; `v`: `number`; \}\>
 
-Defined in: [wallet-hsm-azure/src/azure-hsm-signer.ts:57](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-hsm-azure/src/azure-hsm-signer.ts#L57)
+Defined in: [wallet-hsm-azure/src/azure-hsm-signer.ts:58](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-hsm-azure/src/azure-hsm-signer.ts#L58)
 
 #### Parameters
 

@@ -1,4 +1,4 @@
-[**@celo/explorer v5.0.18**](../README.md)
+[**@celo/explorer v5.1.0**](../README.md)
 
 ***
 
@@ -6,7 +6,7 @@
 
 # Class: BlockExplorer
 
-Defined in: [block-explorer.ts:64](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/explorer/src/block-explorer.ts#L64)
+Defined in: [block-explorer.ts:59](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/explorer/src/block-explorer.ts#L59)
 
 ## Constructors
 
@@ -14,7 +14,7 @@ Defined in: [block-explorer.ts:64](https://github.com/celo-org/developer-tooling
 
 > **new BlockExplorer**(`kit`, `contractDetails`): `BlockExplorer`
 
-Defined in: [block-explorer.ts:68](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/explorer/src/block-explorer.ts#L68)
+Defined in: [block-explorer.ts:63](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/explorer/src/block-explorer.ts#L63)
 
 #### Parameters
 
@@ -36,7 +36,7 @@ Defined in: [block-explorer.ts:68](https://github.com/celo-org/developer-tooling
 
 > `readonly` **contractDetails**: [`ContractDetails`](../interfaces/ContractDetails.md)[]
 
-Defined in: [block-explorer.ts:70](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/explorer/src/block-explorer.ts#L70)
+Defined in: [block-explorer.ts:65](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/explorer/src/block-explorer.ts#L65)
 
 ## Methods
 
@@ -44,7 +44,7 @@ Defined in: [block-explorer.ts:70](https://github.com/celo-org/developer-tooling
 
 > **buildCallDetails**(`contract`, `abi`, `input`): [`CallDetails`](../interfaces/CallDetails.md)
 
-Defined in: [block-explorer.ts:270](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/explorer/src/block-explorer.ts#L270)
+Defined in: [block-explorer.ts:150](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/explorer/src/block-explorer.ts#L150)
 
 #### Parameters
 
@@ -70,7 +70,7 @@ Defined in: [block-explorer.ts:270](https://github.com/celo-org/developer-toolin
 
 > **fetchBlock**(`blockNumber`): `Promise`\<`Block`\>
 
-Defined in: [block-explorer.ts:97](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/explorer/src/block-explorer.ts#L97)
+Defined in: [block-explorer.ts:95](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/explorer/src/block-explorer.ts#L95)
 
 #### Parameters
 
@@ -88,7 +88,7 @@ Defined in: [block-explorer.ts:97](https://github.com/celo-org/developer-tooling
 
 > **fetchBlockByHash**(`blockHash`): `Promise`\<`Block`\>
 
-Defined in: [block-explorer.ts:94](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/explorer/src/block-explorer.ts#L94)
+Defined in: [block-explorer.ts:89](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/explorer/src/block-explorer.ts#L89)
 
 #### Parameters
 
@@ -106,7 +106,7 @@ Defined in: [block-explorer.ts:94](https://github.com/celo-org/developer-tooling
 
 > **fetchBlockRange**(`from`, `to`): `Promise`\<`Block`[]\>
 
-Defined in: [block-explorer.ts:101](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/explorer/src/block-explorer.ts#L101)
+Defined in: [block-explorer.ts:102](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/explorer/src/block-explorer.ts#L102)
 
 #### Parameters
 
@@ -128,7 +128,7 @@ Defined in: [block-explorer.ts:101](https://github.com/celo-org/developer-toolin
 
 > **getContractMappingFromCore**(`address`): `Promise`\<`undefined` \| [`ContractMapping`](../interfaces/ContractMapping.md)\>
 
-Defined in: [block-explorer.ts:308](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/explorer/src/block-explorer.ts#L308)
+Defined in: [block-explorer.ts:188](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/explorer/src/block-explorer.ts#L188)
 
 Returns the ContractMapping for the contract at that address, or undefined
 by looking up the contract address in the core mappings.
@@ -151,7 +151,7 @@ The ContractMapping for the contract at that address, or undefined
 
 > **getContractMappingFromSourcify**(`address`): `Promise`\<`undefined` \| [`ContractMapping`](../interfaces/ContractMapping.md)\>
 
-Defined in: [block-explorer.ts:318](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/explorer/src/block-explorer.ts#L318)
+Defined in: [block-explorer.ts:198](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/explorer/src/block-explorer.ts#L198)
 
 Returns the ContractMapping for the contract at that address, or undefined
 by looking up the contract address in Sourcify.
@@ -174,7 +174,7 @@ The ContractMapping for the contract at that address, or undefined
 
 > **getContractMappingFromSourcifyAsProxy**(`address`): `Promise`\<`undefined` \| [`ContractMapping`](../interfaces/ContractMapping.md)\>
 
-Defined in: [block-explorer.ts:348](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/explorer/src/block-explorer.ts#L348)
+Defined in: [block-explorer.ts:225](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/explorer/src/block-explorer.ts#L225)
 
 Returns the ContractMapping for the contract at that address, or undefined
 by looking up the contract address in Sourcify but using heuristis to treat
@@ -203,7 +203,7 @@ The ContractMapping for the contract at that address, or undefined
 
 > **getContractMappingWithSelector**(`address`, `selector`, `strategies`): `Promise`\<`undefined` \| [`ContractMapping`](../interfaces/ContractMapping.md)\>
 
-Defined in: [block-explorer.ts:377](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/explorer/src/block-explorer.ts#L377)
+Defined in: [block-explorer.ts:254](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/explorer/src/block-explorer.ts#L254)
 
 Uses all of the strategies available to find a contract mapping that contains
 the given method selector.
@@ -230,132 +230,11 @@ The ContractMapping for the contract which has the function selector, or undefin
 
 ***
 
-### ~~getContractMethodAbi()~~
-
-> **getContractMethodAbi**(`address`, `selector`, `onlyCoreContracts`): `Promise`\<`null` \| [`ContractNameAndMethodAbi`](../interfaces/ContractNameAndMethodAbi.md)\>
-
-Defined in: [block-explorer.ts:178](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/explorer/src/block-explorer.ts#L178)
-
-#### Parameters
-
-##### address
-
-`string`
-
-##### selector
-
-`string`
-
-##### onlyCoreContracts
-
-`boolean` = `false`
-
-#### Returns
-
-`Promise`\<`null` \| [`ContractNameAndMethodAbi`](../interfaces/ContractNameAndMethodAbi.md)\>
-
-The contract name and ABI of the method or null if not found
-
-#### Deprecated
-
-use getContractMappingWithSelector instead
-Returns the contract name and ABI of the method by looking up
-the contract address either in all possible contract mappings.
-
-***
-
-### ~~getContractMethodAbiFallback()~~
-
-> **getContractMethodAbiFallback**(`address`, `selector`): `null` \| [`ContractNameAndMethodAbi`](../interfaces/ContractNameAndMethodAbi.md)
-
-Defined in: [block-explorer.ts:250](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/explorer/src/block-explorer.ts#L250)
-
-#### Parameters
-
-##### address
-
-`string`
-
-##### selector
-
-`string`
-
-#### Returns
-
-`null` \| [`ContractNameAndMethodAbi`](../interfaces/ContractNameAndMethodAbi.md)
-
-The contract name and ABI of the method or null if not found
-
-#### Deprecated
-
-use getContractMappingWithSelector instead
-Returns the contract name and ABI of the method by looking up
-the selector in a list of known functions.
-
-***
-
-### getContractMethodAbiFromCore()
-
-> **getContractMethodAbiFromCore**(`address`, `selector`): `Promise`\<`null` \| [`ContractNameAndMethodAbi`](../interfaces/ContractNameAndMethodAbi.md)\>
-
-Defined in: [block-explorer.ts:202](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/explorer/src/block-explorer.ts#L202)
-
-Returns the contract name and ABI of the method by looking up
-the contract address but only in core contracts
-
-#### Parameters
-
-##### address
-
-`string`
-
-##### selector
-
-`string`
-
-#### Returns
-
-`Promise`\<`null` \| [`ContractNameAndMethodAbi`](../interfaces/ContractNameAndMethodAbi.md)\>
-
-The contract name and ABI of the method or null if not found
-
-***
-
-### ~~getContractMethodAbiFromSourcify()~~
-
-> **getContractMethodAbiFromSourcify**(`address`, `selector`): `Promise`\<`null` \| [`ContractNameAndMethodAbi`](../interfaces/ContractNameAndMethodAbi.md)\>
-
-Defined in: [block-explorer.ts:225](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/explorer/src/block-explorer.ts#L225)
-
-#### Parameters
-
-##### address
-
-`string`
-
-##### selector
-
-`string`
-
-#### Returns
-
-`Promise`\<`null` \| [`ContractNameAndMethodAbi`](../interfaces/ContractNameAndMethodAbi.md)\>
-
-The contract name and ABI of the method or null if not found
-
-#### Deprecated
-
-use getContractMappingWithSelector instead
-Returns the contract name and ABI of the method by looking up
-the contract address in Sourcify.
-
-***
-
 ### parseBlock()
 
 > **parseBlock**(`block`): `Promise`\<[`ParsedBlock`](../interfaces/ParsedBlock.md)\>
 
-Defined in: [block-explorer.ts:109](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/explorer/src/block-explorer.ts#L109)
+Defined in: [block-explorer.ts:110](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/explorer/src/block-explorer.ts#L110)
 
 #### Parameters
 
@@ -373,7 +252,7 @@ Defined in: [block-explorer.ts:109](https://github.com/celo-org/developer-toolin
 
 > **setProxyOverride**(`proxyAddress`, `implementationAddress`): `Promise`\<`void`\>
 
-Defined in: [block-explorer.ts:89](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/explorer/src/block-explorer.ts#L89)
+Defined in: [block-explorer.ts:84](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/explorer/src/block-explorer.ts#L84)
 
 #### Parameters
 
@@ -395,13 +274,13 @@ Defined in: [block-explorer.ts:89](https://github.com/celo-org/developer-tooling
 
 > **tryParseTx**(`tx`): `Promise`\<`null` \| [`ParsedTx`](../interfaces/ParsedTx.md)\>
 
-Defined in: [block-explorer.ts:126](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/explorer/src/block-explorer.ts#L126)
+Defined in: [block-explorer.ts:127](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/explorer/src/block-explorer.ts#L127)
 
 #### Parameters
 
 ##### tx
 
-`CeloTxPending`
+`Transaction`
 
 #### Returns
 
@@ -413,7 +292,7 @@ Defined in: [block-explorer.ts:126](https://github.com/celo-org/developer-toolin
 
 > **tryParseTxInput**(`address`, `input`): `Promise`\<`null` \| [`CallDetails`](../interfaces/CallDetails.md)\>
 
-Defined in: [block-explorer.ts:138](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/explorer/src/block-explorer.ts#L138)
+Defined in: [block-explorer.ts:139](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/explorer/src/block-explorer.ts#L139)
 
 #### Parameters
 
@@ -435,7 +314,7 @@ Defined in: [block-explorer.ts:138](https://github.com/celo-org/developer-toolin
 
 > **updateContractDetailsMapping**(`name`, `address`): `Promise`\<`void`\>
 
-Defined in: [block-explorer.ts:79](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/explorer/src/block-explorer.ts#L79)
+Defined in: [block-explorer.ts:74](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/explorer/src/block-explorer.ts#L74)
 
 #### Parameters
 

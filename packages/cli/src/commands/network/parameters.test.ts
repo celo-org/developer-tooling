@@ -44,13 +44,6 @@ testWithAnvilL2('network:parameters', (provider) => {
       LockedCelo: 
         totalLockedGold: 120000000000000000000000 (~1.200e+23)
         unlockingPeriod: 6 hours
-      Reserve: 
-        frozenReserveGoldDays: 0 
-        frozenReserveGoldStartBalance: 0 
-        frozenReserveGoldStartDay: 20278 (~2.028e+4)
-        otherReserveAddresses: 
-
-        tobinTaxStalenessThreshold: 3153600000 (~3.154e+9)
       SortedOracles: 
         reportExpiry: 5 minutes
       Validators: 

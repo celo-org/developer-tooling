@@ -1,5 +1,56 @@
 # @celo/contractkit
 
+## 11.0.0
+
+### Major Changes
+
+- [#777](https://github.com/celo-org/developer-tooling/pull/777) [`f5482b5`](https://github.com/celo-org/developer-tooling/commit/f5482b5a5beeae5827d84a7fd9848841b461c044) Thanks [@martinvol](https://github.com/martinvol)! - Remove ContractKit's dependency on the Mento `Reserve` and `StableToken` ABIs and repoint the Celo stable tokens onto a viem-native ABI.
+
+  - Removed the `ReserveWrapper`, `CeloContract.Reserve`, `ContractKit.getReserve()`, the `reserve` field of `NetworkConfig`, and the `ReserveProxy` init entry.
+  - `StableToken` / `StableTokenEUR` / `StableTokenBRL` now use a composed `stableTokenViemAbi` (viem's `erc20Abi` + `transferWithComment` from `ICeloToken` + the StableToken admin/`initialize` methods) instead of `@celo/abis` `stableTokenABI`/`reserveABI`. This drops the Mento ABI dependency without waiting on a new `@celo/abis` release.
+
+- [#780](https://github.com/celo-org/developer-tooling/pull/780) [`95a84a4`](https://github.com/celo-org/developer-tooling/commit/95a84a4ac6c18278e94ef98549c1606dcd5a496f) Thanks [@pahor167](https://github.com/pahor167)! - **Remove rpc-contract.ts, PromiEvent, and legacy Contract interface from @celo/connect**
+
+  - Deleted `rpc-contract.ts`, `promi-event.ts`, and `viem-contract.ts` — replaced with native viem `getContract()` / `GetContractReturnType`
+  - `CeloTxObject.send()` now returns `Promise<string>` (tx hash) instead of `PromiEvent<CeloTxReceipt>`
+  - Removed `Connection.createContract()` — use `Connection.getCeloContract()` instead
+  - Removed `PromiEvent<T>` and `Contract` interfaces from types
+  - Removed the public exports `CeloTransactionObject`, `toTransactionObject`, `CeloTxObject`, `RpcCaller`, and `TransactionResult` (the old `celo-transaction-object`, `rpc-caller`, and `tx-result` modules)
+  - Contract deployment rewritten to use viem's `encodeDeployData` + `connection.sendTransaction()`
+  - All contractkit wrappers, CLI commands, and test files updated
+
+  **Breaking changes in @celo/contractkit**
+
+  - `kit.sendTransaction()` now returns `Promise<\`0x${string}\`>`(the transaction hash) instead of a`TransactionResult`; use `kit.connection.viemClient.waitForTransactionReceipt({ hash })` to wait for inclusion
+  - All wrapper write methods now return the transaction hash (a `Promise<string>`) instead of `CeloTransactionObject<T>`; replace `.send()` / `.sendAndWaitForReceipt()` with `await kit.connection.viemClient.waitForTransactionReceipt({ hash })`
+  - Removed the deprecated `kit.web3` shim — use `kit.connection.viemClient` (reads) and wrapper methods (writes)
+  - Removed `kit.isListening()` and `kit.isSyncing()` (no direct replacement; query the node via `kit.connection.viemClient.request({ method: 'net_listening' })` or `{ method: 'eth_syncing' }` if needed)
+  - Removed the deprecated `kit.gasPriceSuggestionMultiplier` property
+  - Removed the `CeloToken` type re-export — use `CeloTokenContract`
+
+- [#780](https://github.com/celo-org/developer-tooling/pull/780) [`95a84a4`](https://github.com/celo-org/developer-tooling/commit/95a84a4ac6c18278e94ef98549c1606dcd5a496f) Thanks [@pahor167](https://github.com/pahor167)! - Remove the deprecated `kit.web3` shim and migrate contractkit to viem-native contract interaction. Use `kit.connection.viemClient` for reads and the wrapper methods for writes. Adds `newKitFromProvider()` as the recommended factory for building a kit from an EIP-1193 provider.
+
+### Minor Changes
+
+- [#743](https://github.com/celo-org/developer-tooling/pull/743) [`a695c5c`](https://github.com/celo-org/developer-tooling/commit/a695c5c510dad78028744e1537ca3954f1aef86b) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - Add `submitTransaction` method to `MultiSigWrapper` to submit transactions to multisig without automatic confirmation. This complements the existing `submitOrConfirmTransaction` method by providing more granular control over the submission process.
+
+- [#780](https://github.com/celo-org/developer-tooling/pull/780) [`95a84a4`](https://github.com/celo-org/developer-tooling/commit/95a84a4ac6c18278e94ef98549c1606dcd5a496f) Thanks [@pahor167](https://github.com/pahor167)! - **Improved type safety**: Added explicit return types to wrapper methods that previously emitted `CeloTransactionObject<any>` or `Promise<any>` in their declaration files, replacing untyped `any` results with concrete types. This provides better IDE autocompletion and compile-time type checking for consumers of `@celo/contractkit`.
+
+- [#780](https://github.com/celo-org/developer-tooling/pull/780) [`95a84a4`](https://github.com/celo-org/developer-tooling/commit/95a84a4ac6c18278e94ef98549c1606dcd5a496f) Thanks [@pahor167](https://github.com/pahor167)! - **Migrate internal contract interaction from the web3-style RPC Contract to viem-native `getContract()`**
+
+  - `@celo/connect` exposes `CeloContract<TAbi>` (viem's `GetContractReturnType`) and `Connection.getCeloContract()` for type-safe `.read`/`.write`/`.estimateGas` access.
+  - All 36 ContractKit wrappers now call the viem contract namespaces directly.
+  - `@celo/explorer`: `BlockExplorer.tryParseTx` now accepts viem's `Transaction`, and `getBlockByHash`/`getBlockByNumber` return viem block shapes. This is a breaking change for direct callers of these methods (hence the minor bump).
+  - CLI commands and dev-utils updated to the new API.
+
+### Patch Changes
+
+- [#743](https://github.com/celo-org/developer-tooling/pull/743) [`a695c5c`](https://github.com/celo-org/developer-tooling/commit/a695c5c510dad78028744e1537ca3954f1aef86b) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - Updates logic for submiting/confirming transaction with multisig to only search thru non executed transactions
+
+- Updated dependencies [[`95a84a4`](https://github.com/celo-org/developer-tooling/commit/95a84a4ac6c18278e94ef98549c1606dcd5a496f), [`95a84a4`](https://github.com/celo-org/developer-tooling/commit/95a84a4ac6c18278e94ef98549c1606dcd5a496f), [`95a84a4`](https://github.com/celo-org/developer-tooling/commit/95a84a4ac6c18278e94ef98549c1606dcd5a496f)]:
+  - @celo/connect@8.0.0
+  - @celo/wallet-local@8.0.4
+
 ## 10.0.3
 
 ### Patch Changes

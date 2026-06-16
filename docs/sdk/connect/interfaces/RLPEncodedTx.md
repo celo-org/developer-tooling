@@ -1,4 +1,4 @@
-[**@celo/connect v7.0.0**](../README.md)
+[**@celo/connect v8.0.0**](../README.md)
 
 ***
 
@@ -6,7 +6,7 @@
 
 # Interface: RLPEncodedTx
 
-Defined in: [packages/sdk/connect/src/types.ts:145](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L145)
+Defined in: [packages/sdk/connect/src/types.ts:191](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L191)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [packages/sdk/connect/src/types.ts:145](https://github.com/celo-org/
 
 > **rlpEncode**: `` `0x${string}` ``
 
-Defined in: [packages/sdk/connect/src/types.ts:147](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L147)
+Defined in: [packages/sdk/connect/src/types.ts:193](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L193)
 
 ***
 
@@ -22,7 +22,7 @@ Defined in: [packages/sdk/connect/src/types.ts:147](https://github.com/celo-org/
 
 > **transaction**: [`FormattedCeloTx`](FormattedCeloTx.md)
 
-Defined in: [packages/sdk/connect/src/types.ts:146](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L146)
+Defined in: [packages/sdk/connect/src/types.ts:192](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L192)
 
 ***
 
@@ -30,4 +30,4 @@ Defined in: [packages/sdk/connect/src/types.ts:146](https://github.com/celo-org/
 
 > **type**: [`TransactionTypes`](../type-aliases/TransactionTypes.md)
 
-Defined in: [packages/sdk/connect/src/types.ts:148](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L148)
+Defined in: [packages/sdk/connect/src/types.ts:194](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L194)

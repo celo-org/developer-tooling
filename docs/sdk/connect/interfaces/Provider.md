@@ -1,4 +1,4 @@
-[**@celo/connect v7.0.0**](../README.md)
+[**@celo/connect v8.0.0**](../README.md)
 
 ***
 
@@ -6,26 +6,15 @@
 
 # Interface: Provider
 
-Defined in: [packages/sdk/connect/src/types.ts:125](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L125)
+Defined in: [packages/sdk/connect/src/types.ts:187](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L187)
 
-## Methods
+EIP-1193 compliant provider interface.
+Uses viem's strongly-typed EIP1193RequestFn for full type safety.
 
-### send()
+## Properties
 
-> **send**(`payload`, `callback`): `void`
+### request
 
-Defined in: [packages/sdk/connect/src/types.ts:126](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L126)
+> **request**: `EIP1193RequestFn`
 
-#### Parameters
-
-##### payload
-
-[`JsonRpcPayload`](JsonRpcPayload.md)
-
-##### callback
-
-(`error`, `result?`) => `void`
-
-#### Returns
-
-`void`
+Defined in: [packages/sdk/connect/src/types.ts:188](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L188)

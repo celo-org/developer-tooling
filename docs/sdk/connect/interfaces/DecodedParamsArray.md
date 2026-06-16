@@ -1,4 +1,4 @@
-[**@celo/connect v7.0.0**](../README.md)
+[**@celo/connect v8.0.0**](../README.md)
 
 ***
 
@@ -6,7 +6,7 @@
 
 # Interface: DecodedParamsArray
 
-Defined in: [packages/sdk/connect/src/abi-types.ts:7](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/abi-types.ts#L7)
+Defined in: [packages/sdk/connect/src/abi-types.ts:33](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/abi-types.ts#L33)
 
 **`Internal`**
 
@@ -16,7 +16,7 @@ Defined in: [packages/sdk/connect/src/abi-types.ts:7](https://github.com/celo-or
 
 ## Indexable
 
-\[`index`: `number`\]: `any`
+\[`index`: `number`\]: `unknown`
 
 ## Properties
 
@@ -24,4 +24,4 @@ Defined in: [packages/sdk/connect/src/abi-types.ts:7](https://github.com/celo-or
 
 > **\_\_length\_\_**: `number`
 
-Defined in: [packages/sdk/connect/src/abi-types.ts:9](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/abi-types.ts#L9)
+Defined in: [packages/sdk/connect/src/abi-types.ts:35](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/abi-types.ts#L35)

@@ -1,8 +1,8 @@
-[**@celo/contractkit v10.0.3**](README.md)
+[**@celo/contractkit v11.0.0**](README.md)
 
 ***
 
-# @celo/contractkit v10.0.3
+# @celo/contractkit v11.0.0
 
 ## Enumerations
 
@@ -22,7 +22,6 @@
 ## Type Aliases
 
 - [Address](type-aliases/Address.md)
-- [~~CeloToken~~](type-aliases/CeloToken.md)
 - [CeloTokenContract](type-aliases/CeloTokenContract.md)
 - [CeloTokenType](type-aliases/CeloTokenType.md)
 - [HttpProviderOptions](type-aliases/HttpProviderOptions.md)
@@ -46,6 +45,6 @@
 
 - [getInitializeAbiOfImplementation](functions/getInitializeAbiOfImplementation.md)
 - [newKit](functions/newKit.md)
-- [newKitFromWeb3](functions/newKitFromWeb3.md)
+- [newKitFromProvider](functions/newKitFromProvider.md)
 - [newKitWithApiKey](functions/newKitWithApiKey.md)
 - [setImplementationOnProxy](functions/setImplementationOnProxy.md)

@@ -1,4 +1,4 @@
-[**@celo/wallet-base v8.0.3**](../README.md)
+[**@celo/wallet-base v8.0.4**](../README.md)
 
 ***
 
@@ -34,7 +34,7 @@ Defined in: [wallets/wallet-base/src/wallet-base.ts:19](https://github.com/celo-
 
 > **computeSharedSecret**(`address`, `publicKey`): `Promise`\<`Buffer`\>
 
-Defined in: [wallets/wallet-base/src/wallet-base.ts:148](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-base/src/wallet-base.ts#L148)
+Defined in: [wallets/wallet-base/src/wallet-base.ts:154](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-base/src/wallet-base.ts#L154)
 
 Computes the shared secret (an ECDH key exchange object) between two accounts
 
@@ -62,7 +62,7 @@ Computes the shared secret (an ECDH key exchange object) between two accounts
 
 > **decrypt**(`address`, `ciphertext`): `Promise`\<`Buffer`\>
 
-Defined in: [wallets/wallet-base/src/wallet-base.ts:140](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-base/src/wallet-base.ts#L140)
+Defined in: [wallets/wallet-base/src/wallet-base.ts:146](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-base/src/wallet-base.ts#L146)
 
 #### Parameters
 
@@ -218,7 +218,7 @@ Transaction to sign
 
 > **signTypedData**(`address`, `typedData`): `Promise`\<`string`\>
 
-Defined in: [wallets/wallet-base/src/wallet-base.ts:121](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-base/src/wallet-base.ts#L121)
+Defined in: [wallets/wallet-base/src/wallet-base.ts:124](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-base/src/wallet-base.ts#L124)
 
 Sign an EIP712 Typed Data message.
 

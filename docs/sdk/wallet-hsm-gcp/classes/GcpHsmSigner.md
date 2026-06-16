@@ -1,4 +1,4 @@
-[**@celo/wallet-hsm-gcp v8.0.3**](../README.md)
+[**@celo/wallet-hsm-gcp v8.0.4**](../README.md)
 
 ***
 
@@ -44,7 +44,7 @@ Defined in: [wallet-hsm-gcp/src/gcp-hsm-signer.ts:24](https://github.com/celo-or
 
 > **computeSharedSecret**(`_publicKey`): `Promise`\<`Buffer`\>
 
-Defined in: [wallet-hsm-gcp/src/gcp-hsm-signer.ts:115](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-hsm-gcp/src/gcp-hsm-signer.ts#L115)
+Defined in: [wallet-hsm-gcp/src/gcp-hsm-signer.ts:119](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-hsm-gcp/src/gcp-hsm-signer.ts#L119)
 
 #### Parameters
 
@@ -66,7 +66,7 @@ Defined in: [wallet-hsm-gcp/src/gcp-hsm-signer.ts:115](https://github.com/celo-o
 
 > **decrypt**(`_ciphertext`): `Promise`\<`Buffer`\>
 
-Defined in: [wallet-hsm-gcp/src/gcp-hsm-signer.ts:109](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-hsm-gcp/src/gcp-hsm-signer.ts#L109)
+Defined in: [wallet-hsm-gcp/src/gcp-hsm-signer.ts:113](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-hsm-gcp/src/gcp-hsm-signer.ts#L113)
 
 #### Parameters
 
@@ -88,7 +88,7 @@ Defined in: [wallet-hsm-gcp/src/gcp-hsm-signer.ts:109](https://github.com/celo-o
 
 > **getNativeKey**(): `string`
 
-Defined in: [wallet-hsm-gcp/src/gcp-hsm-signer.ts:105](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-hsm-gcp/src/gcp-hsm-signer.ts#L105)
+Defined in: [wallet-hsm-gcp/src/gcp-hsm-signer.ts:109](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-hsm-gcp/src/gcp-hsm-signer.ts#L109)
 
 #### Returns
 
@@ -158,7 +158,7 @@ is the RLPEncoded transaction object
 
 > **signTypedData**(`typedData`): `Promise`\<`Signature`\>
 
-Defined in: [wallet-hsm-gcp/src/gcp-hsm-signer.ts:94](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-hsm-gcp/src/gcp-hsm-signer.ts#L94)
+Defined in: [wallet-hsm-gcp/src/gcp-hsm-signer.ts:98](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-hsm-gcp/src/gcp-hsm-signer.ts#L98)
 
 #### Parameters
 

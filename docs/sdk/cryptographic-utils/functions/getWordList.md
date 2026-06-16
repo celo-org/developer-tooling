@@ -8,7 +8,7 @@
 
 > **getWordList**(`language`): `string`[]
 
-Defined in: [cryptographic-utils/src/account.ts:171](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/cryptographic-utils/src/account.ts#L171)
+Defined in: [cryptographic-utils/src/account.ts:164](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/cryptographic-utils/src/account.ts#L164)
 
 ## Parameters
 

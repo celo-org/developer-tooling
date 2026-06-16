@@ -8,7 +8,7 @@
 
 > **publicKeyToAddress**(`publicKey`): `` `0x${string}` ``
 
-Defined in: [packages/sdk/utils/src/address.ts:38](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/address.ts#L38)
+Defined in: [packages/sdk/utils/src/address.ts:46](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/address.ts#L46)
 
 ## Parameters
 

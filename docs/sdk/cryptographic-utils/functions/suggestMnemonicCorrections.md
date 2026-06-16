@@ -8,7 +8,7 @@
 
 > **suggestMnemonicCorrections**(`mnemonic`, `language?`, `strength?`): `Generator`\<`string`\>
 
-Defined in: [cryptographic-utils/src/account.ts:275](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/cryptographic-utils/src/account.ts#L275)
+Defined in: [cryptographic-utils/src/account.ts:268](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/cryptographic-utils/src/account.ts#L268)
 
 Generates a list of suggested corrections to the mnemonic phrase based on a set of heuristics.
 
