@@ -174,9 +174,20 @@ export class ProposalBuilder {
     tx: ProposalTransactionJSON,
     proxyAddress: string
   ): Promise<AbiItem | null> => {
-    const repointed =
-      this.externalCallProxyRepoint.get(tx.contract) ??
-      this.externalCallProxyRepoint.get(proxyAddress)
+    // Repoints may be keyed by the proxy contract name (e.g. `ValidatorsProxy`),
+    // the bare contract name (`Validators`), or the proxy address. Match on the
+    // proxy-stripped name or the address so any of those forms resolves.
+    const wantedName = stripProxy(tx.contract as CeloContract)
+    let repointed: string | undefined
+    for (const [key, value] of this.externalCallProxyRepoint) {
+      if (
+        stripProxy(key as CeloContract) === wantedName ||
+        key.toLowerCase() === proxyAddress.toLowerCase()
+      ) {
+        repointed = value
+        break
+      }
+    }
     const impl = repointed ?? (await tryGetProxyImplementation(this.kit.connection, proxyAddress))
 
     let methodABI: AbiItem | null = null
