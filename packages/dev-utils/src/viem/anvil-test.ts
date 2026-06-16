@@ -1,13 +1,13 @@
 import { StrongAddress } from '@celo/base'
-import { Anvil, createAnvil, CreateAnvilOptions } from '@viem/anvil'
+import { Anvil, CreateAnvilOptions, createAnvil } from '@viem/anvil'
 import {
   Account,
   Address,
   Client,
   createTestClient,
   Hex,
-  http,
   HttpTransport,
+  http,
   PublicActions,
   publicActions,
   RpcSchema,

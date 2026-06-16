@@ -1,3 +1,4 @@
+import { PublicCeloClient } from '@celo/actions'
 import { CeloTx } from '@celo/connect'
 import { LockedGoldRequirements } from '@celo/contractkit/lib/wrappers/Validators'
 import { Errors, ux } from '@oclif/core'
@@ -5,14 +6,12 @@ import { TransactionResult as SafeTransactionResult } from '@safe-global/types-k
 import BigNumber from 'bignumber.js'
 import chalk from 'chalk'
 import humanizeDuration from 'humanize-duration'
-
-import { PublicCeloClient } from '@celo/actions'
 import {
   Abi,
   Address,
   ContractEventName,
-  decodeEventLog,
   DecodeEventLogReturnType,
+  decodeEventLog,
   formatEther,
   Hex,
 } from 'viem'
@@ -55,21 +54,21 @@ function decodeAndPrintEvents<const abi extends Abi>(
         })
         .filter(Boolean)
         .at(0) as DecodeEventLogReturnType | undefined
-    } catch (e) {}
+    } catch (e) {
+      // log not decodable with this abi; leave decodedLog undefined
+    }
     return decodedLog
   })
 
-  const filteredLogs = decodedLogs.filter(
-    (decodedLog): decodedLog is DecodeEventLogReturnType => {
-      if (!decodedLog) {
-        return false
-      }
-      return (
-        (typeof displayEventName === 'string' && decodedLog.eventName === displayEventName) ||
-        (displayEventName as string[]).includes(decodedLog.eventName)
-      )
+  const filteredLogs = decodedLogs.filter((decodedLog): decodedLog is DecodeEventLogReturnType => {
+    if (!decodedLog) {
+      return false
     }
-  )
+    return (
+      (typeof displayEventName === 'string' && decodedLog.eventName === displayEventName) ||
+      (displayEventName as string[]).includes(decodedLog.eventName)
+    )
+  })
 
   filteredLogs.forEach(({ eventName, args }) => {
     console.log(chalk.magenta.bold(`${eventName}:`))

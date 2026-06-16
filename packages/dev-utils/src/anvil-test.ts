@@ -4,12 +4,12 @@ import { Anvil, CreateAnvilOptions, createAnvil } from '@viem/anvil'
 import BigNumber from 'bignumber.js'
 import { resolveSystemAnvilBinary } from './anvil-binary'
 import {
+  jsonRpcCall,
   TEST_BALANCE,
   TEST_BASE_FEE,
   TEST_GAS_LIMIT,
   TEST_GAS_PRICE,
   TEST_MNEMONIC,
-  jsonRpcCall,
   testWithProvider,
 } from './test-utils'
 
