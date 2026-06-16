@@ -256,10 +256,7 @@ testWithAnvilL2('account:authorize cmd', (provider) => {
 
         provider
       )
-    ).rejects.toMatchInlineSnapshot(`
-      [Error: Nonexistent flags: --blsKey, --blsPop
-      See more help with --help]
-    `)
+    ).rejects.toMatchInlineSnapshot(`[Error: BLS keys are not supported anymore]`)
 
     expect(stripAnsiCodesFromNestedArray(logMock.mock.calls)).toMatchInlineSnapshot(`[]`)
   })

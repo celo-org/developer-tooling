@@ -65,7 +65,6 @@ export default class LockedCelo extends ReleaseGoldBaseCommand {
         const accounts = await kit.contracts.getAccounts()
         const totalValue = await this.releaseGoldWrapper.getRemainingUnlockedBalance()
         const remaining = totalValue.minus(lockValue)
-        console.log('remaining', remaining.toFixed())
         if (
           !flags.yes &&
           remaining.lt(new BigNumber(2e18)) &&

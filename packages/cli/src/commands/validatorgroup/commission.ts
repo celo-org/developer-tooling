@@ -49,7 +49,7 @@ export default class ValidatorGroupCommission extends BaseCommand {
         .addCheck('Commission is in range [0,1]', () => commission.gte(0) && commission.lte(1))
         .isSignerOrAccount()
         .canSignValidatorTxs()
-        // .signerAccountIsValidatorGroup()
+        .signerAccountIsValidatorGroup()
         .runChecks()
 
       const tx = validators.setNextCommissionUpdate(commission)
@@ -58,7 +58,7 @@ export default class ValidatorGroupCommission extends BaseCommand {
       await newCheckBuilder(this, res.flags.from)
         .isSignerOrAccount()
         .canSignValidatorTxs()
-        // .signerAccountIsValidatorGroup()
+        .signerAccountIsValidatorGroup()
         .hasACommissionUpdateQueued()
         .hasCommissionUpdateDelayPassed()
         .runChecks()

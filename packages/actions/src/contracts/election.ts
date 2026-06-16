@@ -1,5 +1,5 @@
 import { electionABI } from '@celo/abis'
-import { Address, getContract, GetContractReturnType, Hex, isAddressEqual } from 'viem'
+import { Address, GetContractReturnType, getContract, Hex, isAddressEqual } from 'viem'
 import { Clients } from '../client.js'
 import { resolveAddress } from './registry.js'
 
@@ -47,7 +47,7 @@ export async function getGroupsWithPendingVotes(
         }) as const
     ),
   })
-  const groupsWithPendingVotes = groups.filter((_, i) => pendingVotes[i] >= 0)
+  const groupsWithPendingVotes = groups.filter((_, i) => pendingVotes[i] > BigInt(0))
   return groupsWithPendingVotes
 }
 
