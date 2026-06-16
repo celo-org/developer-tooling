@@ -2,6 +2,7 @@
 '@celo/governance': patch
 '@celo/actions': patch
 '@celo/dev-utils': patch
+'@celo/explorer': patch
 '@celo/celocli': patch
 ---
 
@@ -37,3 +38,7 @@ Fix several `governance`/`celocli` command output & safety issues:
 - `@celo/dev-utils` anvil test harness now resolves the foundry-installed
   `anvil` (snapshot-compatible) instead of a package-manager `anvil` bin shim,
   so packages that bundle a newer anvil don't break the devchain state load.
+- `@celo/explorer` `fetchMetadata` now uses the Sourcify v2 API (the v1 repo API
+  has been sunset / returns 503), so contract ABI resolution (used by
+  `governance:propose` to build calls to verified contracts, including
+  implementations added by an in-proposal upgrade) works again.

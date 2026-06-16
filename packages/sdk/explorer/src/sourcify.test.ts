@@ -1,7 +1,7 @@
-import * as crypto from 'crypto'
 import { Address, Connection, Provider } from '@celo/connect'
+import * as crypto from 'crypto'
 import { toFunctionSelector } from 'viem'
-import { Metadata, fetchMetadata, tryGetProxyImplementation } from './sourcify'
+import { fetchMetadata, Metadata, tryGetProxyImplementation } from './sourcify'
 
 // This is taken from protocol/contracts/build/Account.json
 const CONTRACT_METADATA = require('../fixtures/contract.metadata.json')
@@ -33,48 +33,42 @@ describe('sourcify helpers', () => {
   })
 
   describe('fetchMetadata()', () => {
-    describe('when a full match exists', () => {
-      it('returns the metadata from the full match', async () => {
-        fetchMock.get(
-          `https://repo.sourcify.dev/contracts/full_match/42220/${address}/metadata.json`,
-          {}
-        )
+    const v2Url = (addr: Address) =>
+      `https://sourcify.dev/server/v2/contract/42220/${addr}?fields=metadata`
+
+    describe('when an exact match exists', () => {
+      it('returns the metadata', async () => {
+        fetchMock.get(v2Url(address), { match: 'exact_match', metadata: {} })
         const metadata = await fetchMetadata(connection, address)
         expect(metadata).toBeInstanceOf(Metadata)
       })
     })
 
-    describe('when a full match does not exist', () => {
-      describe('but a partial match exists', () => {
-        it('returns the metadata from the partial match', async () => {
-          fetchMock
-            .get(
-              `https://repo.sourcify.dev/contracts/full_match/42220/${address}/metadata.json`,
-              400
-            )
-            .get(
-              `https://repo.sourcify.dev/contracts/partial_match/42220/${address}/metadata.json`,
-              {}
-            )
-          const metadata = await fetchMetadata(connection, address)
-          expect(metadata).toBeInstanceOf(Metadata)
-        })
+    describe('when only a (partial) match exists', () => {
+      it('returns the metadata when not strict', async () => {
+        fetchMock.get(v2Url(address), { match: 'match', metadata: {} })
+        const metadata = await fetchMetadata(connection, address)
+        expect(metadata).toBeInstanceOf(Metadata)
       })
 
-      describe('and a partial match does not exist', () => {
-        it('is null', async () => {
-          fetchMock
-            .get(
-              `https://repo.sourcify.dev/contracts/full_match/42220/${address}/metadata.json`,
-              400
-            )
-            .get(
-              `https://repo.sourcify.dev/contracts/partial_match/42220/${address}/metadata.json`,
-              400
-            )
-          const metadata = await fetchMetadata(connection, address)
-          expect(metadata).toEqual(null)
-        })
+      it('is null when strict (exact match required)', async () => {
+        fetchMock.get(v2Url(address), { match: 'match', metadata: {} })
+        const metadata = await fetchMetadata(connection, address, true)
+        expect(metadata).toEqual(null)
+      })
+    })
+
+    describe('when the contract is not verified', () => {
+      it('is null on a 404 response', async () => {
+        fetchMock.get(v2Url(address), 404)
+        const metadata = await fetchMetadata(connection, address)
+        expect(metadata).toEqual(null)
+      })
+
+      it('is null when the response has no match', async () => {
+        fetchMock.get(v2Url(address), { match: null, metadata: null })
+        const metadata = await fetchMetadata(connection, address)
+        expect(metadata).toEqual(null)
       })
     })
   })
