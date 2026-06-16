@@ -190,6 +190,32 @@ testWithAnvilL2('rewards:show cmd', (provider) => {
     })
   })
 
+  describe('--slashing', () => {
+    test('flag is accepted and slashing penalties are shown', async () => {
+      const lockedGoldMock = jest.spyOn(LockedGoldWrapper.prototype, 'getAccountsSlashed')
+      lockedGoldMock.mockImplementation(async () => [
+        {
+          slashed: KNOWN_DEVCHAIN_VALIDATOR,
+          epochNumber: 1,
+          penalty: new BigNumber(2),
+          reporter: '',
+          reward: new BigNumber(10),
+        },
+      ])
+
+      // Regression: `--slashing` used to be an undeclared flag, so the command
+      // errored with "Nonexistent flag: --slashing". It must now parse cleanly
+      // and surface the slashing section.
+      await expect(
+        testLocallyWithNode(Show, ['--validator', KNOWN_DEVCHAIN_VALIDATOR, '--slashing'], provider)
+      ).resolves.toBeUndefined()
+      const info = stripAnsiCodesFromNestedArray(infoMock.mock.calls).flat().map(String)
+      expect(info).toContain('Slashing penalties and rewards:')
+      expect(lockedGoldMock).toHaveBeenCalled()
+      lockedGoldMock.mockRestore()
+    })
+  })
+
   describe('--voter', () => {
     test('invalid', async () => {
       await expect(

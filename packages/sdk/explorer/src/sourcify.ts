@@ -10,9 +10,9 @@
  *  // do something with it.
  * }
  */
-import { ABIDefinition, AbiItem, AbiInput, Address, Connection } from '@celo/connect'
-import { getAddress, toFunctionSelector } from 'viem'
+import { ABIDefinition, AbiInput, AbiItem, Address, Connection } from '@celo/connect'
 import fetch from 'cross-fetch'
+import { getAddress, toFunctionSelector } from 'viem'
 import { ContractMapping, mapFromPairs } from './base'
 
 /**
@@ -28,9 +28,9 @@ function abiItemToSignatureString(item: AbiItem): string {
 }
 
 /** ABI input that may have tuple components (runtime ABI data from Solidity) */
-type AbiInputWithComponents = AbiInput & { components?: readonly AbiInputWithComponents[] }
+export type AbiInputWithComponents = AbiInput & { components?: readonly AbiInputWithComponents[] }
 
-function formatAbiInputType(input: AbiInputWithComponents): string {
+export function formatAbiInputType(input: AbiInputWithComponents): string {
   if (input.type === 'tuple' && input.components) {
     return `(${input.components.map((c: AbiInput) => formatAbiInputType(c)).join(',')})`
   }
@@ -194,12 +194,23 @@ export class Metadata {
   }
 }
 
+/** Sourcify v2 match types. `exact_match` is the former "full" match; `match`
+ * is the former "partial" match. https://docs.sourcify.dev/docs/exact-match-vs-match/ */
+type SourcifyMatch = 'exact_match' | 'match' | null
+
+interface SourcifyV2Response {
+  match?: SourcifyMatch
+  metadata?: MetadataResponse
+}
+
+const SOURCIFY_SERVER_URL = 'https://sourcify.dev/server'
+
 /**
- * Fetch the sourcify response and instantiate a Metadata wrapper class around it.
- * Try a full_match but fallback to partial_match when not strict.
+ * Fetch the contract metadata from Sourcify and instantiate a Metadata wrapper
+ * class around it. Uses the Sourcify v2 API (the v1 repo API has been sunset).
  * @param connection @celo/connect instance
  * @param contract the address of the contract to query
- * @param strict only allow full matches https://docs.sourcify.dev/docs/full-vs-partial-match/
+ * @param strict only allow exact matches https://docs.sourcify.dev/docs/exact-match-vs-match/
  * @returns Metadata or null
  */
 export async function fetchMetadata(
@@ -207,36 +218,22 @@ export async function fetchMetadata(
   contract: Address,
   strict = false
 ): Promise<Metadata | null> {
-  const fullMatchMetadata = await querySourcify(connection, 'full_match', contract)
-  if (fullMatchMetadata !== null) {
-    return fullMatchMetadata
-  } else if (strict) {
-    return null
-  } else {
-    return querySourcify(connection, 'partial_match', contract)
-  }
-}
-
-/**
- * Fetch the sourcify response and instantiate a Metadata wrapper class around it.
- * @param connection @celo/connect instance
- * @param matchType what type of match to query for https://docs.sourcify.dev/docs/full-vs-partial-match/
- * @param contract the address of the contract to query
- * @returns Metadata or null
- */
-async function querySourcify(
-  connection: Connection,
-  matchType: 'full_match' | 'partial_match',
-  contract: Address
-): Promise<Metadata | null> {
   const chainID = await connection.viemClient.getChainId()
   const resp = await fetch(
-    `https://repo.sourcify.dev/contracts/${matchType}/${chainID}/${contract}/metadata.json`
+    `${SOURCIFY_SERVER_URL}/v2/contract/${chainID}/${contract}?fields=metadata`
   )
-  if (resp.ok) {
-    return new Metadata(connection, contract, await resp.json())
+  // 404 (and any non-2xx) means the contract isn't verified on Sourcify.
+  if (!resp.ok) {
+    return null
   }
-  return null
+  const data = (await resp.json()) as SourcifyV2Response
+  if (!data || !data.match || !data.metadata) {
+    return null
+  }
+  if (strict && data.match !== 'exact_match') {
+    return null
+  }
+  return new Metadata(connection, contract, data.metadata)
 }
 
 /**

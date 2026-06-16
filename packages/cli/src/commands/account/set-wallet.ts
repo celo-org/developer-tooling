@@ -39,17 +39,19 @@ export default class SetWallet extends BaseCommand {
     await newCheckBuilder(this).isAccount(res.flags.account).runChecks()
 
     if (res.flags.signature !== undefined) {
+      let signature: ReturnType<typeof accounts.parseSignatureOfAddress>
       try {
-        accounts.parseSignatureOfAddress(res.flags.account, res.flags.signer, res.flags.signature)
-      } catch (error) {
-        console.error('Error: Failed to parse signature')
+        signature = accounts.parseSignatureOfAddress(
+          res.flags.account,
+          res.flags.signer,
+          res.flags.signature
+        )
+      } catch (_error) {
+        return this.error('Failed to parse signature')
       }
       await displayViemTx(
         'setWalletAddress',
-        accounts.setWalletAddress(
-          res.flags.wallet,
-          accounts.parseSignatureOfAddress(res.flags.account, res.flags.signer, res.flags.signature)
-        ),
+        accounts.setWalletAddress(res.flags.wallet, signature),
         publicClient
       )
     } else {

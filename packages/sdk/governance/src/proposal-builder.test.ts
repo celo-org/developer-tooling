@@ -4,6 +4,7 @@ import { CeloContract, ContractKit, newKitFromProvider } from '@celo/contractkit
 import { testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
 import { encodeFunctionData } from 'viem'
 import { ProposalBuilder } from './proposal-builder'
+
 testWithAnvilL2('ProposalBuilder', (provider) => {
   let kit: ContractKit
   let proposalBuilder: ProposalBuilder
@@ -51,6 +52,32 @@ testWithAnvilL2('ProposalBuilder', (provider) => {
       expect(proposal.length).toBe(1)
       expect(proposal[0].to).toBeDefined()
       expect(proposal[0].value).toBe('0')
+    })
+  })
+
+  describe('fromJsonTx proxy repoint logging', () => {
+    it('logs the proxy identifier (contract) instead of undefined for core-contract repoints', async () => {
+      const logSpy = jest.spyOn(console, 'log').mockImplementation(() => {})
+      const newImplementationAddress = '0x471ece3750da237f93b8e339c536989b8978a438'
+      // A core-contract repoint is keyed by `contract` (no `address`); the log
+      // used to print `undefined is a proxy, repointing to ...`.
+      try {
+        await proposalBuilder.fromJsonTx({
+          contract: CeloContract.GoldToken,
+          function: '_setImplementation',
+          args: [newImplementationAddress],
+          value: '0',
+        } as any)
+      } catch {
+        // building the call may fail (the proxy method isn't on the impl ABI);
+        // the repoint log fires before that and is what we're asserting.
+      }
+      const logged = logSpy.mock.calls.map((c) => String(c[0]))
+      logSpy.mockRestore()
+      expect(logged.some((l) => l.includes('undefined is a proxy'))).toBe(false)
+      expect(
+        logged.some((l) => l === `GoldToken is a proxy, repointing to ${newImplementationAddress}`)
+      ).toBe(true)
     })
   })
 
@@ -119,6 +146,57 @@ testWithAnvilL2('ProposalBuilder', (provider) => {
       expect(result.to).toBeDefined()
       expect(result.value).toBe('0')
       expect(result.input).toBeDefined()
+    })
+
+    it('resolves a method missing from the bundled ABI via the repointed implementation', async () => {
+      // Simulate an earlier proposal tx that repointed the GoldToken proxy to a
+      // new implementation which adds a method not present in the bundled ABI.
+      const newMethodAbi: AbiItem = {
+        name: 'setMaxVoterRewardCommission',
+        type: 'function',
+        inputs: [{ name: 'commission', type: 'uint256' }],
+        outputs: [],
+      }
+      proposalBuilder.externalCallProxyRepoint.set(
+        CeloContract.GoldToken,
+        '0x471ece3750da237f93b8e339c536989b8978a438'
+      )
+      // The new method's ABI would come from the impl's verified metadata.
+      proposalBuilder.lookupExternalMethodABI = async () => newMethodAbi
+
+      const result = await proposalBuilder.buildCallToCoreContract({
+        contract: CeloContract.GoldToken,
+        function: 'setMaxVoterRewardCommission',
+        args: ['1000000000000000000000000'],
+        value: '0',
+      })
+
+      expect(result.value).toBe('0')
+      // selector for setMaxVoterRewardCommission(uint256)
+      expect(result.input.startsWith('0x')).toBe(true)
+      expect(result.input.length).toBeGreaterThan(10)
+    })
+
+    it('falls back to a raw signature when the method is unknown but fully specified', async () => {
+      // No verified ABI available, but the JSON provides the full signature.
+      proposalBuilder.externalCallProxyRepoint.set(
+        CeloContract.GoldToken,
+        '0x471ece3750da237f93b8e339c536989b8978a438'
+      )
+      proposalBuilder.lookupExternalMethodABI = async () => null
+
+      const abi = await proposalBuilder.resolveCoreMethodABIFromRepoint(
+        {
+          contract: CeloContract.GoldToken,
+          function: 'setMaxVoterRewardCommission(uint256)',
+          args: ['1000000000000000000000000'],
+          value: '0',
+        },
+        '0x471ece3750da237f93b8e339c536989b8978a438'
+      )
+
+      expect(abi).not.toBeNull()
+      expect(abi!.name).toBe('setMaxVoterRewardCommission')
     })
   })
 

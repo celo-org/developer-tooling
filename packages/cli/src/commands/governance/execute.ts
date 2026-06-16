@@ -27,6 +27,7 @@ export default class Execute extends BaseCommand {
     await newCheckBuilder(this, account)
       .proposalExists(id)
       .proposalInStage(id, 'Execution')
+      .proposalIsApproved(id)
       .proposalIsPassing(id)
       .runChecks()
 

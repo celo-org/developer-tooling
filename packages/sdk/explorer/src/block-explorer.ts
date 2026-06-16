@@ -13,6 +13,7 @@ import {
   mapFromPairs,
   obtainKitContractDetails,
 } from './base'
+import { abiToContractMapping, fetchAbiFromExplorer } from './explorer'
 import { fetchMetadata, tryGetProxyImplementation } from './sourcify'
 
 const debug = debugFactory('kit:explorer:block')
@@ -244,6 +245,60 @@ export class BlockExplorer {
   }
 
   /**
+   * Returns the ContractMapping for the contract at that address by looking up
+   * its verified ABI on the chain's block explorer (Blockscout / Celoscan).
+   *
+   * Useful when Sourcify does not have the contract (or its v1 API is
+   * unavailable) but the contract is verified on the canonical celo explorer.
+   * @param address
+   * @returns The ContractMapping for the contract at that address, or undefined
+   */
+  getContractMappingFromExplorer = async (
+    address: string
+  ): Promise<ContractMapping | undefined> => {
+    const cached = this.addressMapping.get(address)
+    if (cached) {
+      return cached
+    }
+    const fetched = await fetchAbiFromExplorer(this.kit.connection, address)
+    if (!fetched) {
+      return undefined
+    }
+    const mapping = abiToContractMapping(fetched.name, address, fetched.abi)
+    this.addressMapping.set(address, mapping)
+    return mapping
+  }
+
+  /**
+   * Like getContractMappingFromExplorer, but treats the address as a proxy and
+   * resolves the implementation ABI. Honors proxyImplementationOverride, so a
+   * proxy upgraded earlier in the same proposal resolves to its new
+   * implementation's ABI.
+   * @param address
+   * @returns The ContractMapping for the contract at that address, or undefined
+   */
+  getContractMappingFromExplorerAsProxy = async (
+    address: string
+  ): Promise<ContractMapping | undefined> => {
+    let implAddress = await tryGetProxyImplementation(this.kit.connection, address)
+    if (this.proxyImplementationOverride.has(address)) {
+      implAddress = this.proxyImplementationOverride.get(address)
+    }
+    if (implAddress) {
+      const contractMapping = await this.getContractMappingFromExplorer(implAddress)
+      if (contractMapping) {
+        return {
+          ...contractMapping,
+          details: {
+            ...contractMapping.details,
+            address, // Show the proxy address
+          },
+        }
+      }
+    }
+  }
+
+  /**
    * Uses all of the strategies available to find a contract mapping that contains
    * the given method selector.
    * @param address
@@ -258,6 +313,8 @@ export class BlockExplorer {
       this.getContractMappingFromCore,
       this.getContractMappingFromSourcify,
       this.getContractMappingFromSourcifyAsProxy,
+      this.getContractMappingFromExplorer,
+      this.getContractMappingFromExplorerAsProxy,
     ]
   ): Promise<ContractMapping | undefined> {
     const mappings = await Promise.all(

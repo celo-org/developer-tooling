@@ -1,3 +1,4 @@
+import { multiSigABI } from '@celo/abis'
 import { getMultiSigContract } from '@celo/actions/contracts/multisig'
 import { BaseCommand } from '../../base'
 import { newCheckBuilder } from '../../utils/checks'
@@ -63,7 +64,8 @@ export default class ApproveMultiSig extends BaseCommand {
     await displayViemTx(
       `multisig: approving transaction (approval ${currentConfirmations + 1} of ${neededConfirmations})`,
       multisig.write.confirmTransaction([BigInt(txIndex)]),
-      clients.public
+      clients.public,
+      { abi: multiSigABI, displayEventName: 'Confirmation' }
     )
   }
 }

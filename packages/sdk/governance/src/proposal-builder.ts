@@ -1,31 +1,30 @@
 import { AbiItem, signatureToAbiDefinition } from '@celo/connect'
 import { coerceArgsForAbi } from '@celo/connect/lib/viem-abi-coder'
-import { toChecksumAddress } from '@celo/utils/lib/address'
 import {
   CeloContract,
   ContractKit,
+  getInitializeAbiOfImplementation,
   RegisteredContracts,
   SET_AND_INITIALIZE_IMPLEMENTATION_ABI,
-  getInitializeAbiOfImplementation,
   setImplementationOnProxy,
 } from '@celo/contractkit'
 import { stripProxy } from '@celo/contractkit/lib/base'
 import { ProposalTransaction } from '@celo/contractkit/lib/wrappers/Governance'
 import { fetchMetadata, tryGetProxyImplementation } from '@celo/explorer/lib/sourcify'
-import { isValidAddress } from '@celo/utils/lib/address'
+import { isValidAddress, toChecksumAddress } from '@celo/utils/lib/address'
 import { isNativeError } from 'util/types'
 import { encodeFunctionData } from 'viem'
+import { bigintReplacer } from './json-utils'
 import {
   ExternalProposalTransactionJSON,
-  ProposalTransactionJSON,
-  ProposalTxParams,
-  RegistryAdditions,
   isProxySetAndInitFunction,
   isProxySetFunction,
   isRegistryRepoint,
+  ProposalTransactionJSON,
+  ProposalTxParams,
+  RegistryAdditions,
   registryRepointArgs,
 } from './proposals'
-import { bigintReplacer } from './json-utils'
 
 /**
  * Builder class to construct proposals from JSON or transaction objects.
@@ -166,6 +165,41 @@ export class ProposalBuilder {
     return res
   }
 
+  // Resolve a core-contract method ABI that is absent from the bundled ABI by
+  // looking it up on the implementation an earlier proposal tx repointed the
+  // proxy to (tracked in externalCallProxyRepoint, keyed by contract name or
+  // proxy address). Falls back to the on-chain proxy implementation and finally
+  // to a raw signature (e.g. `function: "setX(uint256)"`).
+  resolveCoreMethodABIFromRepoint = async (
+    tx: ProposalTransactionJSON,
+    proxyAddress: string
+  ): Promise<AbiItem | null> => {
+    // Repoints may be keyed by the proxy contract name (e.g. `ValidatorsProxy`),
+    // the bare contract name (`Validators`), or the proxy address. Match on the
+    // proxy-stripped name or the address so any of those forms resolves.
+    const wantedName = stripProxy(tx.contract as CeloContract)
+    let repointed: string | undefined
+    for (const [key, value] of this.externalCallProxyRepoint) {
+      if (
+        stripProxy(key as CeloContract) === wantedName ||
+        key.toLowerCase() === proxyAddress.toLowerCase()
+      ) {
+        repointed = value
+        break
+      }
+    }
+    const impl = repointed ?? (await tryGetProxyImplementation(this.kit.connection, proxyAddress))
+
+    let methodABI: AbiItem | null = null
+    if (impl) {
+      methodABI = await this.lookupExternalMethodABI(impl, tx as ExternalProposalTransactionJSON)
+    }
+    if (methodABI === null && tx.function.includes('(')) {
+      methodABI = signatureToAbiDefinition(tx.function)
+    }
+    return methodABI
+  }
+
   buildCallToCoreContract = async (tx: ProposalTransactionJSON): Promise<ProposalTransaction> => {
     // Account for canonical registry addresses from current proposal
     const address =
@@ -185,16 +219,23 @@ export class ProposalBuilder {
 
     const contract = await this.kit._contracts.getContract(tx.contract, address)
     const methodName = tx.function
-    const abiItem = (contract.abi as AbiItem[]).find(
+    let abiItem = (contract.abi as AbiItem[]).find(
       (item) => item.type === 'function' && item.name === methodName
     )
+    if (!abiItem) {
+      // The bundled (static) ABI may be older than the implementation this
+      // proposal upgrades the proxy to. An earlier tx in this same proposal can
+      // repoint the proxy to a new implementation that adds this method, so try
+      // to resolve the method ABI from that new implementation before failing.
+      abiItem = (await this.resolveCoreMethodABIFromRepoint(tx, address)) ?? undefined
+    }
     if (!abiItem) {
       throw new Error(`Method ${methodName} not found in ABI for ${tx.contract}`)
     }
     const coercedArgs = abiItem.inputs ? coerceArgsForAbi(abiItem.inputs, tx.args) : tx.args
     const data = encodeFunctionData({
       abi: [abiItem],
-      functionName: methodName,
+      functionName: abiItem.name,
       args: coercedArgs,
     })
     return this.fromEncodedTx(data, { to: address, value: tx.value })
@@ -214,8 +255,9 @@ export class ProposalBuilder {
     }
 
     if (isProxySetAndInitFunction(tx) || isProxySetFunction(tx)) {
-      console.log(tx.address + ' is a proxy, repointing to ' + tx.args[0])
-      this.externalCallProxyRepoint.set(tx.address || (tx.contract as string), tx.args[0] as string)
+      const proxyId = tx.address || (tx.contract as string)
+      console.log(proxyId + ' is a proxy, repointing to ' + tx.args[0])
+      this.externalCallProxyRepoint.set(proxyId, tx.args[0] as string)
     }
 
     const strategies = [this.buildCallToCoreContract, this.buildCallToExternalContract]

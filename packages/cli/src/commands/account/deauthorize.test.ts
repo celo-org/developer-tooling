@@ -48,6 +48,15 @@ testWithAnvilL2('account:deauthorize cmd', (provider) => {
     expect(stripAnsiCodesFromNestedArray(logMock.mock.calls)).toMatchInlineSnapshot(`
       [
         [
+          "Running Checks:",
+        ],
+        [
+          "   ✔  0x5409ED021D9299bf6814279A6A1411A7e866A631 is a registered Account ",
+        ],
+        [
+          "All checks passed",
+        ],
+        [
           "SendTransaction: deauthorizeTx",
         ],
         [

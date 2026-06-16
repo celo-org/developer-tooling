@@ -193,6 +193,8 @@ testWithAnvilL2(
         const proposalBefore = await governance.getProposal(1)
         expect(proposalBefore).toEqual([])
 
+        const logMock = jest.spyOn(console, 'log')
+
         await testLocallyWithNode(
           Propose,
           [
@@ -207,6 +209,13 @@ testWithAnvilL2(
           ],
           client
         )
+
+        // The command must surface the newly created proposal id (decoded from
+        // the ProposalQueued event), not just the tx hash.
+        const loggedText = stripAnsiCodesFromNestedArray(logMock.mock.calls).flat().join('\n')
+        logMock.mockRestore()
+        expect(loggedText).toContain('ProposalQueued:')
+        expect(loggedText).toContain('proposalId: 1')
 
         const proposal = await governance.getProposal(1)
         expect(proposal.length).toEqual(transactions.length)
@@ -251,6 +260,8 @@ testWithAnvilL2(
         const proposalBefore = await governance.getProposal(1)
         expect(proposalBefore).toEqual([])
 
+        const logMock = jest.spyOn(console, 'log')
+
         await testLocallyWithNode(
           Propose,
           [
@@ -268,6 +279,16 @@ testWithAnvilL2(
           ],
           client
         )
+
+        // With a single-signer multisig the submit reaches threshold and the
+        // underlying governance.propose executes in the same receipt, so the
+        // command must surface BOTH the multisig submission id and the new
+        // proposal id (not just the tx hash).
+        const loggedText = stripAnsiCodesFromNestedArray(logMock.mock.calls).flat().join('\n')
+        logMock.mockRestore()
+        expect(loggedText).toContain('Submission:')
+        expect(loggedText).toContain('ProposalQueued:')
+        expect(loggedText).toContain('proposalId: 1')
 
         const proposal = await governance.getProposal(1)
         expect(proposal.length).toEqual(transactions.length)

@@ -1,3 +1,4 @@
+import path from 'node:path'
 import { AbiItem, PROXY_ADMIN_ADDRESS } from '@celo/connect'
 import { newKitFromProvider } from '@celo/contractkit'
 import { Proposal } from '@celo/contractkit/lib/wrappers/Governance'
@@ -9,10 +10,9 @@ import {
 } from '@celo/dev-utils/anvil-test'
 import { timeTravel } from '@celo/dev-utils/ganache-test'
 import fs from 'fs'
-import path from 'node:path'
+import { decodeFunctionResult, encodeFunctionData, parseEther } from 'viem'
 import { stripAnsiCodesAndTxHashes, testLocallyWithNode } from '../../test-utils/cliUtils'
 import Execute from './execute'
-import { decodeFunctionResult, encodeFunctionData, parseEther } from 'viem'
 
 process.env.NO_SYNCCHECK = 'true'
 
@@ -197,6 +197,9 @@ testWithAnvilL2('governance:execute cmd', (provider) => {
           "   ✔  1 is in stage Execution ",
         ],
         [
+          "   ✔  Proposal 1 is approved ",
+        ],
+        [
           "   ✔  Proposal 1 is passing corresponding constitutional quorum ",
         ],
         [
@@ -216,5 +219,55 @@ testWithAnvilL2('governance:execute cmd', (provider) => {
         ],
       ]
     `)
+  })
+
+  it('fails the approved check for an unapproved proposal in the Execution stage', async () => {
+    const kit = newKitFromProvider(provider)
+    const governanceWrapper = await kit.contracts.getGovernance()
+    const [, proposer, voter] = await kit.connection.getAccounts()
+    const minDeposit = (await governanceWrapper.minDeposit()).toFixed()
+    const lockedGold = await kit.contracts.getLockedGold()
+    const majorityOfVotes = (await lockedGold.getTotalLockedGold()).multipliedBy(0.6)
+    const dequeueFrequency = (await governanceWrapper.dequeueFrequency()).toNumber()
+    const proposalId = 1
+
+    await setCode(provider, PROXY_ADMIN_ADDRESS, TEST_TRANSACTIONS_BYTECODE)
+
+    const proposeHash = await governanceWrapper.propose(PROPOSAL_TRANSACTIONS, 'URL', {
+      from: proposer,
+      value: minDeposit,
+    })
+    await kit.connection.viemClient.waitForTransactionReceipt({
+      hash: proposeHash as `0x${string}`,
+    })
+
+    const accountWrapper = await kit.contracts.getAccounts()
+    const createHash = await accountWrapper.createAccount({ from: voter })
+    await kit.connection.viemClient.waitForTransactionReceipt({ hash: createHash as `0x${string}` })
+    const lockHash = await lockedGold.lock({ from: voter, value: majorityOfVotes.toFixed() })
+    await kit.connection.viemClient.waitForTransactionReceipt({ hash: lockHash as `0x${string}` })
+
+    await timeTravel(dequeueFrequency + 1, provider)
+    const dequeueHash = await governanceWrapper.dequeueProposalsIfReady({ from: proposer })
+    await kit.connection.viemClient.waitForTransactionReceipt({
+      hash: dequeueHash as `0x${string}`,
+    })
+
+    // NB: intentionally NOT approving the proposal, then vote + advance to Execution
+    const lockHash2 = await lockedGold.lock({ from: voter, value: minDeposit })
+    await kit.connection.viemClient.waitForTransactionReceipt({ hash: lockHash2 as `0x${string}` })
+    const voteHash = await governanceWrapper.vote(proposalId, 'Yes', { from: voter })
+    await kit.connection.viemClient.waitForTransactionReceipt({ hash: voteHash as `0x${string}` })
+    await timeTravel((await governanceWrapper.stageDurations()).Referendum.toNumber() + 1, provider)
+
+    // The command must fail the on-chain approval precondition check rather than
+    // sending a tx that reverts with "Proposal not approved".
+    await expect(
+      testLocallyWithNode(
+        Execute,
+        ['--proposalID', proposalId.toString(), '--from', proposer],
+        provider
+      )
+    ).rejects.toThrow(/checks didn't pass/i)
   })
 })

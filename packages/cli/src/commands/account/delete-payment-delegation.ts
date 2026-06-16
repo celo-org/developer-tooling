@@ -1,4 +1,5 @@
 import { BaseCommand } from '../../base'
+import { newCheckBuilder } from '../../utils/checks'
 import { displayViemTx } from '../../utils/cli'
 import { CustomFlags } from '../../utils/command'
 
@@ -23,6 +24,8 @@ export default class DeletePaymentDelegation extends BaseCommand {
     const res = await this.parse(DeletePaymentDelegation)
     kit.defaultAccount = res.flags.account
     const accounts = await kit.contracts.getAccounts()
+
+    await newCheckBuilder(this).isAccount(res.flags.account).runChecks()
 
     await displayViemTx('deletePaymentDelegation', accounts.deletePaymentDelegation(), publicClient)
 

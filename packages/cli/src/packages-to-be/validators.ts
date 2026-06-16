@@ -62,7 +62,7 @@ export const meetsValidatorBalanceRequirements = async (
     functionName: 'getValidatorLockedGoldRequirements',
   })
 
-  return validatorLockedGoldRequirements[1] <= accountTotalLockedGold
+  return validatorLockedGoldRequirements[0] <= accountTotalLockedGold
 }
 
 export const meetsValidatorGroupBalanceRequirements = async (
@@ -81,7 +81,7 @@ export const meetsValidatorGroupBalanceRequirements = async (
     functionName: 'getGroupLockedGoldRequirements',
   })
 
-  return validatorLockedGoldRequirements[1] <= accountTotalLockedGold
+  return validatorLockedGoldRequirements[0] <= accountTotalLockedGold
 }
 
 /* 
