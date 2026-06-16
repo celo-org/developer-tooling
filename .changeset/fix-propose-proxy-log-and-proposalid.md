@@ -1,5 +1,6 @@
 ---
 '@celo/governance': patch
+'@celo/actions': patch
 '@celo/celocli': patch
 ---
 
@@ -8,7 +9,12 @@ Fix several `governance`/`celocli` command output & safety issues:
   core-contract proxy repoints (logged `tx.address` which is undefined when the
   tx is keyed by `contract`); now logs the real proxy id.
 - `governance:propose` now surfaces the new proposal id (`ProposalQueued`), and
-  the `--useMultiSig` path surfaces the multisig `Submission` transaction id.
+  the `--useMultiSig` path surfaces the multisig transaction id (`Submission` on
+  submit, `Confirmation` on a later signer) plus the proposal id when the submit
+  reaches threshold and executes in the same receipt.
+- `@celo/actions` `getGroupsWithPendingVotes` now filters on pending votes `> 0`
+  (was `>= 0`, which returned every group); fixes `election:activate` selecting
+  groups with no pending votes.
 - `governance:execute` now checks the proposal is approved before sending, so it
   fails the precondition cleanly instead of reverting with "Proposal not approved".
 - `governance:upvote`/`revokeupvote`/`votePartially` and `multisig:approve` now

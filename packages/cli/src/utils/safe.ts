@@ -3,6 +3,7 @@ import { type Provider } from '@celo/connect'
 import { CeloProvider } from '@celo/connect/lib/celo-provider'
 import Safe from '@safe-global/protocol-kit'
 import { MetaTransactionData, TransactionResult } from '@safe-global/types-kit'
+import { Abi, ContractEventName } from 'viem'
 import { displaySafeTx } from './cli'
 
 export const createSafe = async (
@@ -33,11 +34,17 @@ export const safeTransactionMetadata = (
   }
 }
 
-export const performSafeTransaction = async (
+export const performSafeTransaction = async <const abi extends Abi | undefined = undefined>(
   provider: Provider,
   safeAddress: StrongAddress,
   safeSigner: StrongAddress,
-  txData: MetaTransactionData
+  txData: MetaTransactionData,
+  // When the Safe execution reaches its threshold the underlying call executes
+  // in the same receipt; pass abi/event names to surface those events (e.g. the
+  // governance ProposalQueued proposal id).
+  decodeEventsOpts?: abi extends Abi
+    ? { abi: abi; displayEventName: ContractEventName<abi> | ContractEventName<abi>[] }
+    : never
 ) => {
   const safe = await createSafe(provider, safeSigner, safeAddress)
   const approveTxPromise = await createApproveSafeTransactionIfNotApproved(safe, txData, safeSigner)
@@ -49,7 +56,7 @@ export const performSafeTransaction = async (
   const executeTxPromise = await createExecuteSafeTransactionIfThresholdMet(safe, txData)
 
   if (executeTxPromise) {
-    await displaySafeTx('executeTx', executeTxPromise)
+    await displaySafeTx('executeTx', executeTxPromise, decodeEventsOpts)
   }
 }
 

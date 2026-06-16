@@ -151,15 +151,25 @@ export default class Propose extends BaseCommand {
             deposit.toFixed()
           ),
           publicClient,
-          // surfaces the multisig transaction id (Submission.transactionId)
-          { abi: multiSigABI, displayEventName: 'Submission' }
+          // Surfaces the multisig transaction id. submitOrConfirmTransaction
+          // emits Submission on the first submit and Confirmation when a later
+          // signer confirms an already-submitted tx; surface both. When the
+          // multisig reaches its threshold, the underlying governance.propose
+          // executes in the same receipt, so also surface the new proposal id
+          // (ProposalQueued.proposalId) from that path.
+          {
+            abi: [...multiSigABI, ...governanceABI],
+            displayEventName: ['Submission', 'Confirmation', 'ProposalQueued'],
+          }
         )
       } else {
         await performSafeTransaction(
           (await this.getKit()).connection.currentProvider,
           proposer,
           account,
-          safeTransactionMetadata(proposeData, governance.address, deposit.toFixed())
+          safeTransactionMetadata(proposeData, governance.address, deposit.toFixed()),
+          // surfaces the new proposal id when the Safe execution reaches threshold
+          { abi: governanceABI, displayEventName: 'ProposalQueued' }
         )
       }
     } else {

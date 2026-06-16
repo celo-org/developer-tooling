@@ -14,9 +14,68 @@ import {
   decodeEventLog,
   DecodeEventLogReturnType,
   formatEther,
+  Hex,
 } from 'viem'
 
 const CLIError = Errors.CLIError
+
+type DecodeEventsOpts<abi extends Abi> = {
+  abi: abi
+  displayEventName: ContractEventName<abi> | ContractEventName<abi>[]
+}
+
+// Decode the receipt logs against the given abi and pretty-print every log that
+// matches one of the requested event names. Shared by displayViemTx (viem
+// receipts) and displaySafeTx (Safe/ethers receipts).
+function decodeAndPrintEvents<const abi extends Abi>(
+  logs: readonly { data: Hex; topics: readonly Hex[] }[],
+  decodeEventsOpts: DecodeEventsOpts<abi>
+) {
+  const { abi, displayEventName } = decodeEventsOpts
+  if (!displayEventName || !logs.length) {
+    return
+  }
+  const eventNames = typeof displayEventName === 'string' ? [displayEventName] : displayEventName
+
+  const decodedLogs = logs.map((log) => {
+    let decodedLog: DecodeEventLogReturnType | undefined
+    try {
+      decodedLog = eventNames
+        .map((eventName) => {
+          try {
+            return decodeEventLog({
+              abi,
+              data: log.data,
+              topics: log.topics as [signature: Hex, ...args: Hex[]] | [],
+              eventName,
+            })
+          } catch (e) {
+            // unknown event, it's a-ok
+          }
+        })
+        .filter(Boolean)
+        .at(0) as DecodeEventLogReturnType | undefined
+    } catch (e) {}
+    return decodedLog
+  })
+
+  const filteredLogs = decodedLogs.filter(
+    (decodedLog): decodedLog is DecodeEventLogReturnType => {
+      if (!decodedLog) {
+        return false
+      }
+      return (
+        (typeof displayEventName === 'string' && decodedLog.eventName === displayEventName) ||
+        (displayEventName as string[]).includes(decodedLog.eventName)
+      )
+    }
+  )
+
+  filteredLogs.forEach(({ eventName, args }) => {
+    console.log(chalk.magenta.bold(`${eventName}:`))
+    printValueMap(args!, chalk.magenta)
+  })
+}
 
 export async function displayTx(name: string, txObj: any, tx?: Omit<CeloTx, 'data'>) {
   ux.action.start(`Sending Transaction: ${name}`)
@@ -25,7 +84,11 @@ export async function displayTx(name: string, txObj: any, tx?: Omit<CeloTx, 'dat
   ux.action.stop()
 }
 
-export async function displaySafeTx(name: string, safeTxResult: SafeTransactionResult) {
+export async function displaySafeTx<const abi extends Abi | undefined = undefined>(
+  name: string,
+  safeTxResult: SafeTransactionResult,
+  decodeEventsOpts?: abi extends Abi ? DecodeEventsOpts<abi> : never
+) {
   ux.action.start(`Sending Transaction: ${name}`)
 
   try {
@@ -47,6 +110,13 @@ export async function displaySafeTx(name: string, safeTxResult: SafeTransactionR
       const receipt = await (safeTxResult.transactionResponse as any).wait()
 
       printValueMap({ txHash: receipt.transactionHash })
+
+      // When the Safe reaches its threshold the underlying call (e.g.
+      // governance.propose) executes in this same receipt, so surface its
+      // events too (the receipt is ethers-shaped: { logs: { topics, data } }).
+      if (decodeEventsOpts && Array.isArray(receipt.logs)) {
+        decodeAndPrintEvents(receipt.logs, decodeEventsOpts)
+      }
     }
 
     ux.action.stop()
@@ -76,51 +146,8 @@ export async function displayViemTx<const abi extends Abi | undefined = undefine
     const { transactionHash, logs } = await client.waitForTransactionReceipt({ hash: await hash })
     printValueMap({ txHash: transactionHash })
 
-    if (decodeEventsOpts?.displayEventName && logs.length) {
-      const { abi, displayEventName } = decodeEventsOpts
-
-      const decodedLogs = logs.map((log) => {
-        let decodedLog: DecodeEventLogReturnType | undefined
-        try {
-          const eventNames =
-            typeof displayEventName === 'string' ? [displayEventName] : displayEventName
-
-          decodedLog = eventNames
-            .map((eventName) => {
-              try {
-                return decodeEventLog({
-                  abi,
-                  data: log.data,
-                  topics: log.topics,
-                  eventName,
-                })
-              } catch (e) {
-                // unknown event, it's a-ok
-              }
-            })
-            .filter(Boolean)
-            .at(0)
-        } catch (e) {}
-
-        return decodedLog
-      })
-
-      const filteredLogs = decodedLogs.filter(
-        (decodedLog): decodedLog is DecodeEventLogReturnType => {
-          if (!decodedLog) {
-            return false
-          }
-          return (
-            (typeof displayEventName === 'string' && decodedLog.eventName === displayEventName) ||
-            displayEventName.includes(decodedLog.eventName)
-          )
-        }
-      )
-
-      filteredLogs.forEach(({ eventName, args }) => {
-        console.log(chalk.magenta.bold(`${eventName}:`))
-        printValueMap(args!, chalk.magenta)
-      })
+    if (decodeEventsOpts) {
+      decodeAndPrintEvents(logs, decodeEventsOpts)
     }
 
     ux.action.stop()
