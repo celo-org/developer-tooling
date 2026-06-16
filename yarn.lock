@@ -1676,10 +1676,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@celo/abis@npm:13.0.0-post-audit.0":
-  version: 13.0.0-post-audit.0
-  resolution: "@celo/abis@npm:13.0.0-post-audit.0"
-  checksum: da5aad746ff8fb3515513c7e42be4624e041ff08f7b8dd61a408292c6dd9a28baade1d47873e37024bb81ab91d758142da304b5f55994092530393f773e29f92
+"@celo/abis@npm:17.0.0":
+  version: 17.0.0
+  resolution: "@celo/abis@npm:17.0.0"
+  checksum: d20783fb72ec7b18d15a5bba9922241c696a89891f9177c648ff9ff7aed03072aff8fb76a9323582b9c665c0be6f18ae1795786680b9a5a572008769ebb44eeb
   languageName: node
   linkType: hard
 
@@ -1687,7 +1687,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@celo/actions@workspace:packages/actions"
   dependencies:
-    "@celo/abis": "npm:13.0.0-post-audit.0"
+    "@celo/abis": "npm:17.0.0"
     "@celo/base": "npm:^7.0.4"
     "@celo/core": "npm:0.0.2"
     "@celo/dev-utils": "workspace:^"
@@ -1757,7 +1757,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@celo/celocli@workspace:packages/cli"
   dependencies:
-    "@celo/abis": "npm:13.0.0-post-audit.0"
+    "@celo/abis": "npm:17.0.0"
     "@celo/actions": "npm:0.2.2"
     "@celo/base": "npm:^7.0.4"
     "@celo/compliance": "npm:1.0.28"
@@ -1839,7 +1839,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@celo/contractkit@workspace:packages/sdk/contractkit"
   dependencies:
-    "@celo/abis": "npm:13.0.0-post-audit.0"
+    "@celo/abis": "npm:17.0.0"
     "@celo/base": "npm:^7.0.4"
     "@celo/celo-devchain": "npm:^7.0.0"
     "@celo/connect": "npm:^8.0.0"
@@ -1898,7 +1898,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@celo/dev-utils@workspace:packages/dev-utils"
   dependencies:
-    "@celo/abis": "npm:13.0.0-post-audit.0"
+    "@celo/abis": "npm:17.0.0"
     "@celo/base": "workspace:^"
     "@celo/celo-devchain": "npm:^8.0.0"
     "@celo/connect": "npm:^8.0.0"
@@ -1955,7 +1955,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@celo/governance@workspace:packages/sdk/governance"
   dependencies:
-    "@celo/abis": "npm:13.0.0-post-audit.0"
+    "@celo/abis": "npm:17.0.0"
     "@celo/base": "npm:^7.0.3"
     "@celo/connect": "npm:^8.0.0"
     "@celo/contractkit": "npm:^11.0.0"

@@ -28,7 +28,7 @@
     "test-ci": "NODE_OPTIONS=--experimental-vm-modules yarn run --top-level jest --forceExit --ci"
   },
   "dependencies": {
-    "@celo/abis": "13.0.0-post-audit.0",
+    "@celo/abis": "17.0.0",
     "@celo/base": "^7.0.4",
     "@celo/connect": "^8.0.0",
     "@celo/utils": "^8.0.3",
