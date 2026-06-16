@@ -28,9 +28,9 @@ function abiItemToSignatureString(item: AbiItem): string {
 }
 
 /** ABI input that may have tuple components (runtime ABI data from Solidity) */
-type AbiInputWithComponents = AbiInput & { components?: readonly AbiInputWithComponents[] }
+export type AbiInputWithComponents = AbiInput & { components?: readonly AbiInputWithComponents[] }
 
-function formatAbiInputType(input: AbiInputWithComponents): string {
+export function formatAbiInputType(input: AbiInputWithComponents): string {
   if (input.type === 'tuple' && input.components) {
     return `(${input.components.map((c: AbiInput) => formatAbiInputType(c)).join(',')})`
   }
