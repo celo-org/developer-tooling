@@ -1,3 +1,4 @@
+import { governanceABI } from '@celo/abis'
 import { BaseCommand } from '../../base'
 import { newCheckBuilder } from '../../utils/checks'
 import { displayViemTx } from '../../utils/cli'
@@ -25,6 +26,9 @@ export default class RevokeUpvote extends BaseCommand {
     // TODO(nategraf): Check whether there are upvotes to revoke before sending transaction.
     const governance = await kit.contracts.getGovernance()
     const account = await (await kit.contracts.getAccounts()).voteSignerToAccount(signer)
-    await displayViemTx('revokeUpvoteTx', governance.revokeUpvote(account), publicClient)
+    await displayViemTx('revokeUpvoteTx', governance.revokeUpvote(account), publicClient, {
+      abi: governanceABI,
+      displayEventName: 'ProposalUpvoteRevoked',
+    })
   }
 }

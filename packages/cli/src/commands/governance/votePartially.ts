@@ -1,3 +1,4 @@
+import { governanceABI } from '@celo/abis'
 import { Flags } from '@oclif/core'
 import chalk from 'chalk'
 import { BaseCommand } from '../../base'
@@ -47,7 +48,8 @@ export default class VotePartially extends BaseCommand {
     await displayViemTx(
       'voteTx',
       governance.votePartially(id, res.flags.yes ?? 0, res.flags.no ?? 0, res.flags.abstain ?? 0),
-      publicClient
+      publicClient,
+      { abi: governanceABI, displayEventName: ['ProposalVoted', 'ProposalVotedV2'] }
     )
   }
 }

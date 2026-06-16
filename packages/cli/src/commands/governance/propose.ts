@@ -1,4 +1,4 @@
-import { governanceABI } from '@celo/abis'
+import { governanceABI, multiSigABI } from '@celo/abis'
 import { proposalToParams } from '@celo/contractkit/lib/wrappers/Governance'
 import { ProposalBuilder, ProposalTransactionJSON, proposalToJSON } from '@celo/governance'
 import { Flags } from '@oclif/core'
@@ -150,7 +150,9 @@ export default class Propose extends BaseCommand {
             proposeData,
             deposit.toFixed()
           ),
-          publicClient
+          publicClient,
+          // surfaces the multisig transaction id (Submission.transactionId)
+          { abi: multiSigABI, displayEventName: 'Submission' }
         )
       } else {
         await performSafeTransaction(

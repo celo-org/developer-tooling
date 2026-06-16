@@ -10,9 +10,9 @@ import {
   getFeeCurrencyDirectoryContract,
 } from '@celo/actions/contracts/feecurrency-directory'
 import {
+  GovernanceContract,
   getGovernanceContract,
   getProposalStage,
-  GovernanceContract,
 } from '@celo/actions/contracts/governance'
 import { getLockedCeloContract, LockedCeloContract } from '@celo/actions/contracts/locked-celo'
 import { getValidatorsContract, ValidatorsContract } from '@celo/actions/contracts/validators'
@@ -273,6 +273,12 @@ class CheckBuilder {
     this.addCheck(
       `Proposal ${proposalID} is passing corresponding constitutional quorum`,
       this.withGovernance((governance) => governance.read.isProposalPassing([BigInt(proposalID)]))
+    )
+
+  proposalIsApproved = (proposalID: string | bigint) =>
+    this.addCheck(
+      `Proposal ${proposalID} is approved`,
+      this.withGovernance((governance) => governance.read.isApproved([BigInt(proposalID)]))
     )
 
   hotfixNotExecuted = (hash: Buffer) =>

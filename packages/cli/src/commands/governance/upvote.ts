@@ -1,3 +1,4 @@
+import { governanceABI } from '@celo/abis'
 import { PublicCeloClient } from '@celo/actions'
 import { GovernanceWrapper } from '@celo/contractkit/src/wrappers/Governance'
 import { Flags } from '@oclif/core'
@@ -41,7 +42,10 @@ export default class Upvote extends BaseCommand {
     )
 
     if (!consideredProposals.some((k) => k.id === id)) {
-      await displayViemTx('upvoteTx', governance.upvote(id, account), publicClient)
+      await displayViemTx('upvoteTx', governance.upvote(id, account), publicClient, {
+        abi: governanceABI,
+        displayEventName: 'ProposalUpvoted',
+      })
     } else {
       console.info(chalk.green('Proposal was dequeued, no need to upvote it.'))
     }

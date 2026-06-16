@@ -100,22 +100,27 @@ export default class LockedCelo extends ReleaseGoldBaseCommand {
       await checkBuilder.runChecks()
       const currentTime = Math.round(new Date().getTime() / 1000)
       let madeWithdrawal = false
-      while (!madeWithdrawal) {
+      // Withdraw available pending withdrawals one at a time, re-fetching after
+      // each because withdrawing index i shifts the on-chain list. Stop once none
+      // are available (otherwise this spins forever when nothing is ready).
+      while (true) {
         const pendingWithdrawals = await lockedGold.getPendingWithdrawals(contractAddress)
-        for (let i = 0; i < pendingWithdrawals.length; i++) {
-          const pendingWithdrawal = pendingWithdrawals[i]
-          if (pendingWithdrawal.time.isLessThan(currentTime)) {
-            console.log(
-              `Found available pending withdrawal of value ${pendingWithdrawal.value.toFixed()}, withdrawing`
-            )
-            await displayViemTx(
-              'lockedGoldWithdraw',
-              this.releaseGoldWrapper.withdrawLockedGold(i),
-              publicClient
-            )
-            madeWithdrawal = true
-          }
+        const i = pendingWithdrawals.findIndex((w) => w.time.isLessThan(currentTime))
+        if (i === -1) {
+          break
         }
+        console.log(
+          `Found available pending withdrawal of value ${pendingWithdrawals[i].value.toFixed()}, withdrawing`
+        )
+        await displayViemTx(
+          'lockedGoldWithdraw',
+          this.releaseGoldWrapper.withdrawLockedGold(i),
+          publicClient
+        )
+        madeWithdrawal = true
+      }
+      if (!madeWithdrawal) {
+        console.log('No pending withdrawals are available for withdrawal yet.')
       }
       const remainingPendingWithdrawals = await lockedGold.getPendingWithdrawals(contractAddress)
       for (const pendingWithdrawal of remainingPendingWithdrawals) {
