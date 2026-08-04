@@ -1,16 +1,36 @@
 import { ProposalBuilder, proposalToJSON } from '@celo/governance'
-import { hexToBytes } from 'viem'
 import { Flags } from '@oclif/core'
 import chalk from 'chalk'
 import { writeFileSync } from 'fs'
+import { hexToBytes } from 'viem'
 import { BaseCommand } from '../../base'
 import { newCheckBuilder } from '../../utils/checks'
 import { printValueMap, printValueMapRecursive } from '../../utils/cli'
 import { ViewCommmandFlags } from '../../utils/flags'
 import {
+  ApprovalProgress,
   addExistingProposalIDToBuilder,
   addExistingProposalJSONFileToBuilder,
+  getHotfixApprovalProgress,
 } from '../../utils/governance'
+
+function printApprovalNote(label: string, progress: ApprovalProgress) {
+  if (progress.approved) {
+    console.log(`Note: the ${label} has approved this hotfix`)
+    return
+  }
+
+  if (!progress.isMultiSig) {
+    console.log(`Note: this hotfix still needs the approval of the ${label} ${progress.address}`)
+    return
+  }
+
+  console.log(
+    progress.remaining > 0
+      ? `Note: ${progress.remaining} more ${label} confirmation(s) needed to approve this hotfix (${progress.confirmations.length}/${progress.required})`
+      : `Note: the ${label} multisig has enough confirmations, the approval is pending execution`
+  )
+}
 
 export default class Show extends BaseCommand {
   static aliases = [
@@ -139,6 +159,15 @@ export default class Show extends BaseCommand {
         schedule,
       })
 
+      if (record.approvals && !record.approved) {
+        const { remaining, required, confirmations } = record.approvals
+        console.log(
+          remaining > 0
+            ? `Note: ${remaining} more approver confirmation(s) needed to approve this proposal (${confirmations.length}/${required})`
+            : 'Note: the approver multisig has enough confirmations, the approval is pending execution'
+        )
+      }
+
       if (Object.keys(requirements).length !== 0) {
         console.log(
           'Note: required is the minimal amount of yes + abstain votes needed to pass the proposal'
@@ -151,6 +180,17 @@ export default class Show extends BaseCommand {
       const hotfixBuf = Buffer.from(hexToBytes(hotfix as `0x${string}`))
       const record = await governance.getHotfixRecord(hotfixBuf)
       printValueMap(record)
+
+      if (!record.executed) {
+        const { approver, securityCouncil } = await getHotfixApprovalProgress(
+          governance,
+          hotfix,
+          record
+        )
+        printValueMapRecursive({ approvals: { approver, securityCouncil } })
+        printApprovalNote('approver', approver)
+        printApprovalNote('security council', securityCouncil)
+      }
     } else if (account) {
       const accounts = await kit.contracts.getAccounts()
       printValueMapRecursive(await governance.getVoter(await accounts.signerToAccount(account)))

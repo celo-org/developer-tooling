@@ -2,11 +2,12 @@ import { getMultiSigContract } from '@celo/actions/contracts/multisig'
 import { CeloContract } from '@celo/contractkit'
 import { newBlockExplorer } from '@celo/explorer/lib/block-explorer'
 import { Flags } from '@oclif/core'
-import { Address } from 'viem'
+import { Address, zeroAddress } from 'viem'
 import { BaseCommand } from '../../base'
 import { printValueMapRecursive } from '../../utils/cli'
 import { CustomArgs } from '../../utils/command'
 import { ViewCommmandFlags } from '../../utils/flags'
+import { getConfirmationProgress } from '../../utils/multisig-utils'
 
 export default class ShowMultiSig extends BaseCommand {
   static description = 'Shows information about multi-sig contract'
@@ -44,30 +45,51 @@ export default class ShowMultiSig extends BaseCommand {
 
     const multisig = await getMultiSigContract(clients, multisigAddress)
     const txCount = await multisig.read.getTransactionCount([true, true])
+    const [required, internalRequired] = await Promise.all([
+      multisig.read.required(),
+      multisig.read.internalRequired(),
+    ])
     const explorer = await newBlockExplorer(await this.getKit())
     await explorer.updateContractDetailsMapping(CeloContract.MultiSig, multisigAddress)
-    const process = async (txdata: Awaited<ReturnType<typeof multisig.read.transactions>>) => {
-      if (raw) return txdata
-      return { ...txdata, data: await explorer.tryParseTxInput(txdata[0], txdata[2]) }
+    const confirmationStatus = async (txId: bigint, destination: Address, executed: boolean) => {
+      if (destination === zeroAddress) {
+        // transaction does not exist, there is nothing to confirm
+        return {}
+      }
+      return getConfirmationProgress(
+        multisig.read,
+        txId,
+        { destination, executed },
+        { required, internalRequired },
+        multisigAddress
+      )
+    }
+    const process = async (
+      txId: bigint,
+      txdata: Awaited<ReturnType<typeof multisig.read.transactions>>
+    ) => {
+      const [destination, , input, executed] = txdata
+      const withConfirmations = {
+        ...txdata,
+        ...(await confirmationStatus(txId, destination, executed)),
+      }
+      if (raw) return withConfirmations
+      return { ...withConfirmations, data: await explorer.tryParseTxInput(destination, input) }
     }
     const txinfo =
       tx !== undefined
-        ? await process(await multisig.read.transactions([BigInt(tx)]))
+        ? await process(BigInt(tx), await multisig.read.transactions([BigInt(tx)]))
         : all
           ? await Promise.all(
-              (
-                await Promise.all(
-                  (
-                    await multisig.read.getTransactionIds([BigInt(0), txCount, true, true])
-                  ).map((tx) => multisig.read.transactions([tx]))
-                )
-              ).map(process)
+              (await multisig.read.getTransactionIds([BigInt(0), txCount, true, true])).map(
+                async (txId) => process(txId, await multisig.read.transactions([txId]))
+              )
             )
           : txCount
     const info = {
       Owners: await multisig.read.getOwners(),
-      'Required confirmations': await multisig.read.required(),
-      'Required confirmations (internal)': await multisig.read.internalRequired(),
+      'Required confirmations': required,
+      'Required confirmations (internal)': internalRequired,
       Transactions: txinfo,
     }
     printValueMapRecursive(info)

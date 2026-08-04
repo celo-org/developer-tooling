@@ -1,11 +1,18 @@
+import path from 'node:path'
+import { StrongAddress } from '@celo/base'
 import { newKitFromProvider } from '@celo/contractkit'
 import { unixSecondsTimestampToDateString } from '@celo/contractkit/lib/wrappers/BaseWrapper'
 import { Proposal } from '@celo/contractkit/lib/wrappers/Governance'
 import { testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
 import { timeTravel } from '@celo/dev-utils/ganache-test'
 import fs from 'fs'
-import path from 'node:path'
-import { stripAnsiCodesAndTxHashes, testLocallyWithNode } from '../../test-utils/cliUtils'
+import { changeMultiSigOwner } from '../../test-utils/chain-setup'
+import {
+  stripAnsiCodesAndTxHashes,
+  stripAnsiCodesFromNestedArray,
+  testLocallyWithNode,
+} from '../../test-utils/cliUtils'
+import Approve from './approve'
 import Show from './show'
 
 process.env.NO_SYNCCHECK = 'true'
@@ -95,6 +102,8 @@ testWithAnvilL2('governance:show cmd', (provider) => {
         completion: 0 / 1
         confirmations: 
 
+        remaining: 1
+        required: 1
       approved: false
       metadata: 
         deposit: 100000000000000000000 (~1.000e+20)
@@ -119,6 +128,9 @@ testWithAnvilL2('governance:show cmd', (provider) => {
         Yes: 100000000000000000000 (~1.000e+20)",
         ],
         [
+          "Note: 1 more approver confirmation(s) needed to approve this proposal (0/1)",
+        ],
+        [
           "Note: required is the minimal amount of yes + abstain votes needed to pass the proposal",
         ],
         [
@@ -130,5 +142,34 @@ testWithAnvilL2('governance:show cmd', (provider) => {
         ],
       ]
     `)
+  })
+  it('shows how many approvals a hotfix still needs', async () => {
+    const HOTFIX_HASH = '0xbf670baa773b342120e1af45433a465bbd6fa289a5cf72763d63d95e4e22482d'
+    const kit = newKitFromProvider(provider)
+    const [approver] = (await kit.connection.getAccounts()) as StrongAddress[]
+    // make an account we can send from a signatory of the approver multisig
+    await changeMultiSigOwner(kit, approver)
+
+    const logMock = jest.spyOn(console, 'log')
+    logMock.mockClear()
+    await testLocallyWithNode(Show, ['--hotfix', HOTFIX_HASH], provider)
+
+    const beforeApproval = stripAnsiCodesFromNestedArray(logMock.mock.calls).flat().join('\n')
+    expect(beforeApproval).toContain(
+      'Note: 1 more approver confirmation(s) needed to approve this hotfix (0/1)'
+    )
+
+    await testLocallyWithNode(
+      Approve,
+      ['--hotfix', HOTFIX_HASH, '--from', approver, '--useMultiSig'],
+      provider
+    )
+
+    logMock.mockClear()
+    await testLocallyWithNode(Show, ['--hotfix', HOTFIX_HASH], provider)
+
+    const afterApproval = stripAnsiCodesFromNestedArray(logMock.mock.calls).flat().join('\n')
+    expect(afterApproval).toContain('Note: the approver has approved this hotfix')
+    expect(afterApproval).toContain('this hotfix still needs the approval of the security council')
   })
 })

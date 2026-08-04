@@ -1,11 +1,16 @@
 import { type StrongAddress } from '@celo/base'
 import { ContractKit } from '@celo/contractkit'
-import { ProposalTransaction } from '@celo/contractkit/lib/wrappers/Governance'
-import { ProposalBuilder, proposalToJSON, ProposalTransactionJSON } from '@celo/governance'
+import {
+  GovernanceWrapper,
+  HotfixRecord,
+  ProposalTransaction,
+} from '@celo/contractkit/lib/wrappers/Governance'
+import { MultiSigWrapper } from '@celo/contractkit/lib/wrappers/MultiSig'
+import { ProposalBuilder, ProposalTransactionJSON, proposalToJSON } from '@celo/governance'
 import chalk from 'chalk'
-import { waitForTransactionReceipt } from 'viem/actions'
 import { readJsonSync } from 'fs-extra'
-import { createWalletClient, http, type Hex } from 'viem'
+import { createWalletClient, type Hex, http } from 'viem'
+import { waitForTransactionReceipt } from 'viem/actions'
 import createCeloPublicClient from '../packages-to-be/public-client'
 
 export async function checkProposal(
@@ -131,6 +136,87 @@ async function tryProposal(
     }
   }
   return ok
+}
+
+export interface ApprovalProgress {
+  /** Address which has to approve; a multisig unless `isMultiSig` is false */
+  address: string
+  isMultiSig: boolean
+  approved: boolean
+  confirmations: string[]
+  /** Confirmations needed before the approval goes through */
+  required: number
+  /** How many signatories still need to confirm */
+  remaining: number
+}
+
+/**
+ * Confirmation progress of a pending multisig transaction identified by its content.
+ */
+export async function getMultiSigApprovalProgress(
+  multiSig: MultiSigWrapper,
+  destination: string,
+  encodedData: string
+): Promise<Pick<ApprovalProgress, 'confirmations' | 'required' | 'remaining'>> {
+  const [transaction, required] = await Promise.all([
+    multiSig.getTransactionDataByContent(destination, encodedData),
+    multiSig.getRequired(),
+  ])
+  const confirmations = transaction ? transaction.confirmations : []
+  const requiredConfirmations = required.toNumber()
+
+  return {
+    confirmations,
+    required: requiredConfirmations,
+    remaining: Math.max(0, requiredConfirmations - confirmations.length),
+  }
+}
+
+/**
+ * Approval progress of a hotfix for both approval paths (approver and security council).
+ * Either address may be a plain EOA, in which case a single approval is all that is needed.
+ */
+export async function getHotfixApprovalProgress(
+  governance: GovernanceWrapper,
+  hotfixHash: string,
+  record: HotfixRecord
+): Promise<{ approver: ApprovalProgress; securityCouncil: ApprovalProgress }> {
+  const encodedData = governance.encodeFunctionData('approveHotfix', [hotfixHash])
+  const [approverMultiSig, securityCouncilMultiSig] = await Promise.all([
+    governance.getApproverMultisig(),
+    governance.getSecurityCouncilMultisig(),
+  ])
+
+  const progressFor = async (
+    multiSig: MultiSigWrapper,
+    approved: boolean
+  ): Promise<ApprovalProgress> => {
+    const address = multiSig.address
+    // a plain EOA has no `required()`, and then a single approval is all it takes
+    const isMultiSig = await multiSig
+      .getRequired()
+      .then(() => true)
+      .catch(() => false)
+
+    if (approved) {
+      // the multisig transaction is gone from the pending set once it executed
+      return { address, isMultiSig, approved, confirmations: [], required: 0, remaining: 0 }
+    }
+
+    if (!isMultiSig) {
+      return { address, isMultiSig, approved, confirmations: [], required: 1, remaining: 1 }
+    }
+
+    const progress = await getMultiSigApprovalProgress(multiSig, governance.address, encodedData)
+    return { address, isMultiSig, approved, ...progress }
+  }
+
+  const [approver, securityCouncil] = await Promise.all([
+    progressFor(approverMultiSig, record.approved),
+    progressFor(securityCouncilMultiSig, record.councilApproved),
+  ])
+
+  return { approver, securityCouncil }
 }
 
 export async function addExistingProposalIDToBuilder(
