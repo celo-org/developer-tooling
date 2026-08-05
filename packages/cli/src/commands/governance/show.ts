@@ -20,16 +20,22 @@ function printApprovalNote(label: string, progress: ApprovalProgress) {
     return
   }
 
-  if (!progress.isMultiSig) {
-    console.log(`Note: this hotfix still needs the approval of the ${label} ${progress.address}`)
-    return
+  switch (progress.kind) {
+    case 'multisig':
+      console.log(
+        progress.remaining > 0
+          ? `Note: ${progress.remaining} more ${label} confirmation(s) needed to approve this hotfix (${progress.confirmations.length}/${progress.required})`
+          : `Note: the ${label} multisig has enough confirmations, the approval is pending execution`
+      )
+      return
+    case 'safe':
+      console.log(
+        `Note: this hotfix still needs the approval of the ${label} SAFE ${progress.address} (${progress.required} signature(s) required, collected offchain)`
+      )
+      return
+    default:
+      console.log(`Note: this hotfix still needs the approval of the ${label} ${progress.address}`)
   }
-
-  console.log(
-    progress.remaining > 0
-      ? `Note: ${progress.remaining} more ${label} confirmation(s) needed to approve this hotfix (${progress.confirmations.length}/${progress.required})`
-      : `Note: the ${label} multisig has enough confirmations, the approval is pending execution`
-  )
 }
 
 export default class Show extends BaseCommand {
@@ -183,6 +189,7 @@ export default class Show extends BaseCommand {
 
       if (!record.executed) {
         const { approver, securityCouncil } = await getHotfixApprovalProgress(
+          await this.getPublicClient(),
           governance,
           hotfix,
           record

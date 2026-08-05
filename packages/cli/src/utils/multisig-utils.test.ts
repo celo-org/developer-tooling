@@ -1,9 +1,10 @@
 import { Address, Hex, zeroAddress } from 'viem'
 import { getConfirmationProgress } from './multisig-utils'
 
-const MULTISIG = '0x5409ED021D9299bf6814279A6A1411A7e866A631' as Address
-const OWNER_1 = '0x6Ecbe1DB9EF729CBe972C83Fb886247691Fb6beb' as Hex
-const OWNER_2 = '0xE36Ea790bc9d7AB70C55260C66D52b1eca985f84' as Hex
+// deliberately synthetic addresses, they never touch a chain
+const MULTISIG = '0x00000000000000000000000000000000000000A1' as Address
+const OWNER_1 = '0x0000000000000000000000000000000000000001' as Hex
+const OWNER_2 = '0x0000000000000000000000000000000000000002' as Hex
 const THRESHOLDS = { required: 3n, internalRequired: 2n }
 
 const readMultisig = (confirmations: readonly Hex[]) => ({
@@ -22,8 +23,8 @@ describe('getConfirmationProgress', () => {
       )
     ).toEqual({
       confirmations: [OWNER_1],
-      confirmationsRequired: 3n,
-      confirmationsRemaining: 2n,
+      required: 3n,
+      remaining: 2n,
     })
   })
 
@@ -38,8 +39,8 @@ describe('getConfirmationProgress', () => {
       )
     ).toEqual({
       confirmations: [OWNER_1],
-      confirmationsRequired: 2n,
-      confirmationsRemaining: 1n,
+      required: 2n,
+      remaining: 1n,
     })
   })
 
@@ -54,8 +55,8 @@ describe('getConfirmationProgress', () => {
       )
     ).toEqual({
       confirmations: [OWNER_1, OWNER_2],
-      confirmationsRequired: 3n,
-      confirmationsRemaining: 0n,
+      required: 3n,
+      remaining: 0n,
     })
   })
 
@@ -70,8 +71,8 @@ describe('getConfirmationProgress', () => {
       )
     ).toEqual({
       confirmations: [OWNER_1, OWNER_2],
-      confirmationsRequired: 1n,
-      confirmationsRemaining: 0n,
+      required: 1n,
+      remaining: 0n,
     })
   })
 })

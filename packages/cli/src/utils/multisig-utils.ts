@@ -7,8 +7,10 @@ type ConfirmationGetters = {
 
 export interface ConfirmationProgress {
   confirmations: readonly Hex[]
-  confirmationsRequired: bigint
-  confirmationsRemaining: bigint
+  /** Confirmations needed before the transaction executes */
+  required: bigint
+  /** How many owners still need to confirm */
+  remaining: bigint
 }
 
 /**
@@ -25,14 +27,14 @@ export async function getConfirmationProgress(
   multisigAddress: Address
 ): Promise<ConfirmationProgress> {
   const isInternal = transaction.destination.toLowerCase() === multisigAddress.toLowerCase()
-  const confirmationsRequired = isInternal ? thresholds.internalRequired : thresholds.required
+  const required = isInternal ? thresholds.internalRequired : thresholds.required
   const confirmations = await readMultisig.getConfirmations([txIndex])
-  const missing = confirmationsRequired - BigInt(confirmations.length)
+  const missing = required - BigInt(confirmations.length)
 
   return {
     confirmations,
-    confirmationsRequired,
-    confirmationsRemaining: transaction.executed || missing < 0n ? 0n : missing,
+    required,
+    remaining: transaction.executed || missing < 0n ? 0n : missing,
   }
 }
 

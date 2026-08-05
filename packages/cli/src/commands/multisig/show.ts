@@ -56,13 +56,20 @@ export default class ShowMultiSig extends BaseCommand {
         // transaction does not exist, there is nothing to confirm
         return {}
       }
-      return getConfirmationProgress(
+      const progress = await getConfirmationProgress(
         multisig.read,
         txId,
         { destination, executed },
         { required, internalRequired },
         multisigAddress
       )
+      // prefixed keys: a bare `required` next to the multisig-wide
+      // 'Required confirmations' lines would be ambiguous
+      return {
+        confirmations: progress.confirmations,
+        confirmationsRequired: progress.required,
+        confirmationsRemaining: progress.remaining,
+      }
     }
     const process = async (
       txId: bigint,

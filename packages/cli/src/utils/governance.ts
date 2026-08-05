@@ -1,3 +1,4 @@
+import { type PublicCeloClient } from '@celo/actions'
 import { type StrongAddress } from '@celo/base'
 import { ContractKit } from '@celo/contractkit'
 import {
@@ -138,10 +139,19 @@ async function tryProposal(
   return ok
 }
 
+/**
+ * What kind of account has to give an approval:
+ * - `multisig`: a Celo MultiSig, whose confirmations are visible onchain
+ * - `safe`: a Gnosis Safe, which collects signatures offchain
+ * - `eoa`: a plain externally owned account
+ * - `contract`: some other contract we cannot introspect
+ */
+export type ApproverKind = 'multisig' | 'safe' | 'eoa' | 'contract'
+
 export interface ApprovalProgress {
-  /** Address which has to approve; a multisig unless `isMultiSig` is false */
+  /** Address which has to approve */
   address: string
-  isMultiSig: boolean
+  kind: ApproverKind
   approved: boolean
   confirmations: string[]
   /** Confirmations needed before the approval goes through */
@@ -150,33 +160,47 @@ export interface ApprovalProgress {
   remaining: number
 }
 
+const SAFE_GET_THRESHOLD_ABI = [
+  {
+    inputs: [],
+    name: 'getThreshold',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'view',
+    type: 'function',
+  },
+] as const
+
 /**
- * Confirmation progress of a pending multisig transaction identified by its content.
+ * Confirmation progress of a multisig transaction identified by its content.
+ * Pass `requiredConfirmations` when the threshold was already fetched to save the read.
  */
 export async function getMultiSigApprovalProgress(
   multiSig: MultiSigWrapper,
   destination: string,
-  encodedData: string
+  encodedData: string,
+  requiredConfirmations?: number
 ): Promise<Pick<ApprovalProgress, 'confirmations' | 'required' | 'remaining'>> {
   const [transaction, required] = await Promise.all([
     multiSig.getTransactionDataByContent(destination, encodedData),
-    multiSig.getRequired(),
+    requiredConfirmations !== undefined
+      ? requiredConfirmations
+      : multiSig.getRequired().then((r) => r.toNumber()),
   ])
   const confirmations = transaction ? transaction.confirmations : []
-  const requiredConfirmations = required.toNumber()
 
   return {
     confirmations,
-    required: requiredConfirmations,
-    remaining: Math.max(0, requiredConfirmations - confirmations.length),
+    required,
+    remaining: Math.max(0, required - confirmations.length),
   }
 }
 
 /**
  * Approval progress of a hotfix for both approval paths (approver and security council).
- * Either address may be a plain EOA, in which case a single approval is all that is needed.
+ * Either address may be a Celo MultiSig, a Gnosis Safe, or a plain EOA.
  */
 export async function getHotfixApprovalProgress(
+  publicClient: PublicCeloClient,
   governance: GovernanceWrapper,
   hotfixHash: string,
   record: HotfixRecord
@@ -192,23 +216,65 @@ export async function getHotfixApprovalProgress(
     approved: boolean
   ): Promise<ApprovalProgress> => {
     const address = multiSig.address
-    // a plain EOA has no `required()`, and then a single approval is all it takes
-    const isMultiSig = await multiSig
+
+    const code = await publicClient.getCode({ address })
+    if (!code || code === '0x') {
+      return {
+        address,
+        kind: 'eoa',
+        approved,
+        confirmations: approved ? [address] : [],
+        required: 1,
+        remaining: approved ? 0 : 1,
+      }
+    }
+
+    const required = await multiSig
       .getRequired()
-      .then(() => true)
-      .catch(() => false)
-
-    if (approved) {
-      // the multisig transaction is gone from the pending set once it executed
-      return { address, isMultiSig, approved, confirmations: [], required: 0, remaining: 0 }
+      .then((r) => r.toNumber())
+      .catch(() => undefined)
+    if (required !== undefined) {
+      // the executed approval transaction stays in the multisig's history,
+      // so the confirmation list resolves even after the hotfix was approved
+      const progress = await getMultiSigApprovalProgress(
+        multiSig,
+        governance.address,
+        encodedData,
+        required
+      )
+      return {
+        address,
+        kind: 'multisig',
+        approved,
+        ...progress,
+        remaining: approved ? 0 : progress.remaining,
+      }
     }
 
-    if (!isMultiSig) {
-      return { address, isMultiSig, approved, confirmations: [], required: 1, remaining: 1 }
+    const threshold = await publicClient
+      .readContract({ address, abi: SAFE_GET_THRESHOLD_ABI, functionName: 'getThreshold' })
+      .then((t) => Number(t))
+      .catch(() => undefined)
+    if (threshold !== undefined) {
+      // a Safe collects its signatures offchain, so partial progress is not visible here
+      return {
+        address,
+        kind: 'safe',
+        approved,
+        confirmations: [],
+        required: threshold,
+        remaining: approved ? 0 : threshold,
+      }
     }
 
-    const progress = await getMultiSigApprovalProgress(multiSig, governance.address, encodedData)
-    return { address, isMultiSig, approved, ...progress }
+    return {
+      address,
+      kind: 'contract',
+      approved,
+      confirmations: [],
+      required: 1,
+      remaining: approved ? 0 : 1,
+    }
   }
 
   const [approver, securityCouncil] = await Promise.all([
