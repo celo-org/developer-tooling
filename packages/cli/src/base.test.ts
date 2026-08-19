@@ -1,16 +1,23 @@
 import { Connection } from '@celo/connect'
 import { testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
+import { encryptV3, v3Filename } from '@celo/keystores'
 import * as ViemAccountLedgerExports from '@celo/viem-account-ledger'
 import * as WalletLedgerExports from '@celo/wallet-ledger'
 import { Config, ux } from '@oclif/core'
+import { mkdtempSync, rmSync, writeFileSync } from 'fs'
 import http from 'http'
 import { tmpdir } from 'os'
+import { join } from 'path'
 import { MethodNotFoundRpcError } from 'viem'
 import { privateKeyToAddress } from 'viem/accounts'
 import { BaseCommand } from './base'
 import Set from './commands/config/set'
 import CustomHelp from './help'
-import { stripAnsiCodesFromNestedArray, testLocallyWithNode } from './test-utils/cliUtils'
+import {
+  stripAnsiCodesFromNestedArray,
+  testLocallyWithNode,
+  testWithoutChain,
+} from './test-utils/cliUtils'
 import { mockRpcFetch } from './test-utils/mockRpc'
 import { CustomFlags } from './utils/command'
 import * as config from './utils/config'
@@ -96,6 +103,65 @@ describe('flags', () => {
         expect.stringContaining(`-n, --node=<value>`)
       )
     })
+  })
+})
+
+describe('keystore flags', () => {
+  class TestKeystoreCommand extends BaseCommand {
+    static flags = {
+      ...BaseCommand.flags,
+      from: CustomFlags.address({ required: false }),
+    }
+    async run() {
+      // These cases are all rejected while parsing flags, so run() is never reached.
+      throw new Error('flag parsing should have rejected this invocation')
+    }
+  }
+
+  let dir: string
+  let keystoreFile: string
+
+  beforeAll(async () => {
+    dir = mkdtempSync(join(tmpdir(), 'celocli-base-keystore-'))
+    const keystore = await encryptV3(
+      '0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef',
+      'pw'
+    )
+    keystoreFile = join(dir, v3Filename(keystore.address, Date.parse('2024-01-01T00:00:00Z')))
+    writeFileSync(keystoreFile, JSON.stringify(keystore))
+  })
+
+  afterAll(() => {
+    rmSync(dir, { recursive: true, force: true })
+  })
+
+  it('rejects --keystore together with --privateKey', async () => {
+    await expect(
+      testWithoutChain(TestKeystoreCommand, [
+        '--keystore',
+        keystoreFile,
+        '--privateKey',
+        '0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef',
+      ])
+    ).rejects.toThrow(/cannot also be provided|--privateKey/)
+  })
+
+  it('rejects --keystore together with --useLedger', async () => {
+    await expect(
+      testWithoutChain(TestKeystoreCommand, ['--keystore', keystoreFile, '--useLedger'])
+    ).rejects.toThrow(/cannot also be provided|--useLedger/)
+  })
+
+  it('rejects --passwordFile without --keystore', async () => {
+    await expect(
+      testWithoutChain(TestKeystoreCommand, ['--passwordFile', keystoreFile])
+    ).rejects.toThrow(/keystore/)
+  })
+
+  it('rejects a --keystore path that does not exist', async () => {
+    await expect(
+      testWithoutChain(TestKeystoreCommand, ['--keystore', join(dir, 'nope.json')])
+    ).rejects.toThrow('does not exist')
   })
 })
 

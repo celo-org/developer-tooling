@@ -1,8 +1,8 @@
 import { type PublicCeloClient, type WalletCeloClient } from '@celo/actions'
 import {
   CELO_DERIVATION_PATH_BASE,
-  ensureLeading0x,
   ETHEREUM_DERIVATION_PATH,
+  ensureLeading0x,
   StrongAddress,
 } from '@celo/base'
 import { type Provider, ReadOnlyWallet } from '@celo/connect'
@@ -35,6 +35,7 @@ import { CustomFlags } from './utils/command'
 import { configExists, getDefaultDerivationPath, getNodeUrl } from './utils/config'
 import { getFeeCurrencyContractWrapper } from './utils/fee-currency'
 import { requireNodeIsSynced } from './utils/helpers'
+import { privateKeyFromKeystore } from './utils/keystore'
 import { reportUsageStatisticsIfTelemetryEnabled } from './utils/telemetry'
 
 export abstract class BaseCommand extends Command {
@@ -43,7 +44,19 @@ export abstract class BaseCommand extends Command {
       char: 'k',
       description: 'Use a private key to sign local transactions with',
       hidden: false,
-      exclusive: ['useLedger', 'useAKV'],
+      exclusive: ['useLedger', 'useAKV', 'keystore'],
+    }),
+    keystore: CustomFlags.path({
+      description:
+        'Path to an encrypted keystore file, or to a directory of them. When a directory is given, --from selects the account. You will be prompted for the password unless --passwordFile is set.',
+      hidden: false,
+      exclusive: ['privateKey', 'useLedger', 'useAKV'],
+    }),
+    passwordFile: CustomFlags.path({
+      dependsOn: ['keystore'],
+      noCacheDefault: true,
+      description: 'Path to a file containing the password for --keystore',
+      hidden: false,
     }),
     node: Flags.string({
       char: 'n',
@@ -148,6 +161,7 @@ export abstract class BaseCommand extends Command {
   private walletClient: WalletCeloClient | null = null
   private _parseResult: null | ParserOutput<FlagOutput, FlagOutput> = null
   private ledgerTransport: Awaited<ReturnType<(typeof _TransportNodeHid)['open']>> | null = null
+  private _signingPrivateKey: string | null = null
 
   get _wallet(): ReadOnlyWallet | undefined {
     // the wallet lives on the connection; returning this._wallet would recurse
@@ -156,6 +170,31 @@ export abstract class BaseCommand extends Command {
 
   set _wallet(wallet: ReadOnlyWallet | undefined) {
     this._kit!.connection.wallet = wallet
+  }
+
+  /**
+   * The private key to sign with, from --privateKey or by unlocking --keystore.
+   * Memoized so that a keystore is only decrypted, and its password only
+   * requested, once per command.
+   * @returns The private key, or undefined when signing is delegated elsewhere
+   * (a Ledger, or an account the node has unlocked).
+   */
+  protected async getSigningPrivateKey(): Promise<string | undefined> {
+    const res = await this.parse()
+    if (res.flags.privateKey) {
+      return res.flags.privateKey
+    }
+    if (!res.flags.keystore) {
+      return undefined
+    }
+    if (!this._signingPrivateKey) {
+      this._signingPrivateKey = await privateKeyFromKeystore({
+        keystorePath: res.flags.keystore,
+        passwordFile: res.flags.passwordFile,
+        from: res.flags.from,
+      })
+    }
+    return this._signingPrivateKey
   }
 
   protected async getNodeUrl(): Promise<string> {
@@ -178,8 +217,11 @@ export abstract class BaseCommand extends Command {
     }
 
     const res = await this.parse()
-    if (res.flags && res.flags.privateKey && !res.flags.useLedger && !res.flags.useAKV) {
-      this._kit.connection.addAccount(res.flags.privateKey)
+    if (res.flags && !res.flags.useLedger && !res.flags.useAKV) {
+      const privateKey = await this.getSigningPrivateKey()
+      if (privateKey) {
+        this._kit.connection.addAccount(privateKey)
+      }
     }
 
     return this._kit
@@ -260,11 +302,14 @@ export abstract class BaseCommand extends Command {
         }
       } else if (res.flags.useAKV) {
         failWith('--useAKV flag is no longer supported')
-      } else if (res.flags.privateKey) {
-        const accountFromPrivateKey = privateKeyToAccount(ensureLeading0x(res.flags.privateKey))
+      } else if (await this.getSigningPrivateKey()) {
+        const privateKey = (await this.getSigningPrivateKey())!
+        const accountFromPrivateKey = privateKeyToAccount(ensureLeading0x(privateKey))
         if (accountAddress && !isAddressEqual(accountAddress, accountFromPrivateKey.address)) {
           failWith(
-            `The --from address ${accountAddress} does not match the address derived from the provided private key ${accountFromPrivateKey.address}.`
+            `The --from address ${accountAddress} does not match the address derived from the ${
+              res.flags.keystore ? 'keystore' : 'provided private key'
+            } ${accountFromPrivateKey.address}.`
           )
         }
         this.walletClient = createWalletClient({
