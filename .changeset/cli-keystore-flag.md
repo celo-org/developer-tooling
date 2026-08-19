@@ -1,6 +1,6 @@
 ---
 '@celo/celocli': minor
-'@celo/keystores': patch
+'@celo/keystores': minor
 ---
 
 Add a `--keystore` flag for signing with an encrypted keystore file, in the

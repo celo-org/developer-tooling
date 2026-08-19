@@ -94,7 +94,7 @@ export abstract class BaseCommand extends Command {
     useLedger: Flags.boolean({
       default: false,
       hidden: false,
-      exclusive: ['privateKey'],
+      exclusive: ['privateKey', 'keystore'],
       description: 'Set it to use a ledger wallet',
     }),
     ledgerAddresses: Flags.integer({
@@ -120,7 +120,7 @@ export abstract class BaseCommand extends Command {
     }),
     useAKV: Flags.boolean({
       hidden: true,
-      exclusive: ['privateKey', 'useLedger'],
+      exclusive: ['privateKey', 'useLedger', 'keystore'],
       deprecated: true,
       description: 'Set it to use an Azure KeyVault HSM',
     }),
@@ -302,7 +302,7 @@ export abstract class BaseCommand extends Command {
         }
       } else if (res.flags.useAKV) {
         failWith('--useAKV flag is no longer supported')
-      } else if (await this.getSigningPrivateKey()) {
+      } else if (res.flags.privateKey || res.flags.keystore) {
         const privateKey = (await this.getSigningPrivateKey())!
         const accountFromPrivateKey = privateKeyToAccount(ensureLeading0x(privateKey))
         if (accountAddress && !isAddressEqual(accountAddress, accountFromPrivateKey.address)) {

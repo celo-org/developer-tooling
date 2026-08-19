@@ -1,3 +1,4 @@
+import { type PublicCeloClient } from '@celo/actions'
 import { Connection } from '@celo/connect'
 import { testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
 import { encryptV3, v3Filename } from '@celo/keystores'
@@ -10,6 +11,7 @@ import { tmpdir } from 'os'
 import { join } from 'path'
 import { MethodNotFoundRpcError } from 'viem'
 import { privateKeyToAddress } from 'viem/accounts'
+import { celoSepolia } from 'viem/chains'
 import { BaseCommand } from './base'
 import Set from './commands/config/set'
 import CustomHelp from './help'
@@ -118,17 +120,20 @@ describe('keystore flags', () => {
     }
   }
 
+  const PASSWORD = 'pw'
+  const keystorePrivateKey = '0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef'
+  const keystoreAddress = privateKeyToAddress(keystorePrivateKey)
   let dir: string
   let keystoreFile: string
+  let passwordFile: string
 
   beforeAll(async () => {
     dir = mkdtempSync(join(tmpdir(), 'celocli-base-keystore-'))
-    const keystore = await encryptV3(
-      '0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef',
-      'pw'
-    )
+    const keystore = await encryptV3(keystorePrivateKey, PASSWORD)
     keystoreFile = join(dir, v3Filename(keystore.address, Date.parse('2024-01-01T00:00:00Z')))
     writeFileSync(keystoreFile, JSON.stringify(keystore))
+    passwordFile = join(dir, 'password.txt')
+    writeFileSync(passwordFile, PASSWORD)
   })
 
   afterAll(() => {
@@ -162,6 +167,74 @@ describe('keystore flags', () => {
     await expect(
       testWithoutChain(TestKeystoreCommand, ['--keystore', join(dir, 'nope.json')])
     ).rejects.toThrow('does not exist')
+  })
+
+  // The wallet client is built without contacting a node, so only the public
+  // client is stubbed out here; the key really is decrypted and its address
+  // really is derived.
+  describe('wiring into the wallet client', () => {
+    let config: Config
+
+    class ExposedKeystoreCommand extends TestKeystoreCommand {
+      async run() {
+        await this.getWalletClient()
+      }
+      public resolveSigningKey() {
+        return this.getSigningPrivateKey()
+      }
+    }
+
+    const commandWith = (argv: string[]) => {
+      const command = new ExposedKeystoreCommand(
+        [...argv, '--node', 'http://localhost:8545'],
+        config
+      )
+      jest
+        .spyOn(BaseCommand.prototype, 'getPublicClient')
+        .mockResolvedValue({ chain: celoSepolia } as unknown as PublicCeloClient)
+      return command
+    }
+
+    beforeAll(async () => {
+      config = await Config.load(require.main?.filename || __dirname)
+    })
+
+    afterEach(() => {
+      jest.restoreAllMocks()
+    })
+
+    it('signs with the address held in the keystore', async () => {
+      const command = commandWith(['--keystore', keystoreFile, '--passwordFile', passwordFile])
+
+      const walletClient = await command.getWalletClient()
+      expect(walletClient.account.address).toBe(keystoreAddress)
+    })
+
+    it('asks for the password once, however many times the key is needed', async () => {
+      const promptSpy = jest.spyOn(ux, 'prompt').mockResolvedValue(PASSWORD)
+      const command = commandWith(['--keystore', keystoreFile])
+
+      await command.resolveSigningKey()
+      await command.resolveSigningKey()
+      await command.getWalletClient()
+
+      expect(promptSpy).toHaveBeenCalledTimes(1)
+    })
+
+    it('fails when --from disagrees with the keystore', async () => {
+      const command = commandWith([
+        '--keystore',
+        keystoreFile,
+        '--passwordFile',
+        passwordFile,
+        '--from',
+        '0x0000000000000000000000000000000000000001',
+      ])
+
+      await expect(command.getWalletClient()).rejects.toThrow(
+        `does not match the address derived from the keystore ${keystoreAddress}`
+      )
+    })
   })
 })
 
