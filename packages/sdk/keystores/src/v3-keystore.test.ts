@@ -5,6 +5,9 @@ import {
   GETH_GEN_KEYSTORE2,
   PASSPHRASE1,
   PASSPHRASE2,
+  PBKDF2_KEYSTORE,
+  PBKDF2_PASSPHRASE,
+  PBKDF2_PK,
   PK1,
   PK2,
 } from './test-constants'
@@ -20,6 +23,16 @@ describe('decryptV3', () => {
 
   it('returns the private key 0x-prefixed', async () => {
     expect(await decryptV3(GETH_GEN_KEYSTORE1, PASSPHRASE1)).toBe(`0x${PK1}`)
+  })
+
+  it('decrypts a pbkdf2 keystore', async () => {
+    expect(trimLeading0x(await decryptV3(PBKDF2_KEYSTORE, PBKDF2_PASSPHRASE))).toBe(PBKDF2_PK)
+  })
+
+  it('rejects a wrong passphrase for a pbkdf2 keystore', async () => {
+    await expect(decryptV3(PBKDF2_KEYSTORE, `${PBKDF2_PASSPHRASE}!`)).rejects.toThrow(
+      V3ErrorMessages.WRONG_PASSPHRASE
+    )
   })
 
   it('rejects a wrong passphrase', async () => {
