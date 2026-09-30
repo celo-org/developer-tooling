@@ -48,7 +48,7 @@
     "dotenv": "^8.2.0",
     "size-limit": "^11.2.0",
     "viem": "^2.33.2",
-    "vitest": "^3.2.6"
+    "vitest": "^4.0.0"
   },
   "engines": {
     "node": ">=20"
