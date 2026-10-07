@@ -61,7 +61,7 @@
     "@celo/dev-utils": "workspace:^",
     "@celo/typescript": "workspace:^",
     "@size-limit/preset-small-lib": "^11.2.0",
-    "@vitest/coverage-v8": "^3.2.6",
+    "@vitest/coverage-v8": "^4.0.0",
     "dotenv": "^8.2.0",
     "size-limit": "^11.2.0",
     "vitest": "^4.0.0"
