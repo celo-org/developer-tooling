@@ -6,9 +6,9 @@ import { recoverTransaction, verifyEIP712TypedDataSigner } from '@celo/wallet-ba
 import TransportNodeHid from '@ledgerhq/hw-transport-node-hid'
 import { AddressValidation, CELO_BASE_DERIVATION_PATH, LedgerWallet } from './ledger-wallet'
 import {
+  ACCOUNT_ADDRESS_NEVER,
   ACCOUNT_ADDRESS1,
   ACCOUNT_ADDRESS2,
-  ACCOUNT_ADDRESS_NEVER,
   mockLedgerImplementation,
 } from './test-utils'
 import { tokenInfoByAddressAndChainId } from './tokens'
@@ -220,6 +220,34 @@ describe('LedgerWallet class', () => {
         ]
       `)
       expect(wallet.ledger!.getAddress).toHaveBeenCalledTimes(6)
+    })
+    it('iterates hardened account indexes for Ledger Live paths', async () => {
+      // Ledger Live accounts are m/44'/60'/N'/0/0. Index ≥1 is required to distinguish
+      // that from iterating the change component (m/44'/60'/0'/N/0).
+      wallet = new LedgerWallet(
+        {},
+        [0],
+        "m/44'/60'/0'",
+        [0],
+        AddressValidation.firstTransactionPerAddress,
+        [0, 1, 2]
+      )
+      mockLedger(wallet, mockForceValidation)
+      await wallet.init()
+      // @ts-expect-error (mock.calls)
+      expect(wallet.ledger!.getAddress.mock.calls).toEqual([
+        ["44'/60'/0'/0/0", false],
+        ["44'/60'/1'/0/0", false],
+        ["44'/60'/2'/0/0", false],
+      ])
+      expect(wallet.ledger!.getAddress).toHaveBeenCalledTimes(3)
+    })
+    it('does not iterate the account component when accountIndexes is omitted', async () => {
+      wallet = new LedgerWallet({}, [0], "m/44'/60'/5'", [0])
+      mockLedger(wallet, mockForceValidation)
+      await wallet.init()
+      // @ts-expect-error (mock.calls)
+      expect(wallet.ledger!.getAddress.mock.calls).toEqual([["44'/60'/5'/0/0", false]])
     })
     describe('with other ledger apps', () => {
       describe('with the ethereum-recovery app', () => {

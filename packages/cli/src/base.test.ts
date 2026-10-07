@@ -195,7 +195,7 @@ testWithAnvilL2('BaseCommand', (provider) => {
     })
 
     describe('with --ledgerLiveMode', () => {
-      it('--ledgerAddresses passes changeIndexes to LedgerWallet', async () => {
+      it('--ledgerAddresses passes accountIndexes to LedgerWallet', async () => {
         await testLocallyWithNode(
           BasicCommand,
           ['--useLedger', '--ledgerLiveMode', '--ledgerAddresses', '5'],
@@ -205,14 +205,16 @@ testWithAnvilL2('BaseCommand', (provider) => {
         expect(WalletLedgerExports.newLedgerWalletWithSetup).toHaveBeenCalledWith(
           expect.anything(),
           expect.objectContaining({
-            changeIndexes: [0, 1, 2, 3, 4],
+            accountIndexes: [0, 1, 2, 3, 4],
+            changeIndexes: [0],
             derivationPathIndexes: [0],
           })
         )
 
         expect(ViemAccountLedgerExports.ledgerToWalletClient).toHaveBeenCalledWith(
           expect.objectContaining({
-            changeIndexes: [0, 1, 2, 3, 4],
+            accountIndexes: [0, 1, 2, 3, 4],
+            changeIndexes: [0],
             derivationPathIndexes: [0],
           })
         )
@@ -244,7 +246,7 @@ testWithAnvilL2('BaseCommand', (provider) => {
         `)
       })
       describe('with --ledgerCustomAddresses', () => {
-        it('passes custom changeIndexes to LedgerWallet', async () => {
+        it('passes custom accountIndexes to LedgerWallet', async () => {
           await testLocallyWithNode(
             BasicCommand,
             ['--useLedger', '--ledgerLiveMode', '--ledgerCustomAddresses', '[1,8,9]'],
@@ -254,14 +256,16 @@ testWithAnvilL2('BaseCommand', (provider) => {
           expect(WalletLedgerExports.newLedgerWalletWithSetup).toHaveBeenCalledWith(
             expect.anything(),
             expect.objectContaining({
-              changeIndexes: [1, 8, 9],
+              accountIndexes: [1, 8, 9],
+              changeIndexes: [0],
               derivationPathIndexes: [0],
             })
           )
 
           expect(ViemAccountLedgerExports.ledgerToWalletClient).toHaveBeenCalledWith(
             expect.objectContaining({
-              changeIndexes: [1, 8, 9],
+              accountIndexes: [1, 8, 9],
+              changeIndexes: [0],
               derivationPathIndexes: [0],
             })
           )
