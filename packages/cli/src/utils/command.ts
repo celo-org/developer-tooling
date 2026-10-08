@@ -197,6 +197,11 @@ export const CustomFlags = {
     description: 'Hex string',
     helpValue: '0x',
   }),
+  path: Flags.custom({
+    parse: parsePath,
+    description: 'Path to an existing file or directory',
+    helpValue: '/path/to/file',
+  }),
 }
 
 export const CustomArgs = {
