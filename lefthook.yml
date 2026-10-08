@@ -1,0 +1,13 @@
+pre-commit:
+  commands:
+    biome-check:
+      glob: "*.{js,ts,cjs,mjs,d.cts,d.mts,jsx,tsx,json,jsonc}"
+      run: yarn biome check --write --no-errors-on-unmatched --files-ignore-unknown=true --colors=off {staged_files}
+      stage_fixed: true
+    prerelease-check:
+      run: bash scripts/hooks/prereleasecheck.sh
+
+pre-push:
+  commands:
+    prerelease-check:
+      run: bash scripts/hooks/prereleasecheck.sh
