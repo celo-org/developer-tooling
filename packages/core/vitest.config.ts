@@ -7,6 +7,7 @@ export default defineConfig({
       sourcemap: false,
     },
     coverage: {
+      include: ['src/**/*.ts'],
       reporter: ['json', 'clover', 'lcov'],
       exclude: ['**/data**', '**/tokens**', '**/test-utils**', ...coverageConfigDefaults.exclude],
     },
