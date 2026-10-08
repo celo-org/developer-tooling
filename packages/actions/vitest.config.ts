@@ -10,6 +10,7 @@ export default defineConfig({
     // to hook into it, useful for testWithAnvil.
     globals: true,
     coverage: {
+      include: ['src/**/*.ts'],
       reporter: ['json', 'clover', 'lcov'],
       exclude: ['**/data**', '**/tokens**', '**/test-utils**', ...coverageConfigDefaults.exclude],
     },
