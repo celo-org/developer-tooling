@@ -3,12 +3,16 @@ import { Address, CeloTx } from '@celo/connect'
 import BigNumber from 'bignumber.js'
 import {
   BaseWrapper,
+  stringToSolidityBytes,
   toViemAddress,
   toViemBigInt,
-  stringToSolidityBytes,
   valueToBigNumber,
   valueToInt,
 } from './BaseWrapper'
+
+// small enough to stay under typical RPC rate limits, large enough to
+// find a recent transaction in one round trip
+const TRANSACTION_SCAN_BATCH_SIZE = 25
 
 export interface TransactionData {
   destination: string
@@ -149,24 +153,27 @@ export class MultiSigWrapper extends BaseWrapper<typeof multiSigABI> {
   ) {
     const data = stringToSolidityBytes(encodedData)
     const transactionCount = await this.getTransactionCount(true, true)
-    const transactionsOrEmpties = await Promise.all(
-      new Array(transactionCount).fill(0).map(async (_, index) => {
-        const tx = await this.getTransaction(index, false)
-        if (tx.data === data && tx.destination === destination && tx.value.isEqualTo(value)) {
-          return { index, ...tx }
+    // scan newest-first in small batches: the wanted transaction is almost always
+    // recent, and fetching the multisig's entire history at once trips RPC rate limits.
+    // When several transactions share the same content, the most recent one wins.
+    for (let end = transactionCount; end > 0; end -= TRANSACTION_SCAN_BATCH_SIZE) {
+      const start = Math.max(0, end - TRANSACTION_SCAN_BATCH_SIZE)
+      const indices = Array.from({ length: end - start }, (_, i) => end - 1 - i)
+      const transactions = await Promise.all(
+        indices.map(async (index) => ({ index, ...(await this.getTransaction(index, false)) }))
+      )
+      const wantedTransaction = transactions.find(
+        (tx) => tx.data === data && tx.destination === destination && tx.value.isEqualTo(value)
+      )
+      if (wantedTransaction) {
+        const confirmations = await this.getConfirmations(wantedTransaction.index)
+        return {
+          ...wantedTransaction,
+          confirmations,
         }
-        return null
-      })
-    )
-    const wantedTransaction = transactionsOrEmpties.find((tx) => tx !== null)
-    if (!wantedTransaction) {
-      return
+      }
     }
-    const confirmations = await this.getConfirmations(wantedTransaction.index)
-    return {
-      ...wantedTransaction,
-      confirmations,
-    }
+    return
   }
   async getTransaction(i: number): Promise<TransactionData>
   async getTransaction(
@@ -198,28 +205,13 @@ export class MultiSigWrapper extends BaseWrapper<typeof multiSigABI> {
     }
   }
 
-  private _getConfirmation = async (txId: number, owner: string) => {
-    return this.contract.read.confirmations([toViemBigInt(txId), toViemAddress(owner)])
-  }
-
   /*
    * Returns array of signer addresses which have confirmed a transaction
    * when given the index of that transaction.
    */
   async getConfirmations(txId: number) {
-    const owners = await this.getOwners()
-    const confirmationsOrEmpties = await Promise.all(
-      owners.map(async (owner: string) => {
-        const confirmation = await this._getConfirmation(txId, owner)
-        if (confirmation) {
-          return owner
-        } else {
-          return null
-        }
-      })
-    )
-    const confirmations = confirmationsOrEmpties.filter((c) => c !== null) as string[]
-    return confirmations
+    const res = await this.contract.read.getConfirmations([toViemBigInt(txId)])
+    return [...res] as string[]
   }
 
   async getTransactions(): Promise<TransactionData[]> {

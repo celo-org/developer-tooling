@@ -211,6 +211,27 @@ testWithAnvilL2('Governance Wrapper', (provider) => {
       expect(approved).toBeTruthy()
     })
 
+    it('#getApprovalStatus reports the confirmations still needed', async () => {
+      await proposeFn(accounts[0])
+      await timeTravel(dequeueFrequency, provider)
+      const dequeueHash = await governance.dequeueProposalsIfReady()
+      await kit.connection.viemClient.waitForTransactionReceipt({ hash: dequeueHash })
+
+      const required = (await governanceApproverMultiSig.getRequired()).toNumber()
+      const before = await governance.getApprovalStatus(proposalID)
+      expect(before.confirmations).toEqual([])
+      expect(before.required).toEqual(required)
+      expect(before.remaining).toEqual(required)
+
+      await approveFn()
+
+      const after = await governance.getApprovalStatus(proposalID)
+      expect(after.confirmations).toHaveLength(required)
+      expect(after.required).toEqual(required)
+      expect(after.remaining).toEqual(0)
+      expect(await governance.isApproved(proposalID)).toBe(true)
+    })
+
     it('#vote', async () => {
       await proposeFn(accounts[0])
       await timeTravel(dequeueFrequency, provider)

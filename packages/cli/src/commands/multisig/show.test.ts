@@ -1,8 +1,11 @@
+import { multiSigABI } from '@celo/abis'
 import { StrongAddress } from '@celo/base'
 import { ContractKit, newKitFromProvider } from '@celo/contractkit'
 import { testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
+import { encodeFunctionData } from 'viem'
 import { stripAnsiCodesFromNestedArray, testLocallyWithNode } from '../../test-utils/cliUtils'
 import { createMultisig } from '../../test-utils/multisigUtils'
+import ApproveMultiSig from './approve'
 import ProposeMultiSig from './propose'
 import ShowMultiSig from './show'
 
@@ -113,11 +116,57 @@ testWithAnvilL2('multisig:show integration tests', (provider) => {
           1: 1000000000000000000 (~1e+18)
           2: 0x
           3: false
+          confirmations: 
+            0: 0x5409ED021D9299bf6814279A6A1411A7e866A631
+          confirmationsRemaining: 1 
+          confirmationsRequired: 2 
           data: null",
           ],
         ]
       `)
       expect(result).toBeUndefined()
+    })
+
+    it('shows how many confirmations a transaction still needs', async () => {
+      // a dedicated multisig keeps the transaction indexes independent of the other tests.
+      // 3 signatures are required in general, but only 2 for transactions the multisig sends
+      // to itself, which is what this transaction does
+      const isolatedMultisig = await createMultisig(kit, [owner1, owner2, owner3], 3, 2)
+      const addOwner = encodeFunctionData({
+        abi: multiSigABI,
+        functionName: 'addOwner',
+        args: [accounts[5]],
+      })
+      const txId = '0'
+
+      await testLocallyWithNode(
+        ProposeMultiSig,
+        [isolatedMultisig, '--from', owner1, '--to', isolatedMultisig, '--data', addOwner],
+        provider
+      )
+
+      const logMock = jest.spyOn(console, 'log')
+      logMock.mockClear()
+      await testLocallyWithNode(ShowMultiSig, [isolatedMultisig, '--tx', txId], provider)
+
+      // proposing confirms on behalf of the proposer, so 1 of the 2 internally required is missing
+      const beforeApproval = stripAnsiCodesFromNestedArray(logMock.mock.calls).flat().join('\n')
+      expect(beforeApproval).toContain('confirmationsRequired: 2')
+      expect(beforeApproval).toContain('confirmationsRemaining: 1')
+
+      await testLocallyWithNode(
+        ApproveMultiSig,
+        ['--from', owner2, '--for', isolatedMultisig, '--tx', txId],
+        provider
+      )
+
+      logMock.mockClear()
+      await testLocallyWithNode(ShowMultiSig, [isolatedMultisig, '--tx', txId], provider)
+
+      const afterApproval = stripAnsiCodesFromNestedArray(logMock.mock.calls).flat().join('\n')
+      expect(afterApproval).toContain('confirmationsRemaining: 0')
+      expect(afterApproval).toContain(owner1)
+      expect(afterApproval).toContain(owner2)
     })
 
     it('shows raw transaction data', async () => {
