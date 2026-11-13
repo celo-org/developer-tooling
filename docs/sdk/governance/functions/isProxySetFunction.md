@@ -1,4 +1,4 @@
-[**@celo/governance v5.1.11**](../README.md)
+[**@celo/governance v5.1.12**](../README.md)
 
 ***
 
