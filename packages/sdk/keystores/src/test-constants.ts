@@ -11,3 +11,9 @@ export const PK2 = 'bb6f3fa4a83b7b06e72e580a3b09df5dd6fb4fa745ee2b0d865413ad6299
 export const KEYSTORE_NAME2 = 'PK2 keystore name'
 export const GETH_GEN_KEYSTORE2 = `{"address":"b81a82696018fd9d8b43431966b60c31bdcdc2e8","blspublickey":"b9f862e2ced58bb2eef8ffde7020189ab2bb050603630eceec9b80c1636d98f8c3b9bd517d673937a0551c3a0698a00086bda4db1f0d859912a91988775ae388886013e7eb254d195871f9ced6643e288755da0b483ebe6dda448fea2eb75481","crypto":{"cipher":"aes-128-ctr","ciphertext":"6f3cd02b2d3d81b2bbf76743396c9c3c1685ddc6cfafbba34195ab03476831d3","cipherparams":{"iv":"af1f9853e0ff20ee5d495cf7d9461e1c"},"kdf":"scrypt","kdfparams":{"dklen":32,"n":262144,"p":1,"r":8,"salt":"cf0446914e5d214f2a312c08ef24e7e3dd15e948d2ca67d59b3bb97903a96147"},"mac":"58348f6d843d28b3ac8cf40542d10da198016f28f132c32389ab56a945c858e1"},"id":"b224dac6-c089-4b47-8557-e04ae60b3506","version":3}`
 export const ADDRESS2 = normalizeAddressWith0x(privateKeyToAddress(PK2))
+
+// The pbkdf2 test vector from the Web3 Secret Storage Definition. Keystores in
+// the wild almost always use scrypt, so this pins the pbkdf2 derivation path.
+export const PBKDF2_PASSPHRASE = 'testpassword'
+export const PBKDF2_PK = '7a28b5ba57c53603b0b07b56bba752f7784bf506fa95edc395f5cf6c7514fe9d'
+export const PBKDF2_KEYSTORE = `{"crypto":{"cipher":"aes-128-ctr","cipherparams":{"iv":"6087dab2f9fdbbfaddc31a909735c1e6"},"ciphertext":"5318b4d5bcd28de64ee5559e671353e16f075ecae9f99c7a79a38af5f869aa46","kdf":"pbkdf2","kdfparams":{"c":262144,"dklen":32,"prf":"hmac-sha256","salt":"ae3cd4e7013836a3df6bd7241b12db061dbe2c6785853cce422d148a624ce0bd"},"mac":"517ead924a9d0dc3124507e3393d175ce3ff7c1e96529c6c555ce9e51205e9b2"},"id":"3198bc9c-6672-5ab3-d995-4942343ae5b6","version":3}`

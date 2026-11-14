@@ -3,7 +3,7 @@ import {
   normalizeAddressWith0x,
   privateKeyToAddress,
 } from '@celo/utils/lib/address'
-import Wallet from 'ethereumjs-wallet'
+import { decryptV3, encryptV3, v3Filename } from './v3-keystore'
 
 export enum ErrorMessages {
   KEYSTORE_ENTRY_EXISTS = 'Existing encrypted keystore for address',
@@ -90,12 +90,10 @@ export abstract class KeystoreBase {
       throw new Error(ErrorMessages.KEYSTORE_ENTRY_EXISTS)
     }
 
-    const key = Buffer.from(privateKey, 'hex')
-    const wallet = Wallet.fromPrivateKey(key)
-    const keystore = await wallet.toV3String(passphrase)
-    const keystoreName = wallet.getV3Filename(Date.now())
+    const keystore = await encryptV3(privateKey, passphrase)
+    const keystoreName = v3Filename(address, Date.now())
 
-    this.persistKeystore(keystoreName, keystore)
+    this.persistKeystore(keystoreName, JSON.stringify(keystore))
   }
 
   /**
@@ -120,7 +118,7 @@ export abstract class KeystoreBase {
   async getPrivateKey(address: string, passphrase: string): Promise<string> {
     const rawKeystore = this.getRawKeystore(await this.getKeystoreName(address))
     // TODO do we want to trim leading 0x here? what is the best practice here?
-    return (await Wallet.fromV3(rawKeystore, passphrase)).getPrivateKeyString()
+    return decryptV3(rawKeystore, passphrase)
   }
 
   /**
@@ -132,10 +130,9 @@ export abstract class KeystoreBase {
   async changeKeystorePassphrase(address: string, oldPassphrase: string, newPassphrase: string) {
     const keystoreName = await this.getKeystoreName(address)
     const rawKeystore = this.getRawKeystore(keystoreName)
-    const newKeystore = await (await Wallet.fromV3(rawKeystore, oldPassphrase)).toV3String(
-      newPassphrase
-    )
-    this.persistKeystore(keystoreName, newKeystore)
+    const privateKey = await decryptV3(rawKeystore, oldPassphrase)
+    const newKeystore = await encryptV3(privateKey, newPassphrase)
+    this.persistKeystore(keystoreName, JSON.stringify(newKeystore))
   }
 
   /**
