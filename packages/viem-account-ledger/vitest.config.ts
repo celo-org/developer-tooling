@@ -7,6 +7,7 @@ export default defineConfig({
       sourcemap: process.env.CI ? false : true, // Disable sourcemaps in CI for performance
     },
     coverage: {
+      include: ['src/**/*.ts'],
       reporter: ['json', 'clover', 'lcov'],
       exclude: ['**/data**', '**/tokens**', '**/test-utils**', ...coverageConfigDefaults.exclude],
     },
