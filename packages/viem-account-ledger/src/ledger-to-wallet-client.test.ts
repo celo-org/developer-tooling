@@ -390,6 +390,23 @@ syntheticDescribe('ledgerToWalletClient (mocked ledger)', () => {
           ])
           expect(spy).toHaveBeenCalledTimes(6)
         })
+
+        it('iterates hardened account indexes for Ledger Live paths', async () => {
+          client = await ledgerToWalletClient<typeof celo>({
+            transport: await transport,
+            walletClientOptions: defaultWalletClientOptions,
+            derivationPathIndexes: [0],
+            changeIndexes: [0],
+            accountIndexes: [0, 1, 2],
+            baseDerivationPath: "m/44'/60'/0'",
+          })
+          expect(spy.mock.calls).toEqual([
+            ["44'/60'/0'/0/0", false],
+            ["44'/60'/1'/0/0", false],
+            ["44'/60'/2'/0/0", false],
+          ])
+          expect(spy).toHaveBeenCalledTimes(3)
+        })
       })
     })
   }

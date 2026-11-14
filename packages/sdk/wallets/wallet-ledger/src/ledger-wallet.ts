@@ -31,6 +31,7 @@ export enum AddressValidation {
 interface LedgerWalletSetup {
   derivationPathIndexes?: number[]
   changeIndexes?: number[]
+  accountIndexes?: number[]
   baseDerivationPath?: string
   ledgerAddressValidation?: AddressValidation
 }
@@ -42,6 +43,7 @@ export async function newLedgerWalletWithSetup(
     baseDerivationPath,
     ledgerAddressValidation,
     changeIndexes,
+    accountIndexes,
   }: LedgerWalletSetup
 ): Promise<LedgerWallet> {
   const wallet = new LedgerWallet(
@@ -49,7 +51,8 @@ export async function newLedgerWalletWithSetup(
     derivationPathIndexes,
     baseDerivationPath,
     changeIndexes,
-    ledgerAddressValidation
+    ledgerAddressValidation,
+    accountIndexes
   )
   await wallet.init()
   return wallet
@@ -74,18 +77,25 @@ export class LedgerWallet extends RemoteWallet<LedgerSigner> implements ReadOnly
    * Default: [0].
    * Example: [0, 1] will retrieve the derivation paths of [`${baseDerivationPath}/0/${address_index}`, `${baseDerivationPath}/1/${address_index}`, `${baseDerivationPath}/2/${address_index}`]
    * @param ledgerAddressValidation AddressValidation enum to validate addresses. Default: AddressValidation.firstTransactionPerAddress
+   * @param accountIndexes number array of BIP-44 hardened "account" indexes.
+   * Default: the account component from `baseDerivationPath`.
+   * Example: [0, 1, 2] with change/address 0 yields [`44'/60'/0'/0/0`, `44'/60'/1'/0/0`, `44'/60'/2'/0/0`]
    */
   constructor(
     readonly transport: any = {},
     readonly derivationPathIndexes: number[] = zeroRange(ADDRESS_QTY),
     readonly baseDerivationPath: string = CELO_BASE_DERIVATION_PATH,
     readonly changeIndexes: number[] = [0],
-    readonly ledgerAddressValidation: AddressValidation = AddressValidation.firstTransactionPerAddress
+    readonly ledgerAddressValidation: AddressValidation = AddressValidation.firstTransactionPerAddress,
+    readonly accountIndexes?: number[]
   ) {
     super()
 
     validateIndexes(derivationPathIndexes, 'address index')
     validateIndexes(changeIndexes, 'change index')
+    if (accountIndexes) {
+      validateIndexes(accountIndexes, 'account index')
+    }
     // Remove the 'm/' prefix if it exists since we dont expect it here but that is how derivaiton path is used in the rest of the code
     this.baseDerivationPath = baseDerivationPath.startsWith('m/')
       ? baseDerivationPath.slice(2)
@@ -174,22 +184,27 @@ export class LedgerWallet extends RemoteWallet<LedgerSigner> implements ReadOnly
     const appConfiguration = await this.retrieveAppConfiguration()
     const validationRequired = this.ledgerAddressValidation === AddressValidation.initializationOnly
     // https://trezor.io/learn/a/what-is-bip44
-    const [purpose, coinType, account] = this.baseDerivationPath.split('/')
+    const [purpose, coinType, accountFromPath] = this.baseDerivationPath.split('/')
+    const accounts = this.accountIndexes
+      ? this.accountIndexes.map((index) => `${index}'`)
+      : [accountFromPath]
     // Each address must be retrieved synchronously, (ledger lock)
-    for (const changeIndex of this.changeIndexes) {
-      for (const addressIndex of this.derivationPathIndexes) {
-        const derivationPath = `${purpose}/${coinType}/${account}/${changeIndex}/${addressIndex}`
-        debug(`Fetching address for derivation path ${derivationPath}`)
-        const addressInfo = await this.ledger!.getAddress(derivationPath, validationRequired)
-        addressToSigner.set(
-          addressInfo.address!,
-          new LedgerSigner(
-            this.ledger!,
-            derivationPath,
-            this.ledgerAddressValidation,
-            appConfiguration
+    for (const account of accounts) {
+      for (const changeIndex of this.changeIndexes) {
+        for (const addressIndex of this.derivationPathIndexes) {
+          const derivationPath = `${purpose}/${coinType}/${account}/${changeIndex}/${addressIndex}`
+          debug(`Fetching address for derivation path ${derivationPath}`)
+          const addressInfo = await this.ledger!.getAddress(derivationPath, validationRequired)
+          addressToSigner.set(
+            addressInfo.address!,
+            new LedgerSigner(
+              this.ledger!,
+              derivationPath,
+              this.ledgerAddressValidation,
+              appConfiguration
+            )
           )
-        )
+        }
       }
     }
     return addressToSigner

@@ -1,8 +1,8 @@
 import { type PublicCeloClient, type WalletCeloClient } from '@celo/actions'
 import {
   CELO_DERIVATION_PATH_BASE,
-  ensureLeading0x,
   ETHEREUM_DERIVATION_PATH,
+  ensureLeading0x,
   StrongAddress,
 } from '@celo/base'
 import { type Provider, ReadOnlyWallet } from '@celo/connect'
@@ -95,7 +95,7 @@ export abstract class BaseCommand extends Command {
       dependsOn: ['useLedger'],
       default: false,
       description:
-        'When set, the 4th postion of the derivation path will be iterated over instead of the 5th. This is useful to use same address on you Ledger with celocli as you do on Ledger Live',
+        "When set, the BIP-44 account index is iterated instead of the address index. This matches Ledger Live account paths (m/44'/60'/N'/0/0)",
     }),
     ledgerCustomAddresses: Flags.string({
       dependsOn: ['useLedger'],
@@ -330,7 +330,8 @@ export abstract class BaseCommand extends Command {
       transport: await this.openLedgerTransport(),
       baseDerivationPath: getDefaultDerivationPath(this.config.configDir),
       derivationPathIndexes: isLedgerLiveMode ? [0] : indicesToIterateOver,
-      changeIndexes: isLedgerLiveMode ? indicesToIterateOver : [0],
+      changeIndexes: [0],
+      accountIndexes: isLedgerLiveMode ? indicesToIterateOver : undefined,
       ledgerAddressValidation: ledgerConfirmation,
     }
     return ledgerOptions
@@ -389,7 +390,8 @@ export abstract class BaseCommand extends Command {
         this._wallet = await newLedgerWalletWithSetup(await this.openLedgerTransport(), {
           baseDerivationPath: baseDerivationPath,
           derivationPathIndexes: isLedgerLiveMode ? [0] : indicesToIterateOver,
-          changeIndexes: isLedgerLiveMode ? indicesToIterateOver : [0],
+          changeIndexes: [0],
+          accountIndexes: isLedgerLiveMode ? indicesToIterateOver : undefined,
           ledgerAddressValidation: ledgerConfirmation,
         })
       } catch (err) {

@@ -9,6 +9,7 @@ export async function ledgerToWalletClient<T extends Chain | undefined = undefin
   transport,
   derivationPathIndexes = zeroRange(ADDRESS_QTY),
   changeIndexes = [0],
+  accountIndexes,
   baseDerivationPath = DEFAULT_DERIVATION_PATH,
   ledgerAddressValidation,
   account,
@@ -17,6 +18,7 @@ export async function ledgerToWalletClient<T extends Chain | undefined = undefin
   transport: TransportNodeHid
   derivationPathIndexes?: number[]
   changeIndexes?: number[]
+  accountIndexes?: number[]
   baseDerivationPath?: string
   ledgerAddressValidation?: AddressValidation
   account?: Address
@@ -26,6 +28,7 @@ export async function ledgerToWalletClient<T extends Chain | undefined = undefin
     transport,
     derivationPathIndexes,
     changeIndexes,
+    accountIndexes,
     baseDerivationPath,
     ledgerAddressValidation,
   })
