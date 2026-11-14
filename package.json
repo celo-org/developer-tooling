@@ -59,7 +59,7 @@
     "bignumber.js": "9.0.0",
     "buffer-equal-constant-time@npm:1.0.1": "patch:buffer-equal-constant-time@npm%3A1.0.1#~/.yarn/patches/buffer-equal-constant-time-npm-1.0.1-41826f3419.patch",
     "vite": "^6.0.0",
-    "protobufjs@npm:6.11.3": "7.6.3",
+    "protobufjs@npm:6.11.3": "7.6.6",
     "tar": "7.5.22"
   },
   "dependencies": {
