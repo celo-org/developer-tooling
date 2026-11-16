@@ -100,6 +100,8 @@ jobs:
   open-docs-pr:
     needs: [install-released-packages]
     if: ${{ needs.install-released-packages.outputs.assetStableCLIRelease != 'failure' }}
+    permissions:
+      id-token: write
     uses: celo-org/developer-tooling/.github/workflows/open-docs-pr.yml@master
     with:
       commit: ${{ github.sha }}
@@ -107,6 +109,9 @@ jobs:
   upload-executables:
     needs: [install-released-packages]
     if: ${{ needs.install-released-packages.outputs.assetStableCLIRelease != 'failure' }}
+    permissions:
+      contents: write  # compile job uploads executables to the GitHub release
+      id-token: write
     uses: celo-org/developer-tooling/.github/workflows/upload-celocli-executables.yml@master
     with:
       ref: ${{ github.sha }}

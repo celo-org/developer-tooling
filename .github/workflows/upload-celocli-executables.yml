@@ -149,40 +149,22 @@ jobs:
 
   upload:
     needs: [setupVariables, compile]
-    name: Submit homebrew PR
+    name: Build homebrew formula
     runs-on: ubuntu-latest
     permissions:
-      contents: write
-      id-token: write
-      pull-requests: write
-      repository-projects: write
+      contents: read  # checkout + release download; no secrets in this job
     steps:
-      - name: Get Token from Akeyless
-        id: get_token
-        uses: docker://us-west1-docker.pkg.dev/devopsre/akeyless-public/akeyless-action:latest
-        with:
-          api-url: https://api.gateway.akeyless.celo-networks-dev.org
-          access-id: p-kf9vjzruht6l
-          dynamic-secrets: '{"/dynamic-secrets/keys/github/homebrew-brew/contents=write":"HOMEBREW_BREW_TOKEN"}'
-
       - name: Checkout Repo
         uses: actions/checkout@v6
         with:
           ref: ${{ inputs.ref }}
           fetch-depth: 0
           fetch-tags: true
+          persist-credentials: false
 
       - name: Set up Homebrew
         id: set-up-homebrew
         uses: Homebrew/actions/setup-homebrew@master
-
-      - name: Checkout Celo Homebrew Tap
-        uses: actions/checkout@v6
-        with:
-          repository: 'celo-org/homebrew-brew'
-          path: '/home/runner/work/developer-tooling/developer-tooling/homebrew-brew'
-          ref: main
-          token: ${{ env.HOMEBREW_BREW_TOKEN }}
 
       - name: Setup Node.js 24.x
         uses: actions/setup-node@v6
@@ -224,50 +206,97 @@ jobs:
           brew cleanup
           ./homebrew/scripts/test.sh
 
+      - name: Save the formula for the PR job
+        uses: actions/upload-artifact@v7
+        with:
+          name: celocli-formula
+          path: packages/cli/homebrew/Formula/celocli.rb
+          if-no-files-found: error
+
+  homebrew-pr:
+    # Only job that sees the GitHub App key: runs no third-party code besides
+    # the OpenBao and token actions.
+    needs: [setupVariables, upload]
+    name: Submit homebrew PR
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write  # OpenBao login; the PR uses the GitHub App token
+    steps:
+      - name: Import GitHub App key from OpenBao
+        id: openbao
+        uses: hashicorp/vault-action@4c06c5ccf5c0761b6029f56cfb1dcf5565918a3b # v3
+        with:
+          url: https://openbao.akeyless.celo-networks-dev.org
+          method: jwt
+          path: github
+          role: celo-org_developer-tooling_master
+          exportEnv: false
+          secrets: |
+            secrets/data/static-secrets/dev-tooling-circle/github-app/developer-tooling-release app_id | APP_ID ;
+            secrets/data/static-secrets/dev-tooling-circle/github-app/developer-tooling-release private_key | APP_PRIVATE_KEY
+
+      - name: Create GitHub App token for celo-org/homebrew-brew
+        id: app-token
+        uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
+        with:
+          app-id: ${{ steps.openbao.outputs.APP_ID }}
+          private-key: ${{ steps.openbao.outputs.APP_PRIVATE_KEY }}
+          owner: celo-org
+          repositories: homebrew-brew
+          permission-contents: write
+          permission-pull-requests: write
+          permission-members: read  # request celo-org/devtooling as reviewer
+
+      - name: Checkout Celo Homebrew Tap
+        uses: actions/checkout@v6
+        with:
+          repository: 'celo-org/homebrew-brew'
+          ref: main
+          token: ${{ steps.app-token.outputs.token }}
+
+      - name: Download the formula
+        uses: actions/download-artifact@v8
+        with:
+          name: celocli-formula
+          path: ${{ runner.temp }}/formula
+
       - name: Open pull-request on Homebrew repo
-        if: ${{ env.HOMEBREW_BREW_TOKEN }}
-        working-directory: packages/cli
         env:
           BOT_NAME: 'celo-org'
           BOT_EMAIL: 'celo-org@github.com'
-          HOMEBREW_FORK: 'celo-org:homebrew-brew'
           BASE_BRANCH: main
+          VERSION: ${{ needs.setupVariables.outputs.version }}
           NEW_BRANCH: 'ci/celocli-${{ needs.setupVariables.outputs.version }}'
-          GH_TOKEN: ${{ env.HOMEBREW_BREW_TOKEN }}
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
           RELEASE_URL: 'https://github.com/celo-org/developer-tooling/releases/download/%40celo%2Fcelocli%40${{ needs.setupVariables.outputs.version }}'
         run: |
           set -x
 
-          cli_workspace=$(pwd)
-          cd /home/runner/work/developer-tooling/developer-tooling/homebrew-brew
-
           # Setup the committers identity.
-          git config --global user.name ${{ env.BOT_NAME }}
-          git config --global user.email ${{ env.BOT_EMAIL }}
+          git config --global user.name "$BOT_NAME"
+          git config --global user.email "$BOT_EMAIL"
 
           # Create a new feature branch for the changes.
-          git checkout -b ${{ env.NEW_BRANCH }}
-          git status
-          cp $cli_workspace/homebrew/Formula/celocli.rb ./Formula/celocli.rb
+          git checkout -b "$NEW_BRANCH"
+          cp "$RUNNER_TEMP/formula/celocli.rb" ./Formula/celocli.rb
           git add ./Formula/celocli.rb
           git diff --cached
 
           # Commit the new Formula
-          git commit -m "celocli ${{ needs.setupVariables.outputs.version }}"
-          git push origin ${{ env.NEW_BRANCH }} -f
+          git commit -m "celocli $VERSION"
+          git push origin "$NEW_BRANCH" -f
 
-
-          # Write the commit message into a file
+          # Write the pull-request body into a file
           cat >/tmp/pr-body.md <<EOL
-          Update celocli formula to [${{ needs.setupVariables.outputs.version }}](${{ env.RELEASE_URL }}).
+          Update celocli formula to [$VERSION]($RELEASE_URL).
 
-          🤖 _This pull-request was opened by a robot beep boop from [@${{ env.BOT_NAME }}](https://github.com/celo-org)_ 🤖
+          🤖 _This pull-request was opened by a robot beep boop from [@$BOT_NAME](https://github.com/celo-org)_ 🤖
           EOL
 
           # Open a pull-request
           gh pr create \
             --body-file /tmp/pr-body.md \
             --reviewer "celo-org/devtooling" \
-            --title "celocli ${{ needs.setupVariables.outputs.version }}" \
-            --base "${{ env.BASE_BRANCH }}" \
-            --head "${{ env.NEW_BRANCH }}"
+            --title "celocli $VERSION" \
+            --base "$BASE_BRANCH" \
+            --head "$NEW_BRANCH"
