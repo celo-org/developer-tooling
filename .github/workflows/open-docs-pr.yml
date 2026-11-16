@@ -25,7 +25,7 @@ jobs:
     steps:
       - name: Import GitHub App key from OpenBao
         id: openbao
-        uses: hashicorp/vault-action@v3
+        uses: hashicorp/vault-action@4c06c5ccf5c0761b6029f56cfb1dcf5565918a3b # v3
         with:
           url: https://openbao.akeyless.celo-networks-dev.org
           method: jwt
@@ -44,6 +44,8 @@ jobs:
           private-key: ${{ steps.openbao.outputs.APP_PRIVATE_KEY }}
           owner: celo-org
           repositories: docs
+          permission-contents: write
+          permission-pull-requests: write
 
       - name: Checkout Repo
         uses: actions/checkout@v6
