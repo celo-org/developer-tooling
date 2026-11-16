@@ -1,5 +1,16 @@
 # @celo/governance
 
+## 5.1.12
+
+### Patch Changes
+
+- [#784](https://github.com/celo-org/developer-tooling/pull/784) [`b4f631c`](https://github.com/celo-org/developer-tooling/commit/b4f631c07abf3570aeac6112a98249203bf7344a) Thanks [@pahor167](https://github.com/pahor167)! - Bump `@celo/abis` from `13.0.0-post-audit.0` to `14.0.1` across all consuming
+  packages. (14.0.1 is the latest release that still ships the StableToken ABIs
+  the kit registers; 15/16 were unpublished and 17.x removed StableToken\*, which
+  would require a separate migration.)
+- Updated dependencies [[`b4f631c`](https://github.com/celo-org/developer-tooling/commit/b4f631c07abf3570aeac6112a98249203bf7344a)]:
+  - @celo/contractkit@11.0.1
+
 ## 5.1.11
 
 ### Patch Changes
