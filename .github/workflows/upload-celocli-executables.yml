@@ -152,18 +152,30 @@ jobs:
     name: Submit homebrew PR
     runs-on: ubuntu-latest
     permissions:
-      contents: write
-      id-token: write
-      pull-requests: write
-      repository-projects: write
+      contents: read  # checkout + release download; the homebrew PR uses the GitHub App token
+      id-token: write  # OpenBao login
     steps:
-      - name: Get Token from Akeyless
-        id: get_token
-        uses: docker://us-west1-docker.pkg.dev/devopsre/akeyless-public/akeyless-action:latest
+      - name: Import GitHub App key from OpenBao
+        id: openbao
+        uses: hashicorp/vault-action@v3
         with:
-          api-url: https://api.gateway.akeyless.celo-networks-dev.org
-          access-id: p-kf9vjzruht6l
-          dynamic-secrets: '{"/dynamic-secrets/keys/github/homebrew-brew/contents=write":"HOMEBREW_BREW_TOKEN"}'
+          url: https://openbao.akeyless.celo-networks-dev.org
+          method: jwt
+          path: github
+          role: celo-org_developer-tooling_master
+          exportEnv: false
+          secrets: |
+            secrets/data/static-secrets/dev-tooling-circle/github-app/developer-tooling-release app_id | APP_ID ;
+            secrets/data/static-secrets/dev-tooling-circle/github-app/developer-tooling-release private_key | APP_PRIVATE_KEY
+
+      - name: Create GitHub App token for celo-org/homebrew-brew
+        id: app-token
+        uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
+        with:
+          app-id: ${{ steps.openbao.outputs.APP_ID }}
+          private-key: ${{ steps.openbao.outputs.APP_PRIVATE_KEY }}
+          owner: celo-org
+          repositories: homebrew-brew
 
       - name: Checkout Repo
         uses: actions/checkout@v6
@@ -182,7 +194,7 @@ jobs:
           repository: 'celo-org/homebrew-brew'
           path: '/home/runner/work/developer-tooling/developer-tooling/homebrew-brew'
           ref: main
-          token: ${{ env.HOMEBREW_BREW_TOKEN }}
+          token: ${{ steps.app-token.outputs.token }}
 
       - name: Setup Node.js 24.x
         uses: actions/setup-node@v6
@@ -225,7 +237,7 @@ jobs:
           ./homebrew/scripts/test.sh
 
       - name: Open pull-request on Homebrew repo
-        if: ${{ env.HOMEBREW_BREW_TOKEN }}
+        if: ${{ steps.app-token.outputs.token }}
         working-directory: packages/cli
         env:
           BOT_NAME: 'celo-org'
@@ -233,7 +245,7 @@ jobs:
           HOMEBREW_FORK: 'celo-org:homebrew-brew'
           BASE_BRANCH: main
           NEW_BRANCH: 'ci/celocli-${{ needs.setupVariables.outputs.version }}'
-          GH_TOKEN: ${{ env.HOMEBREW_BREW_TOKEN }}
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
           RELEASE_URL: 'https://github.com/celo-org/developer-tooling/releases/download/%40celo%2Fcelocli%40${{ needs.setupVariables.outputs.version }}'
         run: |
           set -x

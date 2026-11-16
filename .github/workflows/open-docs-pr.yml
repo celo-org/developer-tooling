@@ -21,18 +21,29 @@ jobs:
     name: Open a pull-request on the celo-org/docs repository
     runs-on: ubuntu-latest
     permissions:
-      contents: write
-      id-token: write
-      pull-requests: write
-      repository-projects: write
+      id-token: write  # OpenBao login; everything else uses the GitHub App token
     steps:
-      - name: Fetch secrets from AKeyless
-        id: fetch-secrets
-        uses: docker://us-west1-docker.pkg.dev/devopsre/akeyless-public/akeyless-action:latest
+      - name: Import GitHub App key from OpenBao
+        id: openbao
+        uses: hashicorp/vault-action@v3
         with:
-          access-id: p-kf9vjzruht6l
-          api-url: https://api.gateway.akeyless.celo-networks-dev.org
-          dynamic-secrets: '{"/dynamic-secrets/keys/github/docs/contents=write,pull_requests=write":"DOCS_TOKEN"}'
+          url: https://openbao.akeyless.celo-networks-dev.org
+          method: jwt
+          path: github
+          role: celo-org_developer-tooling_master
+          exportEnv: false
+          secrets: |
+            secrets/data/static-secrets/dev-tooling-circle/github-app/developer-tooling-release app_id | APP_ID ;
+            secrets/data/static-secrets/dev-tooling-circle/github-app/developer-tooling-release private_key | APP_PRIVATE_KEY
+
+      - name: Create GitHub App token for celo-org/docs
+        id: app-token
+        uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
+        with:
+          app-id: ${{ steps.openbao.outputs.APP_ID }}
+          private-key: ${{ steps.openbao.outputs.APP_PRIVATE_KEY }}
+          owner: celo-org
+          repositories: docs
 
       - name: Checkout Repo
         uses: actions/checkout@v6
@@ -41,11 +52,12 @@ jobs:
           submodules: 'recursive'
           fetch-depth: 0
           ref: main
-          token: ${{ env.DOCS_TOKEN }}
+          token: ${{ steps.app-token.outputs.token }}
 
       - name: Open pull-request
         env:
           COMMIT: ${{ inputs.commit }}
+          DOCS_TOKEN: ${{ steps.app-token.outputs.token }}
           REPOSITORY: 'celo-org/docs'
           DOCS_CWD: 'celo-docs'
           BASE_BRANCH: main
