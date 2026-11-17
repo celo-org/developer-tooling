@@ -88,10 +88,15 @@ export const proposalToParams = (proposal: Proposal, descriptionURL: string): Pr
   ]
 }
 
-interface ApprovalStatus {
+export interface ApprovalStatus {
+  /** Confirmations collected out of the total number of approver multisig owners */
   completion: string
   confirmations: string[]
   approvers: string[]
+  /** Confirmations the approver multisig needs before the approval executes */
+  required: number
+  /** How many approvers still need to confirm before the approval executes */
+  remaining: number
 }
 
 export interface ProposalRecord {
@@ -524,17 +529,21 @@ export class GovernanceWrapper extends BaseWrapperForGoverning<typeof governance
       valueToString(proposalID),
       proposalIndex,
     ])
-    const [multisigTxs, approvers] = await Promise.all([
+    const [multisigTxs, approvers, required] = await Promise.all([
       multisig.getTransactionDataByContent(this.address, encodedData),
       multisig.getOwners() as Promise<Address[]>,
+      multisig.getRequired(),
     ])
 
     const confirmations = multisigTxs ? multisigTxs.confirmations : []
+    const requiredConfirmations = required.toNumber()
 
     return {
       completion: `${confirmations.length} / ${approvers.length}`,
       confirmations,
       approvers,
+      required: requiredConfirmations,
+      remaining: Math.max(0, requiredConfirmations - confirmations.length),
     }
   }
 
