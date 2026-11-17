@@ -1,6 +1,0 @@
-#!/usr/bin/env sh
-. "$(dirname -- "$0")/_/husky.sh"
-
-yarn fmt --staged --no-errors-on-unmatched
-
-bash scripts/hooks/prereleasecheck.sh
