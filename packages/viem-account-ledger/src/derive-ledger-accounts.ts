@@ -9,12 +9,14 @@ export async function deriveLedgerAccounts({
   transport,
   derivationPathIndexes = zeroRange(ADDRESS_QTY),
   changeIndexes = [0],
+  accountIndexes,
   baseDerivationPath = DEFAULT_DERIVATION_PATH,
   ledgerAddressValidation,
 }: {
   transport: TransportNodeHid
   derivationPathIndexes?: number[]
   changeIndexes?: number[]
+  accountIndexes?: number[]
   baseDerivationPath?: string
   ledgerAddressValidation?: AddressValidation
 }) {
@@ -22,23 +24,31 @@ export async function deriveLedgerAccounts({
   const accounts: LedgerAccount[] = []
   validateIndexes(derivationPathIndexes, 'address index')
   validateIndexes(changeIndexes, 'change index')
+  if (accountIndexes) {
+    validateIndexes(accountIndexes, 'account index')
+  }
 
   const _baseDerivationPath = baseDerivationPath.startsWith('m/')
     ? baseDerivationPath.slice(2)
     : baseDerivationPath
 
   // https://trezor.io/learn/a/what-is-bip44
-  const [purpose, coinType, accountIndex] = _baseDerivationPath.split('/')
-  for (const changeIndex of changeIndexes) {
-    for (const addressIndex of derivationPathIndexes) {
-      accounts.push(
-        await ledgerToAccount({
-          ledger,
-          derivationPathIndex: addressIndex,
-          baseDerivationPath: `${purpose}/${coinType}/${accountIndex}/${changeIndex}`,
-          ledgerAddressValidation,
-        })
-      )
+  const [purpose, coinType, accountFromPath] = _baseDerivationPath.split('/')
+  const accountsToIterate = accountIndexes
+    ? accountIndexes.map((index) => `${index}'`)
+    : [accountFromPath]
+  for (const account of accountsToIterate) {
+    for (const changeIndex of changeIndexes) {
+      for (const addressIndex of derivationPathIndexes) {
+        accounts.push(
+          await ledgerToAccount({
+            ledger,
+            derivationPathIndex: addressIndex,
+            baseDerivationPath: `${purpose}/${coinType}/${account}/${changeIndex}`,
+            ledgerAddressValidation,
+          })
+        )
+      }
     }
   }
   return accounts
